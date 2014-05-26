@@ -26,11 +26,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +37,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
 
         setupActionBar();
@@ -118,6 +117,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
+    }
+
+    private int getScreenOrientationOption(){
+        final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+        return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     }
 
     private View createTabView(int titleId, int iconId){
