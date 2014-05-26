@@ -22,9 +22,18 @@
 
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="ZWayActionBar" parent="android:Theme.Holo.Light">
+    </style>
+
+    <style name="TabText">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="ZWayTabsStyle" parent="android:Widget.Holo.Tab">
+        <item name="android:padding">0dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

@@ -2,7 +2,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Created by Ivan Platonov on 26.05.14 21:26.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -22,14 +22,5 @@
   -->
 
 <resources>
-
-    <string name="app_name">Z-Way</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    
-    <string name="dashboard">Dashboard</string>
-    <string name="widgets">Widgets</string>
-    <string name="notifications">Notifications</string>
-    <string name="profiles">Profiles</string>
-
+    <bool name="is_tablet">false</bool>
 </resources>
