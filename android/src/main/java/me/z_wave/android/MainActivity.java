@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import me.z_wave.android.gui.fragments.DashboardFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
 
@@ -39,8 +40,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
-
         setupActionBar();
+
+
     }
 
     private void setupActionBar() {
@@ -75,7 +77,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new PlaceholderFragment())
+                    .add(R.id.fragment_container, new DashboardFragment())
                     .commit();
     }
 

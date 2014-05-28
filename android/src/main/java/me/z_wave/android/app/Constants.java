@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 25.05.14 22:30.
+ * Created by Ivan Platonov on 28.05.14 18:05.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,19 +20,7 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.gui.fragments;
+package me.z_wave.android.app;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import me.z_wave.android.R;
-
-public class DashboardFragment extends Fragment {
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
-    }
+public class Constants {
 }

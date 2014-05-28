@@ -25,6 +25,7 @@
 
     <style name="ZWayAppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarTabStyle">@style/ZWayTabsStyle</item>
+        <item name="android:textViewStyle">@style/ZWayTextViewStyle</item>
     </style>
 
 </resources>
