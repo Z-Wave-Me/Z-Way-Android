@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 18:28.
+ * Created by Ivan Platonov on 28.05.14 18:22.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,24 +20,21 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.dataModel;
+package me.z_wave.android.network;
 
-public class Metrics {
+public class BaseResponse<T> {
 
-    public String probeTitle;
-    public String scaleTitle;
-    public String level;
-    public String title;
-    public String iconBase;
-    public String icon;
+    public T data;
+    public int code;
+    public String message;
+    public String error;
 
-//    "metrics": {
-//        "probeTitle": "Temperature",
-//                "scaleTitle": "°C",
-//                "level": 57,
-//                "title": "Temperature Sensor",
-//                "iconBase": "zwave",
-//                "icon": "multilevel"
-//    },
-
+    @Override
+    public String toString() {
+        return "BaseResponse{" +
+                "error='" + error + '\'' +
+                ", message='" + message + '\'' +
+                ", code=" + code +
+                '}';
+    }
 }

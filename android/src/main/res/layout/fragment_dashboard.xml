@@ -35,6 +35,9 @@
 
     <GridView android:id="@+id/dashboard_widgets"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:numColumns="@integer/devices_list_columns_count"
+            android:scrollbars="vertical"
+            android:horizontalSpacing="8dp"/>
 
 </RelativeLayout>

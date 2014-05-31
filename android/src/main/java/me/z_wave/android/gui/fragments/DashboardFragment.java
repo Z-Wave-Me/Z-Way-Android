@@ -22,17 +22,106 @@
 
 package me.z_wave.android.gui.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.DevicesStatus;
+import me.z_wave.android.gui.adapters.DevicesGridAdapter;
+import me.z_wave.android.network.ApiClient;
 
-public class DashboardFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class DashboardFragment extends BaseFragment {
+
+    private Timer mTimer;
+    private DevicesGridAdapter mAdapter;
+
+    private List<Device> mDeviceList;
+    private long mLastUpdateTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mDeviceList = new ArrayList<Device>();
+        prepareDevicesView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startDevicesUpdates();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mTimer.cancel();
+
+    }
+
+    private void startDevicesUpdates(){
+        mTimer =  new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
+
+                    @Override
+                    public void onSuccess(DevicesStatus result) {
+                        if(isAdded()){
+                            mLastUpdateTime = result.updateTime;
+                            if(result.devices != null && !result.devices.isEmpty()){
+                                updateDevicesList(result.devices);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Long request, boolean isNetworkError) {
+                        if(isAdded()){
+                            if(isNetworkError){
+                                showToast(R.string.request_network_problem);
+                            } else {
+                                showToast(R.string.request_server_problem_msg);
+                            }
+                        }
+                    }
+                });
+            }
+        }, 0, 5000);
+    }
+
+    private void updateDevicesList(List<Device> updatedDeviceList){
+        if(mDeviceList == null || mDeviceList.isEmpty()){
+            mDeviceList.addAll(updatedDeviceList);
+        } else {
+            for(Device updatedDevice : updatedDeviceList){
+                final int position = mDeviceList.indexOf(updatedDevice);
+                if(position >= 0){
+                    mDeviceList.remove(position);
+                    mDeviceList.add(position, updatedDevice);
+                }
+            }
+        }
+    }
+
+    private void prepareDevicesView(){
+        mAdapter = new DevicesGridAdapter(getActivity(), mDeviceList);
+        final GridView gridView = (GridView) getView().findViewById(R.id.dashboard_widgets);
+        gridView.setAdapter(mAdapter);
+    }
+
 }

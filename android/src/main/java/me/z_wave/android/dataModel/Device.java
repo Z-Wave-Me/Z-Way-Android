@@ -22,6 +22,8 @@
 
 package me.z_wave.android.dataModel;
 
+import me.z_wave.android.R;
+
 import java.util.List;
 
 public class Device {
@@ -33,4 +35,27 @@ public class Device {
     public String deviceType;
     public long updateTime;
 
+    public int getIconId(){
+        if(deviceType.equalsIgnoreCase("fan")){
+            return R.drawable.ic_device_fan;
+        } else if(deviceType.equalsIgnoreCase("thermostat")){
+            return R.drawable.ic_device_thermostat;
+        } else if(deviceType.equalsIgnoreCase("switchMultilevel")){
+            return R.drawable.ic_device_light;
+        } else if(deviceType.equalsIgnoreCase("switchBinary")){
+            return R.drawable.ic_device_switch;
+        } else if(deviceType.equalsIgnoreCase("probe") || deviceType.equalsIgnoreCase("battery")) {
+            return R.drawable.ic_device_battery;
+        }
+        return R.drawable.ic_plase_holder;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Device device = (Device) o;
+        if (id != null ? !id.equals(device.id) : device.id != null) return false;
+        return true;
+    }
 }

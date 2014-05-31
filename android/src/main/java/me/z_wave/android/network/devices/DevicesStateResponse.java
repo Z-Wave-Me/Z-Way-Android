@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 18:22.
+ * Created by Ivan Platonov on 31.05.14 13:02.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,13 +20,11 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.dataModel;
+package me.z_wave.android.network.devices;
 
-public class Response<T> {
+import me.z_wave.android.dataModel.DevicesStatus;
+import me.z_wave.android.network.BaseResponse;
 
-    public T data;
-    public int code;
-    public String message;
-    public String error;
+public class DevicesStateResponse extends BaseResponse<DevicesStatus> {
 
 }

@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Created by Ivan Platonov on 28.05.14 22:21.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -21,6 +22,5 @@
   -->
 
 <resources>
-    <dimen name="grid_item_height">86dp</dimen>
-
-    </resources>
+    <integer name="devices_list_columns_count">2</integer>
+</resources>

@@ -25,6 +25,8 @@
 
     <color name="main_app_color">#00b1b5</color>
     <color name="main_text_color">#4f4f4f</color>
+
+    <color name="grid_divider_color">#c8c8c8</color>
     
     <color name="gray">#929292</color>
     <color name="white">#ffffff</color>

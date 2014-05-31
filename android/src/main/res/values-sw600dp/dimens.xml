@@ -1,7 +1,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Created by Ivan Platonov on 31.05.14 9:40.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -22,5 +22,4 @@
 
 <resources>
     <dimen name="grid_item_height">86dp</dimen>
-
     </resources>

@@ -22,5 +22,11 @@
 
 package me.z_wave.android.app;
 
+import retrofit.RestAdapter;
+
 public class Constants {
+
+    public static final String BASE_API_URL = "http://mskoff.z-wave.me:10483/ZAutomation/api/v1";
+    public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.FULL;
+
 }
