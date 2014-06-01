@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
@@ -49,11 +50,24 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final ViewHolder holder = (ViewHolder) convertView.getTag();
         final Device device = getItem(position);
 
+        prepareViewVisibility(device, holder);
         holder.icon.setImageResource(device.getIconId());
-
         holder.name.setText(device.metrics.title);
+        holder.value.setText(device.getValue());
+        holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
+
 
         return convertView;
+    }
+
+    private void prepareViewVisibility(Device device, ViewHolder holder){
+        changeViewVisibility(holder.value, device.isSensor());
+        changeViewVisibility(holder.switchView, device.isSwitch());
+    }
+
+    private void changeViewVisibility(View view, boolean isVisible){
+        final int visibility = isVisible ? View.VISIBLE : View.GONE;
+        view.setVisibility(visibility);
     }
 
 //    if (model.get('deviceType') === "sensorBinary" || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
@@ -81,13 +95,16 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
     private class ViewHolder{
         public ImageView icon;
         public TextView name;
+        public TextView value;
+        public Switch switchView;
 
         private ViewHolder(View parent) {
             icon = (ImageView) parent.findViewById(R.id.device_grid_item_icon);
             name = (TextView) parent.findViewById(R.id.device_grid_item_name);
+            value = (TextView) parent.findViewById(R.id.device_grid_item_value);
+            switchView = (Switch) parent.findViewById(R.id.device_grid_item_switch);
+
         }
     }
-
-
 
 }

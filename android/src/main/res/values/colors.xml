@@ -27,6 +27,7 @@
     <color name="main_text_color">#4f4f4f</color>
 
     <color name="grid_divider_color">#c8c8c8</color>
+    <color name="device_value_text_color">#8e8e93</color>
     
     <color name="gray">#929292</color>
     <color name="white">#ffffff</color>

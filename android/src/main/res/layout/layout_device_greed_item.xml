@@ -32,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/grid_item_height">
 
-
         <ImageView android:id="@+id/device_grid_item_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,13 +42,49 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_sensor"/>
 
-        <TextView android:id="@+id/device_grid_item_name"
+        <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/device_grid_item_icon"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:textSize="18sp"
-                android:textColor="@color/black"/>
+                android:layout_marginRight="22dp"
+                android:layout_toRightOf="@+id/device_grid_item_icon"
+                android:id="@+id/relativeLayout">
+
+            <FrameLayout android:id="@+id/device_grid_item_content_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                <TextView android:id="@+id/device_grid_item_value"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@color/device_value_text_color"
+                          android:textSize="18sp"/>
+
+                <Switch android:id="@+id/device_grid_item_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="Off"
+                        android:textOn="On"/>
+
+            </FrameLayout>
+
+            <TextView android:id="@+id/device_grid_item_name"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginRight="8dp"
+                      android:textSize="18sp"
+                      android:textColor="@color/black"
+                    android:layout_alignParentLeft="true"
+                    android:singleLine="true"
+                    android:layout_toLeftOf="@id/device_grid_item_content_container"
+                    android:text="sdfsdfsdfsdfsdfsdfsdfsdf"/>
+
+
+                </RelativeLayout>
+
+
 
     </RelativeLayout>
 

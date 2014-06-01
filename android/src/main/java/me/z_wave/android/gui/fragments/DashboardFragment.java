@@ -86,6 +86,7 @@ public class DashboardFragment extends BaseFragment {
                                 updateDevicesList(result.devices);
                                 mAdapter.notifyDataSetChanged();
                             }
+                            changeEmptyDashboardMsgVisibility();
                         }
                     }
 
@@ -123,5 +124,15 @@ public class DashboardFragment extends BaseFragment {
         final GridView gridView = (GridView) getView().findViewById(R.id.dashboard_widgets);
         gridView.setAdapter(mAdapter);
     }
+
+    private void changeEmptyDashboardMsgVisibility(){
+        final View emptyDashboardMsgView = getView().findViewById(R.id.dashboard_msg_empty);
+        final int msgVisibility = mDeviceList == null || mDeviceList.isEmpty() ? View.VISIBLE : View.GONE;
+        if(emptyDashboardMsgView.getVisibility() != msgVisibility){
+            emptyDashboardMsgView.setVisibility(msgVisibility);
+        }
+    }
+
+
 
 }

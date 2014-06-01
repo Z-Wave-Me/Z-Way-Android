@@ -36,18 +36,58 @@ public class Device {
     public long updateTime;
 
     public int getIconId(){
-        if(deviceType.equalsIgnoreCase("fan")){
-            return R.drawable.ic_device_fan;
-        } else if(deviceType.equalsIgnoreCase("thermostat")){
-            return R.drawable.ic_device_thermostat;
-        } else if(deviceType.equalsIgnoreCase("switchMultilevel")){
-            return R.drawable.ic_device_light;
-        } else if(deviceType.equalsIgnoreCase("switchBinary")){
+        final String icon = metrics.icon;
+        if(icon.equalsIgnoreCase("switch")){
             return R.drawable.ic_device_switch;
-        } else if(deviceType.equalsIgnoreCase("probe") || deviceType.equalsIgnoreCase("battery")) {
-            return R.drawable.ic_device_battery;
+        } else if(icon.equalsIgnoreCase("meter")){
+            return R.drawable.ic_device_meter;
+        } else if(icon.equalsIgnoreCase("battery")){
+            final double batteryLevel = Double.parseDouble(metrics.level);
+            if(batteryLevel >= 90){
+                return R.drawable.ic_device_battery;
+            } else if(batteryLevel >= 50 && batteryLevel < 90){
+                return R.drawable.ic_battery_less90;
+            } else if(batteryLevel >= 10 && batteryLevel < 50){
+                return R.drawable.ic_battery_less50;
+            } else if(batteryLevel < 10){
+                return R.drawable.ic_battery_less10;
+            }
+        } else if(icon.equalsIgnoreCase("luminosity")){
+            return R.drawable.ic_device_luminosity;
+        } else if(icon.equalsIgnoreCase("temperature")){
+            return R.drawable.ic_device_temperature;
         }
         return R.drawable.ic_plase_holder;
+
+//        if(deviceType.equalsIgnoreCase("fan")){
+//            return R.drawable.ic_device_fan;
+//        } else if(deviceType.equalsIgnoreCase("thermostat")){
+//            return R.drawable.ic_device_thermostat;
+//        } else if(deviceType.equalsIgnoreCase("switchMultilevel")){
+//            return R.drawable.ic_device_light;
+//        } else if(deviceType.equalsIgnoreCase("switchBinary")){
+//            return R.drawable.ic_device_switch;
+//        } else if(deviceType.equalsIgnoreCase("probe") || deviceType.equalsIgnoreCase("battery")) {
+//            return R.drawable.ic_device_battery;
+//        }
+//        return R.drawable.ic_plase_holder;
+    }
+
+    public String getValue(){
+        return String.format("%s %s", metrics.level, metrics.scaleTitle);
+    }
+
+    public boolean isSensor(){
+        return deviceType.equalsIgnoreCase("sensorBinary")
+                || deviceType.equalsIgnoreCase("sensorMultilevel")
+                || deviceType.equalsIgnoreCase("battery");
+    }
+
+    public boolean isSwitch(){
+        return deviceType.equalsIgnoreCase("switchControl")
+                || deviceType.equalsIgnoreCase("switchBinary")
+                || deviceType.equalsIgnoreCase("switchRGBW")
+                || deviceType.equalsIgnoreCase("toggleButton");
     }
 
     @Override
@@ -58,4 +98,27 @@ public class Device {
         if (id != null ? !id.equals(device.id) : device.id != null) return false;
         return true;
     }
+
+    //    if (model.get('deviceType') === "sensorBinary" || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
+//        modelView = new ProbeWidgetView({model: model});
+//    } else if (model.get('deviceType') === "fan") {
+//        modelView = new FanWidgetView({model: model});
+//    } else if (model.get('deviceType') === "switchMultilevel") {
+//        modelView = new MultilevelWidgetView({model: model});
+//    } else if (model.get('deviceType') === "thermostat") {
+//        modelView = new ThermostatView({model: model});
+//    } else if (model.get('deviceType') === "doorlock") {
+//        modelView = new DoorLockView({model: model});
+//    } else if (model.get('deviceType') === "switchBinary" || model.get('deviceType') === "switchRGBW") {
+//        modelView = new SwitchView({model: model});
+//    } else if (model.get('deviceType') === "toggleButton") {
+//        modelView = new ToggleView({model: model});
+//    } else if (model.get('deviceType') === "camera") {
+//        modelView = new CameraView({model: model});
+//    } else if (model.get('deviceType') === "switchControl") {
+//        modelView = new SwitchControlView({model: model});
+//    } else {
+//        log(model);
+//    }
+
 }

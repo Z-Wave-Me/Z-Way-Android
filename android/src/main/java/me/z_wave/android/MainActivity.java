@@ -24,11 +24,12 @@ package me.z_wave.android;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import me.z_wave.android.gui.fragments.DashboardFragment;
@@ -67,13 +68,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 .setTabListener(this);
     }
 
-    /**
-     * Called when a tab enters the selected state.
-     * @param tab The tab that was selected
-     * @param ft  A {@link android.app.FragmentTransaction} for queuing fragment operations to execute
-     *            during a tab switch. The previous tab's unselect and this tab's select will be
-     *            executed in a single transaction. This FragmentTransaction does not support
-     */
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             getFragmentManager().beginTransaction()
@@ -81,44 +75,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                     .commit();
     }
 
-    /**
-     * Called when a tab exits the selected state.
-     * @param tab The tab that was unselected
-     * @param ft  A {@link android.app.FragmentTransaction} for queuing fragment operations to execute
-     *            during a tab switch. This tab's unselect and the newly selected tab's select
-     *            will be executed in a single transaction. This FragmentTransaction does not
-     */
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
     }
 
-    /**
-     * Called when a tab that is already selected is chosen again by the user.
-     * Some applications may use this action to return to the top level of a category.
-     * @param tab The tab that was reselected.
-     * @param ft  A {@link android.app.FragmentTransaction} for queuing fragment operations to execute
-     *            once this method returns. This FragmentTransaction does not support
-     */
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
     }
 
     private int getScreenOrientationOption(){
