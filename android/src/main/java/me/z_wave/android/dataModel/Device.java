@@ -37,6 +37,9 @@ public class Device {
 
     public int getIconId(){
         final String icon = metrics.icon;
+        if(icon == null)
+            return R.drawable.ic_plase_holder;
+
         if(icon.equalsIgnoreCase("switch")){
             return R.drawable.ic_device_switch;
         } else if(icon.equalsIgnoreCase("meter")){

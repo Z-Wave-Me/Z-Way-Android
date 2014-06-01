@@ -63,10 +63,9 @@
                           android:textSize="18sp"/>
 
                 <Switch android:id="@+id/device_grid_item_switch"
+                        style="@style/ZWaySwitchStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOff="Off"
-                        android:textOn="On"/>
+                        android:layout_height="wrap_content"/>
 
             </FrameLayout>
 

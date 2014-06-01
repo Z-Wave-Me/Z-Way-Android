@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DashboardFragment extends BaseFragment {
+public class DashboardFragment extends BaseFragment implements
+        DevicesGridAdapter.DeviceStateUpdatedListener {
 
     private Timer mTimer;
     private DevicesGridAdapter mAdapter;
@@ -69,6 +70,27 @@ public class DashboardFragment extends BaseFragment {
         super.onPause();
         mTimer.cancel();
 
+    }
+
+    @Override
+    public void onExactChanged(Device updatedDevice) {
+        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Device state changed!");
+            }
+
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
     }
 
     private void startDevicesUpdates(){
@@ -120,10 +142,11 @@ public class DashboardFragment extends BaseFragment {
     }
 
     private void prepareDevicesView(){
-        mAdapter = new DevicesGridAdapter(getActivity(), mDeviceList);
+        mAdapter = new DevicesGridAdapter(getActivity(), mDeviceList, this);
         final GridView gridView = (GridView) getView().findViewById(R.id.dashboard_widgets);
         gridView.setAdapter(mAdapter);
     }
+
 
     private void changeEmptyDashboardMsgVisibility(){
         final View emptyDashboardMsgView = getView().findViewById(R.id.dashboard_msg_empty);
@@ -132,7 +155,4 @@ public class DashboardFragment extends BaseFragment {
             emptyDashboardMsgView.setVisibility(msgVisibility);
         }
     }
-
-
-
 }

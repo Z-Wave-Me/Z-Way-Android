@@ -23,6 +23,14 @@
 <resources>
 
     <style name="ZWayActionBar" parent="android:Theme.Holo.Light">
+
+    </style>
+
+    <style name="ZWaySwitchStyle">
+        <!--<item name="android:thumb">@drawable/switch_thumb</item>-->
+        <!--<item name="android:track">@drawable/bg_switch_focused</item>-->
+        <item name="android:textOff">"Off"</item>
+        <item name="android:textOn">"On"</item>
     </style>
 
     <style name="TabText">

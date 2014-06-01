@@ -23,9 +23,11 @@
 package me.z_wave.android.network;
 
 import me.z_wave.android.app.Constants;
+import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.network.devices.DevicesStateRequest;
 import me.z_wave.android.network.devices.DevicesStateResponse;
+import me.z_wave.android.network.devices.UpdateDeviceRequest;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -72,6 +74,22 @@ public class ApiClient {
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
                 callback.onFailure(lastUpdateTime, networkUnreachable);
+            }
+        });
+    }
+
+    public static void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        sAdaptor.create(UpdateDeviceRequest.class).updateDeviceExact(updatedDevice.id, updatedDevice.metrics.level,
+         new  Callback<Device>() {
+            @Override
+            public void success(Device objects, Response response) {
+                Timber.v(objects.toString());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                boolean networkUnreachable = isNetworkUnreachableError(error);
+                callback.onFailure(updatedDevice, networkUnreachable);
             }
         });
     }

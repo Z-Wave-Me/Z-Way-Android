@@ -25,10 +25,7 @@ package me.z_wave.android.gui.adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.*;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 
@@ -36,8 +33,35 @@ import java.util.List;
 
 public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
-    public DevicesGridAdapter(Context context, List<Device> objects) {
+    public interface DeviceStateUpdatedListener{
+        void onExactChanged(Device updatedDevice);
+
+//        devices/:deviceId/exact/on
+//        devices/:deviceId/exact/off
+//
+//                thermostat
+//        devices/:deviceId/setMode/:integer
+//        devices/:deviceId/setTempo/:integer
+//
+//        multilevel:
+//        devices/:deviceId/exact/:integer
+//
+//        fan:
+//        devices/:deviceId/setMode/:mode (возможно :integer)
+//        devices/:deviceId/setMode/off (возможно deprecated)
+//
+//        door:
+//        devices/:deviceId/exact/open
+//        devices/:deviceId/exact/close
+
+    }
+
+    private final DeviceStateUpdatedListener listener;
+
+    public DevicesGridAdapter(Context context, List<Device> objects,
+                              DeviceStateUpdatedListener listener) {
         super(context, 0, objects);
+        this.listener = listener;
     }
 
     @Override
@@ -56,6 +80,14 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         holder.value.setText(device.getValue());
         holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
 
+        holder.switchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String newState = ((Switch)v).isChecked() ? "on" : "off";
+                updateDeviceState(device, newState);
+            }
+        });
+
 
         return convertView;
     }
@@ -68,6 +100,13 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
     private void changeViewVisibility(View view, boolean isVisible){
         final int visibility = isVisible ? View.VISIBLE : View.GONE;
         view.setVisibility(visibility);
+    }
+
+    private void updateDeviceState(Device device, String level){
+        if(!device.metrics.level.equalsIgnoreCase(level)){
+            device.metrics.level = level;
+            listener.onExactChanged(device);
+        }
     }
 
 //    if (model.get('deviceType') === "sensorBinary" || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
