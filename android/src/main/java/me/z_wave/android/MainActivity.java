@@ -24,6 +24,7 @@ package me.z_wave.android;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import me.z_wave.android.gui.fragments.DashboardFragment;
+import me.z_wave.android.gui.fragments.NotificationsFragment;
+import me.z_wave.android.gui.fragments.ProfilesFragment;
+import me.z_wave.android.gui.fragments.WidgetsFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
 
@@ -70,9 +74,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new DashboardFragment())
-                    .commit();
+        final int tabPosition = tab.getPosition();
+        if(tabPosition == 0) {
+            commitFragment(new DashboardFragment(), false);
+        } else if(tabPosition == 1) {
+            commitFragment(new WidgetsFragment(), false);
+        } else if(tabPosition == 2) {
+            commitFragment(new NotificationsFragment(), false);
+        }else if(tabPosition == 3) {
+            commitFragment(new ProfilesFragment(), false);
+        }
     }
 
     @Override
@@ -100,5 +111,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         tabIcon.setImageResource(iconId);
         tabTitle.setText(titleId);
         return tabView;
+    }
+
+    private void commitFragment(Fragment fragment, boolean addToBackStack){
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }
