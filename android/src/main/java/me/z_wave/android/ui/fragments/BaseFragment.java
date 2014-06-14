@@ -20,14 +20,44 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.gui.fragments;
+package me.z_wave.android.ui.fragments;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.squareup.otto.Bus;
+import me.z_wave.android.app.ZWayApplication;
+import me.z_wave.android.data.DataContext;
+
+import javax.inject.Inject;
 
 public class BaseFragment extends Fragment{
+
+    @Inject
+    DataContext dataContext;
+
+    @Inject
+    Bus bus;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((ZWayApplication) getActivity().getApplication()).inject(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bus.unregister(this);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 22:54.
+  ~ Created by Ivan Platonov on 08.06.14 13:12.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -21,18 +22,7 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-
-    <color name="main_app_color">#00b1b5</color>
-    <color name="main_text_color">#4f4f4f</color>
-
-    <color name="grid_divider_color">#c8c8c8</color>
-    <color name="device_value_text_color">#8e8e93</color>
-
-    <color name="filter_list_divider_color">#cccccc</color>
-    
-    <color name="gray">#929292</color>
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
-
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true"  android:color="@color/main_app_color" />
+    <item android:state_checked="false" android:color="@color/white" />
+</selector>

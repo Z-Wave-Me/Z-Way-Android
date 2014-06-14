@@ -33,29 +33,37 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import me.z_wave.android.gui.fragments.DashboardFragment;
-import me.z_wave.android.gui.fragments.NotificationsFragment;
-import me.z_wave.android.gui.fragments.ProfilesFragment;
-import me.z_wave.android.gui.fragments.WidgetsFragment;
+import me.z_wave.android.servises.BindHelper;
+import me.z_wave.android.servises.DeviceStateService;
+import me.z_wave.android.ui.fragments.DashboardFragment;
+import me.z_wave.android.ui.fragments.FiltersFragment;
+import me.z_wave.android.ui.fragments.NotificationsFragment;
+import me.z_wave.android.ui.fragments.ProfilesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
+
+    private BindHelper mBindHelper = new BindHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
+        mBindHelper.keep(DeviceStateService.class);
         setupActionBar();
-
-
     }
 
-    private void setupActionBar() {
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBindHelper.onBind(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mBindHelper.onUnbind(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,19 +74,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         return super.onCreateOptionsMenu(menu);
     }
 
-    private ActionBar.Tab createTab(int titleId, int iconId){
-        final View tabView = createTabView(titleId, iconId);
-        return getActionBar().newTab().setCustomView(tabView)
-                .setTabListener(this);
-    }
-
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         final int tabPosition = tab.getPosition();
         if(tabPosition == 0) {
             commitFragment(new DashboardFragment(), false);
         } else if(tabPosition == 1) {
-            commitFragment(new WidgetsFragment(), false);
+            commitFragment(new FiltersFragment(), false);
         } else if(tabPosition == 2) {
             commitFragment(new NotificationsFragment(), false);
         }else if(tabPosition == 3) {
@@ -100,6 +102,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
         return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    }
+
+    private void setupActionBar() {
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    }
+
+    private ActionBar.Tab createTab(int titleId, int iconId){
+        final View tabView = createTabView(titleId, iconId);
+        return getActionBar().newTab().setCustomView(tabView)
+                .setTabListener(this);
     }
 
     private View createTabView(int titleId, int iconId){

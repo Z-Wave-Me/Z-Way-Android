@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 31.05.14 13:20.
+ * Created by Ivan Platonov on 14.06.14 18:39.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,29 +20,16 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.app;
+package me.z_wave.android.otto.events;
+import android.app.Fragment;
 
-import android.app.Application;
-import dagger.ObjectGraph;
-import me.z_wave.android.BuildConfig;
-import timber.log.Timber;
+public class CommitFragmentEvent {
 
-public class ZWayApplication extends Application {
+    public final Fragment fragment;
+    public final boolean addToBackStack;
 
-    private ObjectGraph objectGraph;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
-        objectGraph = ObjectGraph.create(new ZWayModule());
+    public CommitFragmentEvent(Fragment fragment, boolean addToBackStack) {
+        this.fragment = fragment;
+        this.addToBackStack = addToBackStack;
     }
-
-    public void inject(Object object) {
-        objectGraph.inject(object);
-    }
-
 }

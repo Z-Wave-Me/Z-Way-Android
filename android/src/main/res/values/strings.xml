@@ -41,4 +41,8 @@
     <string name="request_server_problem_msg">Something wrong with server!</string>
     <string name="request_network_problem">Something wrong with network connection!</string>
 
+    <string name="filters_rooms">Rooms</string>
+    <string name="filters_types">Types</string>
+    <string name="filters_tags">Tags</string>
+
 </resources>

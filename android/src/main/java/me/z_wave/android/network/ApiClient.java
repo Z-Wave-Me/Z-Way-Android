@@ -25,14 +25,19 @@ package me.z_wave.android.network;
 import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DevicesStatus;
+import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.network.devices.DevicesStateRequest;
 import me.z_wave.android.network.devices.DevicesStateResponse;
 import me.z_wave.android.network.devices.UpdateDeviceRequest;
+import me.z_wave.android.network.locations.LocationsRequest;
+import me.z_wave.android.network.locations.LocationsResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import timber.log.Timber;
+
+import java.util.List;
 
 
 public class ApiClient {
@@ -90,6 +95,26 @@ public class ApiClient {
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
                 callback.onFailure(updatedDevice, networkUnreachable);
+            }
+        });
+    }
+
+    public static void getLocations(final ApiCallback<List<Location>, String> callback) {
+        sAdaptor.create(LocationsRequest.class).getLocations(new Callback<LocationsResponse>() {
+            @Override
+            public void success(LocationsResponse locationsResponse, Response response) {
+                Timber.v(locationsResponse.toString());
+                if (locationsResponse.code != 200) {
+                    callback.onFailure("", false);
+                } else {
+                    callback.onSuccess(locationsResponse.data);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                boolean networkUnreachable = isNetworkUnreachableError(error);
+                callback.onFailure("", networkUnreachable);
             }
         });
     }

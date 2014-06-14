@@ -20,7 +20,7 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.gui.adapters;
+package me.z_wave.android.ui.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -78,7 +78,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         holder.icon.setImageResource(device.getIconId());
         holder.name.setText(device.metrics.title);
         holder.value.setText(device.getValue());
-        holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
+        if(device.metrics.level != null)
+            holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
 
         holder.switchView.setOnClickListener(new View.OnClickListener() {
             @Override

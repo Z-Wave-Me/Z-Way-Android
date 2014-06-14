@@ -49,5 +49,12 @@
         <item name="android:textColor">@color/main_text_color</item>
     </style>
 
+    <style name="FiltersRadioButton">
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/sl_bg_filter_radio_btn</item>
+        <item name="android:textColor">@drawable/sl_filter_radio_btn_text_selector</item>
+    </style>
+
 
 </resources>

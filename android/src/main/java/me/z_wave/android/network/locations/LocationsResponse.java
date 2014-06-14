@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 31.05.14 13:20.
+ * Created by Ivan Platonov on 08.06.14 19:19.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,29 +20,13 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.app;
+package me.z_wave.android.network.locations;
 
-import android.app.Application;
-import dagger.ObjectGraph;
-import me.z_wave.android.BuildConfig;
-import timber.log.Timber;
+import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.network.BaseResponse;
 
-public class ZWayApplication extends Application {
+import java.util.List;
 
-    private ObjectGraph objectGraph;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
-        objectGraph = ObjectGraph.create(new ZWayModule());
-    }
-
-    public void inject(Object object) {
-        objectGraph.inject(object);
-    }
+public class LocationsResponse extends BaseResponse<List<Location>> {
 
 }

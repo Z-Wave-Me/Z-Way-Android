@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 08.06.14 13:19.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@color/main_app_color">
+
+        <RadioGroup android:id="@+id/filter_container"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal"
+                android:checkedButton="@+id/filter_rooms">
+
+            <RadioButton android:id="@+id/filter_rooms"
+                    style="@style/FiltersRadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/filters_rooms"/>
+
+            <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"/>
+
+            <RadioButton android:id="@+id/filter_types"
+                         style="@style/FiltersRadioButton"
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:text="@string/filters_types"/>
+
+            <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"/>
+
+            <RadioButton android:id="@+id/filter_tags"
+                         style="@style/FiltersRadioButton"
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:text="@string/filters_tags"/>
+
+                </RadioGroup>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/bg_filters_radio_group"/>
+
+            </RelativeLayout>
+
+    <ListView android:id="@+id/filter_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/filter_list_divider_color"/>
+
+
+
+</LinearLayout>
