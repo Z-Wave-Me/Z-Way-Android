@@ -23,6 +23,7 @@
 package me.z_wave.android.data;
 
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
 
 import java.util.ArrayList;
@@ -89,6 +90,42 @@ public class DataContext {
         for (Location location : mLocation) {
             if (!result.contains(location.title))
                 result.add(location.title);
+        }
+        return result;
+    }
+
+    public List<Device> getDevicesWithType(String deviceType){
+        if(deviceType.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+            return mDevices;
+
+        final ArrayList<Device> result = new ArrayList<Device>();
+        for(Device device : mDevices){
+            if(device.deviceType.equalsIgnoreCase(deviceType))
+                result.add(device);
+        }
+        return result;
+    }
+
+    public List<Device> getDevicesWithTag(String deviceTag){
+        if(deviceTag.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+            return mDevices;
+
+        final ArrayList<Device> result = new ArrayList<Device>();
+        for(Device device : mDevices){
+            if(device.tags.contains(deviceTag))
+                result.add(device);
+        }
+        return result;
+    }
+
+    public List<Device> getDevicesForLocation(String location){
+        if(location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+            return mDevices;
+
+        final ArrayList<Device> result = new ArrayList<Device>();
+        for(Device device : mDevices){
+            if(device.location != null &&  device.location.equalsIgnoreCase(location))
+                result.add(device);
         }
         return result;
     }

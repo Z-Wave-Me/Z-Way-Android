@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/ZWayAppTheme" >
         <activity
-            android:name="me.z_wave.android.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

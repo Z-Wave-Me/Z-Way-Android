@@ -84,7 +84,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
-        Timber.v("Device list updated!");
+        Timber.v("Dashboard list updated!");
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }

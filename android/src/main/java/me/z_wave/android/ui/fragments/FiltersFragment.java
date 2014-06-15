@@ -32,19 +32,15 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnItemClick;
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.otto.events.CommitFragmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FiltersFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener   {
-
-    public static final String DEFAULT_FILTER = "All";
-
-    public enum Filter{
-        LOCATION, TYPE, TAG
-    }
+public class FiltersFragment extends BaseFragment
+        implements RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener {
 
     @InjectView(R.id.filter_container)
     RadioGroup filterType;
@@ -52,8 +48,8 @@ public class FiltersFragment extends BaseFragment implements RadioGroup.OnChecke
     @InjectView(R.id.filter_list)
     ListView filtersList;
 
-    private Filter mSelectedFilter;
-    private List<String> mFilters;
+    private Filter mSelectedFilter = Filter.LOCATION;
+    private List<String> mFilters = new ArrayList<String>();
     private ArrayAdapter<String> mAdapter;
 
 
@@ -73,36 +69,42 @@ public class FiltersFragment extends BaseFragment implements RadioGroup.OnChecke
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        mFilters.clear();
-        mFilters.add(DEFAULT_FILTER);
-        switch (checkedId){
-            case R.id.filter_rooms:
-                mFilters.addAll(dataContext.getLocations());
-                mSelectedFilter = Filter.LOCATION;
-                break;
-            case R.id.filter_types:
-                mFilters.addAll(dataContext.getDeviceTypes());
-                mSelectedFilter = Filter.TYPE;
-                break;
-            case R.id.filter_tags:
-                mFilters.addAll(dataContext.getDeviceTags());
-                mSelectedFilter = Filter.TAG;
-                break;
+        if(checkedId == R.id.filter_rooms){
+            mSelectedFilter = Filter.LOCATION;
+        } else if(checkedId == R.id.filter_types){
+            mSelectedFilter = Filter.TYPE;
+        } else {
+            mSelectedFilter = Filter.TAG;
         }
+
+        mFilters.clear();
+        mFilters.addAll(getUpdatedFilters());
         mAdapter.notifyDataSetChanged();
     }
 
-    @OnItemClick(R.id.filter_list)
-    public void onFilterSelected(AdapterView<?> parent, View view, int position, long id){
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final String selectedFilter = mAdapter.getItem(position);
+        bus.post(new CommitFragmentEvent(DevicesFragment.newInstance(mSelectedFilter, selectedFilter), true));
     }
 
     private void prepareFiltersList(){
-        mFilters = new ArrayList<String>();
-        mFilters.add(DEFAULT_FILTER);
-
+        mFilters = getUpdatedFilters();
         mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.layout_filter_list_item, mFilters);
         filtersList.setAdapter(mAdapter);
+        filtersList.setOnItemClickListener(this);
     }
 
+    private List<String> getUpdatedFilters(){
+        final List<String> result = new ArrayList<String>();
+        result.add(Filter.DEFAULT_FILTER);
+        if(mSelectedFilter == Filter.LOCATION){
+            result.addAll(dataContext.getLocations());
+        } else if(mSelectedFilter == Filter.TYPE) {
+            result.addAll(dataContext.getDeviceTypes());
+        } else {
+            result.addAll(dataContext.getDeviceTags());
+        }
+        return result;
+    }
 }

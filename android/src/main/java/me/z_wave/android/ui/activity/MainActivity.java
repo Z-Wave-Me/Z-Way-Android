@@ -20,11 +20,9 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android;
+package me.z_wave.android.ui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -33,6 +31,9 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.otto.Subscribe;
+import me.z_wave.android.R;
+import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.ui.fragments.DashboardFragment;
@@ -40,7 +41,7 @@ import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
 import me.z_wave.android.ui.fragments.ProfilesFragment;
 
-public class MainActivity extends Activity implements ActionBar.TabListener{
+public class MainActivity extends BaseActivity implements ActionBar.TabListener{
 
     private BindHelper mBindHelper = new BindHelper();
 
@@ -98,6 +99,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 
     }
 
+    @Subscribe
+    public void onCommitFragment(CommitFragmentEvent event){
+        commitFragment(event.fragment, event.addToBackStack);
+    }
+
     private int getScreenOrientationOption(){
         final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
         return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -127,9 +133,4 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         return tabView;
     }
 
-    private void commitFragment(Fragment fragment, boolean addToBackStack){
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
 }

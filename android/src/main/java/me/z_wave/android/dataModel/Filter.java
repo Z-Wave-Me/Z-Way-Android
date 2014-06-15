@@ -22,9 +22,8 @@
 
 package me.z_wave.android.dataModel;
 
-public class Filter {
+public enum Filter {
+    LOCATION, TYPE, TAG;
 
-    public int id;
-    public String title;
-
+    public static final String DEFAULT_FILTER = "All";
 }

@@ -45,4 +45,6 @@
     <string name="filters_types">Types</string>
     <string name="filters_tags">Tags</string>
 
+    <string name="devices_empty_msg">Nothing found</string>
+
 </resources>

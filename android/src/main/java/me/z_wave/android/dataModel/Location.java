@@ -22,5 +22,8 @@
 
 package me.z_wave.android.dataModel;
 
-public class Location extends Filter{
+public class Location{
+
+    public int id;
+    public String title;
 }

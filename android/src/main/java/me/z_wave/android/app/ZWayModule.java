@@ -25,14 +25,11 @@ package me.z_wave.android.app;
 import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
-import me.z_wave.android.MainActivity;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
-import me.z_wave.android.ui.fragments.DashboardFragment;
-import me.z_wave.android.ui.fragments.FiltersFragment;
-import me.z_wave.android.ui.fragments.NotificationsFragment;
-import me.z_wave.android.ui.fragments.ProfilesFragment;
+import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.fragments.*;
 
 import javax.inject.Singleton;
 
@@ -43,6 +40,7 @@ import javax.inject.Singleton;
                 FiltersFragment.class,
                 NotificationsFragment.class,
                 ProfilesFragment.class,
+                DevicesFragment.class,
                 DataUpdateService.class
         },
         library = true,
