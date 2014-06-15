@@ -59,6 +59,7 @@ public class DashboardFragment extends BaseFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         prepareDevicesView();
+        changeEmptyDashboardMsgVisibility();
     }
 
     @Override

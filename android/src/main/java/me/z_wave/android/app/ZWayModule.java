@@ -28,6 +28,7 @@ import dagger.Provides;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
+import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.fragments.*;
 
@@ -41,7 +42,8 @@ import javax.inject.Singleton;
                 NotificationsFragment.class,
                 ProfilesFragment.class,
                 DevicesFragment.class,
-                DataUpdateService.class
+                DataUpdateService.class,
+                NotificationService.class
         },
         library = true,
         complete = false

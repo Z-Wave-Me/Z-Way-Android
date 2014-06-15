@@ -22,17 +22,59 @@
 
 package me.z_wave.android.ui.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
+import me.z_wave.android.otto.events.OnGetNotificationEvent;
+import me.z_wave.android.ui.adapters.NotificationsListAdapter;
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends BaseFragment {
+
+    //TODO replace BaseFragment to BaseListFragment!
+
+    @InjectView(R.id.notification_list)
+    ListView notificationList;
+
+    @InjectView(R.id.notification_msg_ok)
+    View everythingOkMsg;
+
+    private NotificationsListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_notification, container, false);
+        ButterKnife.inject(this, view);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        prepareListView();
+        changeEmptyDashboardMsgVisibility();
+    }
+
+    @Subscribe
+    public void onGetNotification(OnGetNotificationEvent event){
+        mAdapter.notifyDataSetChanged();
+        changeEmptyDashboardMsgVisibility();
+    }
+
+    private void prepareListView(){
+        mAdapter = new NotificationsListAdapter(getActivity(), dataContext.getNotifications());
+        notificationList.setAdapter(mAdapter);
+    }
+
+    private void changeEmptyDashboardMsgVisibility(){
+        final int msgVisibility = mAdapter != null && mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE;
+        if(everythingOkMsg.getVisibility() != msgVisibility){
+            everythingOkMsg.setVisibility(msgVisibility);
+        }
     }
 }

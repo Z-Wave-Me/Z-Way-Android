@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 14.06.14 20:57.
+ * Created by Ivan Platonov on 15.06.14 19:39.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -29,18 +29,16 @@ import android.os.IBinder;
 import com.squareup.otto.Bus;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
-import me.z_wave.android.dataModel.DevicesStatus;
-import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.network.ApiClient;
-import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.network.notification.NotificationDataWrapper;
+import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import timber.log.Timber;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DataUpdateService extends Service {
+public class NotificationService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -64,14 +62,14 @@ public class DataUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.v("On start command");
-        return super.onStartCommand(intent, flags, startId);
+        if(mTimer == null)
+            startNotificationListening();
+        return Service.START_NOT_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         Timber.v("On bind");
-        startDevicesUpdates();
-        requestLocations();
         return mBinder;
     }
 
@@ -86,62 +84,41 @@ public class DataUpdateService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Timber.v("On destroy");
+        mTimer.cancel();
         bus.unregister(this);
     }
 
-    private void startDevicesUpdates() {
+    private void startNotificationListening() {
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                updateDevices();
+                ApiClient.getNotifications(mLastUpdateTime,
+                        new ApiClient.ApiCallback<NotificationDataWrapper, Long>() {
+
+                    @Override
+                    public void onSuccess(NotificationDataWrapper result) {
+                        Timber.v("Notification updated!", result.toString());
+                        mLastUpdateTime = result.updateTime;
+                        if (result.notifications != null && !result.notifications.isEmpty()) {
+                            dataContext.addNotifications(result.notifications);
+                            bus.post(new OnGetNotificationEvent());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Long request, boolean isNetworkError) {
+                        if (isNetworkError) {
+                            Timber.v("Notification update filed! Something wrong with network connection.");
+                        } else {
+                            Timber.v("Notification update filed! Something wrong with server.");
+                        }
+                    }
+                });
             }
         }, 0, 5000);
     }
 
-    private void updateDevices() {
-        ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
-
-            @Override
-            public void onSuccess(DevicesStatus result) {
-                Timber.v("Device updated!", result);
-                mLastUpdateTime = result.updateTime;
-                if (result.devices != null && !result.devices.isEmpty()) {
-                    dataContext.addDevices(result.devices);
-                    bus.post(new OnDataUpdatedEvent());
-                }
-            }
-
-            @Override
-            public void onFailure(Long request, boolean isNetworkError) {
-                if (isNetworkError) {
-                    Timber.v("Device update filed! Something wrong with network connection.");
-                } else {
-                    Timber.v("Device update filed! Something wrong with server.");
-                }
-            }
-        });
-    }
-
-    public void requestLocations(){
-        ApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
-            @Override
-            public void onSuccess(List<Location> result) {
-                Timber.v(result.toString());
-                dataContext.setLocations(result);
-                bus.post(new OnDataUpdatedEvent());
-            }
-
-            @Override
-            public void onFailure(String request, boolean isNetworkError) {
-                    if(isNetworkError){
-                        Timber.v("Request Location update filed! Something wrong with network connection.");
-                    } else {
-                        Timber.v("Request Location update filed! Something wrong with server.");
-                    }
-            }
-        });
-    }
 
     public class LocalBinder extends Binder {
     }

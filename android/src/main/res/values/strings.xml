@@ -46,5 +46,7 @@
     <string name="filters_tags">Tags</string>
 
     <string name="devices_empty_msg">Nothing found</string>
+    
+    <string name="notification_everything_ok">Everything OK</string>
 
 </resources>

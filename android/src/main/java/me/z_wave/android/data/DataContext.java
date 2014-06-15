@@ -25,6 +25,7 @@ package me.z_wave.android.data;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class DataContext {
 
     private List<Device> mDevices = new ArrayList<Device>();
     private List<Location> mLocation = new ArrayList<Location>();
+    private List<Notification> mNotifications = new ArrayList<Notification>();
 
     public void setLocations(List<Location> locations) {
         mLocation = locations;
@@ -48,11 +50,19 @@ public class DataContext {
         mDevices = devices;
     }
 
-    public void updateDeviceData(List<Device> devices) {
-        updateDevices(devices);
+    public void addNotifications(List<Notification> notifications){
+        for(Notification notification : notifications){
+            final int i = mNotifications.indexOf(notification);
+            if (i >= 0) {
+                mNotifications.remove(i);
+                mNotifications.add(i, notification);
+            } else {
+                mNotifications.add(notification);
+            }
+        }
     }
 
-    public void updateDevices(List<Device> devices) {
+    public void addDevices(List<Device> devices) {
         for (Device device : devices) {
             final int i = mDevices.indexOf(device);
             if (i >= 0) {
@@ -92,6 +102,10 @@ public class DataContext {
                 result.add(location.title);
         }
         return result;
+    }
+
+    public List<Notification> getNotifications(){
+        return mNotifications;
     }
 
     public List<Device> getDevicesWithType(String deviceType){

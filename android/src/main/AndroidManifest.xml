@@ -43,8 +43,11 @@
 
         <service
             android:name=".servises.DataUpdateService"
-            android:exported="false" >
-        </service>
+            android:exported="false" />
+
+        <service
+                android:name=".servises.NotificationService"
+                android:exported="false"/>
     </application>
 
 </manifest>

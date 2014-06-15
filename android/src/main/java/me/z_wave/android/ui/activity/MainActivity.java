@@ -24,6 +24,7 @@ package me.z_wave.android.ui.activity;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,8 +35,10 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
+import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.fragments.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
@@ -51,12 +54,14 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
         mBindHelper.keep(DataUpdateService.class);
+//        mBindHelper.keep(NotificationService.class);
         setupActionBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        startNotificationListening();
         mBindHelper.onBind(this);
     }
 
@@ -104,6 +109,11 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         commitFragment(event.fragment, event.addToBackStack);
     }
 
+    @Subscribe
+    public void onGetNotification(OnGetNotificationEvent event){
+
+    }
+
     private int getScreenOrientationOption(){
         final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
         return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -131,6 +141,11 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         tabIcon.setImageResource(iconId);
         tabTitle.setText(titleId);
         return tabView;
+    }
+
+    private void startNotificationListening(){
+        final Intent i = new Intent(this, NotificationService.class);
+        startService(i);
     }
 
 }

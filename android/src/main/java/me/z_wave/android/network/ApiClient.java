@@ -31,6 +31,9 @@ import me.z_wave.android.network.devices.DevicesStateResponse;
 import me.z_wave.android.network.devices.UpdateDeviceRequest;
 import me.z_wave.android.network.locations.LocationsRequest;
 import me.z_wave.android.network.locations.LocationsResponse;
+import me.z_wave.android.network.notification.NotificationDataWrapper;
+import me.z_wave.android.network.notification.NotificationRequest;
+import me.z_wave.android.network.notification.NotificationResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -117,6 +120,25 @@ public class ApiClient {
                 callback.onFailure("", networkUnreachable);
             }
         });
+    }
+
+    public static void getNotifications(final long lastUpdateTime,
+                                        final ApiCallback<NotificationDataWrapper, Long> callback) {
+        sAdaptor.create(NotificationRequest.class).getNotifications(
+                lastUpdateTime, new Callback<NotificationResponse>() {
+                    @Override
+                    public void success(NotificationResponse notificationResponse, Response response) {
+                        Timber.v(notificationResponse.toString());
+                        callback.onSuccess(notificationResponse.data);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        callback.onFailure(lastUpdateTime, networkUnreachable);
+                    }
+                }
+        );
     }
 
     private static boolean isNetworkUnreachableError(RetrofitError retrofitError) {
