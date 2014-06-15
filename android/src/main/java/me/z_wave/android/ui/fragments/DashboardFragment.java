@@ -35,6 +35,7 @@ import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
+import timber.log.Timber;
 
 public class DashboardFragment extends BaseFragment implements
         DevicesGridAdapter.DeviceStateUpdatedListener {
@@ -83,6 +84,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
+        Timber.v("Device list updated!");
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }

@@ -42,7 +42,7 @@
         </activity>
 
         <service
-            android:name=".servises.DeviceStateService"
+            android:name=".servises.DataUpdateService"
             android:exported="false" >
         </service>
     </application>

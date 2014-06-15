@@ -34,7 +34,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import me.z_wave.android.servises.BindHelper;
-import me.z_wave.android.servises.DeviceStateService;
+import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.ui.fragments.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
-        mBindHelper.keep(DeviceStateService.class);
+        mBindHelper.keep(DataUpdateService.class);
         setupActionBar();
     }
 

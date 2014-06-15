@@ -83,8 +83,7 @@
     <ListView android:id="@+id/filter_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/filter_list_divider_color"/>
-
-
+            android:divider="@color/filter_list_divider_color"
+            android:dividerHeight="1dp"/>
 
 </LinearLayout>

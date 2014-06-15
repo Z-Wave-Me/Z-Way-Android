@@ -30,15 +30,17 @@ import com.squareup.otto.Bus;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.DevicesStatus;
+import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import timber.log.Timber;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DeviceStateService extends Service {
+public class DataUpdateService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -69,6 +71,7 @@ public class DeviceStateService extends Service {
     public IBinder onBind(Intent intent) {
         Timber.v("On bind");
         startDevicesUpdates();
+        requestLocations();
         return mBinder;
     }
 
@@ -91,29 +94,53 @@ public class DeviceStateService extends Service {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
-
-                    @Override
-                    public void onSuccess(DevicesStatus result) {
-                        Timber.v("Device updated!", result);
-                        mLastUpdateTime = result.updateTime;
-                        if (result.devices != null && !result.devices.isEmpty()) {
-                            dataContext.updateDevices(result.devices);
-                            bus.post(new OnDataUpdatedEvent());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Long request, boolean isNetworkError) {
-                        if (isNetworkError) {
-                            Timber.v("Device update filed! Something wrong with network connection.");
-                        } else {
-                            Timber.v("Device update filed! Something wrong with server.");
-                        }
-                    }
-                });
+                updateDevices();
             }
         }, 0, 5000);
+    }
+
+    private void updateDevices() {
+        ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
+
+            @Override
+            public void onSuccess(DevicesStatus result) {
+                Timber.v("Device updated!", result);
+                mLastUpdateTime = result.updateTime;
+                if (result.devices != null && !result.devices.isEmpty()) {
+                    dataContext.updateDevices(result.devices);
+                    bus.post(new OnDataUpdatedEvent());
+                }
+            }
+
+            @Override
+            public void onFailure(Long request, boolean isNetworkError) {
+                if (isNetworkError) {
+                    Timber.v("Device update filed! Something wrong with network connection.");
+                } else {
+                    Timber.v("Device update filed! Something wrong with server.");
+                }
+            }
+        });
+    }
+
+    public void requestLocations(){
+        ApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
+            @Override
+            public void onSuccess(List<Location> result) {
+                Timber.v(result.toString());
+                dataContext.setLocations(result);
+                bus.post(new OnDataUpdatedEvent());
+            }
+
+            @Override
+            public void onFailure(String request, boolean isNetworkError) {
+                    if(isNetworkError){
+                        Timber.v("Request Location update filed! Something wrong with network connection.");
+                    } else {
+                        Timber.v("Request Location update filed! Something wrong with server.");
+                    }
+            }
+        });
     }
 
     public class LocalBinder extends Binder {

@@ -30,19 +30,15 @@ import java.util.List;
 
 public class DataContext {
 
-    private List<Device> mDevices= new ArrayList<Device>();
+    private List<Device> mDevices = new ArrayList<Device>();
     private List<Location> mLocation = new ArrayList<Location>();
-
-    public List<Location> getLocations() {
-        return mLocation;
-    }
 
     public void setLocations(List<Location> locations) {
         mLocation = locations;
     }
 
     public List<Device> getDevices() {
-        if(mDevices == null)
+        if (mDevices == null)
             mDevices = new ArrayList<Device>();
         return mDevices;
     }
@@ -51,16 +47,50 @@ public class DataContext {
         mDevices = devices;
     }
 
+    public void updateDeviceData(List<Device> devices) {
+        updateDevices(devices);
+    }
+
     public void updateDevices(List<Device> devices) {
-            for(Device device : devices){
-                final int i = mDevices.indexOf(device);
-                if(i >= 0){
-                    mDevices.remove(i);
-                    mDevices.add(i, device);
-                } else {
-                    mDevices.add(device);
-                }
+        for (Device device : devices) {
+            final int i = mDevices.indexOf(device);
+            if (i >= 0) {
+                mDevices.remove(i);
+                mDevices.add(i, device);
+            } else {
+                mDevices.add(device);
             }
+        }
+    }
+
+    public List<String> getDeviceTypes() {
+        final List<String> result = new ArrayList<String>();
+        for (Device device : mDevices) {
+            final String deviceType = device.deviceType;
+            if (!result.contains(deviceType))
+                result.add(deviceType);
+        }
+        return result;
+    }
+
+    public List<String> getDeviceTags() {
+        final List<String> result = new ArrayList<String>();
+        for (Device device : mDevices) {
+            for (String tag : device.tags) {
+                if (!result.contains(tag))
+                    result.add(tag);
+            }
+        }
+        return result;
+    }
+
+    public List<String> getLocations() {
+        final List<String> result = new ArrayList<String>();
+        for (Location location : mLocation) {
+            if (!result.contains(location.title))
+                result.add(location.title);
+        }
+        return result;
     }
 
 }

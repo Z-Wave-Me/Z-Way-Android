@@ -28,7 +28,7 @@ import dagger.Provides;
 import me.z_wave.android.MainActivity;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
-import me.z_wave.android.servises.DeviceStateService;
+import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.ui.fragments.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
@@ -43,7 +43,7 @@ import javax.inject.Singleton;
                 FiltersFragment.class,
                 NotificationsFragment.class,
                 ProfilesFragment.class,
-                DeviceStateService.class
+                DataUpdateService.class
         },
         library = true,
         complete = false
