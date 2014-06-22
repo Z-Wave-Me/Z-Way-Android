@@ -38,23 +38,39 @@ import me.z_wave.android.dataModel.Profile;
  */
 public class ProfilesListAdapter extends ArrayAdapter<Profile> {
 
-    public ProfilesListAdapter(Context context, List<Profile> profiles) {
+    private boolean mIsEditMode;
+
+    public ProfilesListAdapter(Context context, List<Profile> profiles, boolean isEditMode) {
         super(context, 0, profiles);
+        mIsEditMode = isEditMode;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             convertView = View.inflate(getContext(), R.layout.layaut_profiles_list_item, null);
+            convertView.setTag(new ViewHolder(convertView));
         }
 
         final Profile profile = getItem(position);
-        final TextView item = (TextView)convertView;
-        item.setText(profile.name);
+        final ViewHolder holder = (ViewHolder) convertView.getTag();
+        holder.name.setText(profile.name);
 
-        if(profile.active)
-            item.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_checked, 0);
+        if(mIsEditMode){
+            holder.name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.right_arrow, 0);
+        } else {
+            if(profile.active)
+                holder.name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_checked, 0);
+        }
 
         return convertView;
+    }
+
+    private class ViewHolder{
+        public TextView name;
+
+        private ViewHolder(View parent) {
+            name = (TextView) parent.findViewById(R.id.profile_name);
+        }
     }
 }

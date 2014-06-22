@@ -73,10 +73,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getActionBar().addTab(createTab(R.string.dashboard, R.drawable.ic_dashboard));
-        getActionBar().addTab(createTab(R.string.widgets, R.drawable.ic_widgets));
-        getActionBar().addTab(createTab(R.string.notifications, R.drawable.ic_notifications));
-        getActionBar().addTab(createTab(R.string.profiles, R.drawable.ic_profiles));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -124,6 +120,11 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        actionBar.addTab(createTab(R.string.dashboard, R.drawable.ic_dashboard));
+        actionBar.addTab(createTab(R.string.widgets, R.drawable.ic_widgets));
+        actionBar.addTab(createTab(R.string.notifications, R.drawable.ic_notifications));
+        actionBar.addTab(createTab(R.string.profiles, R.drawable.ic_profiles));
     }
 
     private ActionBar.Tab createTab(int titleId, int iconId){

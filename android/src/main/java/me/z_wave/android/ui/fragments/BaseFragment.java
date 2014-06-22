@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -40,6 +41,12 @@ public class BaseFragment extends Fragment{
 
     @Inject
     Bus bus;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

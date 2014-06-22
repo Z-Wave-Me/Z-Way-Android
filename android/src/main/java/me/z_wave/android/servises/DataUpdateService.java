@@ -31,6 +31,7 @@ import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import timber.log.Timber;
@@ -72,6 +73,7 @@ public class DataUpdateService extends Service {
         Timber.v("On bind");
         startDevicesUpdates();
         requestLocations();
+        requestProfiles();
         return mBinder;
     }
 
@@ -139,6 +141,25 @@ public class DataUpdateService extends Service {
                     } else {
                         Timber.v("Request Location update filed! Something wrong with server.");
                     }
+            }
+        });
+    }
+
+    public void requestProfiles(){
+        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
+            @Override
+            public void onSuccess(List<Profile> result) {
+                Timber.v(result.toString());
+                dataContext.addProfiles(result);
+            }
+
+            @Override
+            public void onFailure(String request, boolean isNetworkError) {
+                if(isNetworkError){
+                    Timber.v("Request Profile update filed! Something wrong with network connection.");
+                } else {
+                    Timber.v("Request Profile update filed! Something wrong with server.");
+                }
             }
         });
     }

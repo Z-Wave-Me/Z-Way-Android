@@ -26,7 +26,7 @@
     <color name="main_app_color">#00b1b5</color>
     <color name="main_text_color">#4f4f4f</color>
 
-    <color name="grid_divider_color">#c8c8c8</color>
+    <color name="divider_color">#c8c8c8</color>
     <color name="device_value_text_color">#8e8e93</color>
 
     <color name="filter_list_divider_color">#cccccc</color>
@@ -37,5 +37,6 @@
 
     <color name="red">#ff3b30</color>
     <color name="profiles_bg">#e5e5e5</color>
+    <color name="profile_text_hint_color">#808080</color>
 
 </resources>

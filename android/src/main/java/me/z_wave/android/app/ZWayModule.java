@@ -41,6 +41,8 @@ import javax.inject.Singleton;
                 FiltersFragment.class,
                 NotificationsFragment.class,
                 ProfilesFragment.class,
+                EditProfilesFragment.class,
+                ProfileFragment.class,
                 DevicesFragment.class,
                 DataUpdateService.class,
                 NotificationService.class

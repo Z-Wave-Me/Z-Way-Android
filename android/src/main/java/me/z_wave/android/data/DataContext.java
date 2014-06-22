@@ -162,4 +162,32 @@ public class DataContext {
         return mProfiles;
     }
 
+    public Profile getProfileWithId(int id){
+        for(Profile profile : mProfiles){
+            if(profile.id == id)
+                return profile;
+        }
+        return null;
+    }
+
+    public Profile getActiveProfile(){
+        for(Profile profile : mProfiles){
+            if(profile.active)
+                return profile;
+        }
+        return null;
+    }
+
+    public List<Device> getDashboardDevices(){
+        final Profile profile = getActiveProfile();
+        final List<Device> result = new ArrayList<Device>();
+        if(profile != null){
+            for(Device device : mDevices){
+                if(profile.positions.contains(device.id))
+                    result.add(device);
+            }
+        }
+        return result;
+    }
+
 }

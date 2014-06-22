@@ -82,7 +82,8 @@
                 <Switch android:id="@+id/device_grid_item_switch"
                         style="@style/ZWaySwitchStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                    android:checked="false" />
 
             </FrameLayout>
 
@@ -106,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/grid_divider_color"/>
+        android:background="@color/divider_color"/>
 
 
 

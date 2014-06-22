@@ -26,6 +26,7 @@ import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.devices.DevicesStateRequest;
 import me.z_wave.android.network.devices.DevicesStateResponse;
 import me.z_wave.android.network.devices.UpdateDeviceRequest;
@@ -34,6 +35,8 @@ import me.z_wave.android.network.locations.LocationsResponse;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
 import me.z_wave.android.network.notification.NotificationRequest;
 import me.z_wave.android.network.notification.NotificationResponse;
+import me.z_wave.android.network.profiles.ProfilesRequest;
+import me.z_wave.android.network.profiles.ProfilesResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -136,6 +139,24 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         callback.onFailure(lastUpdateTime, networkUnreachable);
+                    }
+                }
+        );
+    }
+
+    public static void getProfiles(final ApiCallback<List<Profile>, String> callback) {
+        sAdaptor.create(ProfilesRequest.class).getProfiles(
+                new Callback<ProfilesResponse>() {
+                    @Override
+                    public void success(ProfilesResponse profileResponse, Response response) {
+                        Timber.v(profileResponse.toString());
+                        callback.onSuccess(profileResponse.data);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        callback.onFailure("", networkUnreachable);
                     }
                 }
         );

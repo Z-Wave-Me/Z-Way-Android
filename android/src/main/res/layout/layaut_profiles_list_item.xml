@@ -22,13 +22,19 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/grid_item_height"
-    android:gravity="center_vertical"
-    android:background="@color/white"
-    android:textColor="@color/black"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:padding="20dp"
-    android:text="Home"/>
+    android:layout_height="wrap_content">
+
+    <TextView android:id="@+id/profile_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_height"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="20dp"
+        android:text="Home"/>
+
+    </FrameLayout>

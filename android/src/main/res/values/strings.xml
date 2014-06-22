@@ -49,5 +49,27 @@
     <string name="devices_empty_msg">Nothing found</string>
     
     <string name="notification_everything_ok">Everything OK</string>
+    
+    <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
+    <string name="profile_auto_switch_location">Switch automatically</string>
+    <string name="profile_edit">Edit</string>
+    <string name="profile_add">Add</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_indoor_server">Indoor server</string>
+    <string name="profile_url">url</string>
+    <string name="profile_http">http://</string>
+    <string name="profile_http_hint">Should look like http://192.168.0.1:50</string>
+    <string name="profile_credentials">Remote access credentials</string>
+    <string name="profile_login">Login</string>
+    <string name="profile_password">Password</string>
+    <string name="profile_credentials_hint">You can get yours at find.zwave.me</string>
+    <string name="profile_location">Location</string>
+    <string name="profile_connecting">Connecting…</string>
+    <string name="profile_delete">Delete Profile</string>
+    <string name="profile_connection_established">Connection established</string>
+    <string name="profile_connection_authorized">Authorised</string>
+    <string name="profile_connection_filed">Can\'t connect to this URL</string>
+    <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
 
 </resources>
