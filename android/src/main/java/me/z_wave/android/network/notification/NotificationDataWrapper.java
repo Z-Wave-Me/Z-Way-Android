@@ -22,11 +22,19 @@
 
 package me.z_wave.android.network.notification;
 
-import me.z_wave.android.dataModel.Notification;
-
 import java.util.List;
+
+import me.z_wave.android.dataModel.Notification;
 
 public class NotificationDataWrapper{
     public long updateTime;
     public List<Notification> notifications;
+
+    @Override
+    public String toString() {
+        return "NotificationDataWrapper{" +
+                "\nupdateTime=" + updateTime +
+                ",\n notifications=" + notifications +
+                "\n}";
+    }
 }

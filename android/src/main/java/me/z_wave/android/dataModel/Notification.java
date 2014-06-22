@@ -43,6 +43,17 @@ public class Notification {
         return id.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "\nid='" + id + '\'' +
+                ",\n timestamp='" + timestamp + '\'' +
+                ",\n level='" + level + '\'' +
+                ",\n message='" + message + '\'' +
+                ",\n redeemed='" + redeemed + '\'' +
+                " \n }";
+    }
+
     //    {"id":"1387199352223",
 //            "timestamp":"2013-12-16T13:09:12.223Z",
 //            "level":"error",

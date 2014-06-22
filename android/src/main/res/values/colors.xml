@@ -35,4 +35,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 
+    <color name="red">#ff3b30</color>
+    <color name="profiles_bg">#e5e5e5</color>
+
 </resources>

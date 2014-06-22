@@ -98,9 +98,9 @@ public class NotificationService extends Service {
 
                     @Override
                     public void onSuccess(NotificationDataWrapper result) {
-                        Timber.v("Notification updated!", result.toString());
                         mLastUpdateTime = result.updateTime;
                         if (result.notifications != null && !result.notifications.isEmpty()) {
+                            Timber.v("Notification updated!" + result.toString());
                             dataContext.addNotifications(result.notifications);
                             bus.post(new OnGetNotificationEvent());
                         }

@@ -26,6 +26,7 @@ import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Notification;
+import me.z_wave.android.dataModel.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class DataContext {
     private List<Device> mDevices = new ArrayList<Device>();
     private List<Location> mLocation = new ArrayList<Location>();
     private List<Notification> mNotifications = new ArrayList<Notification>();
+    private List<Profile> mProfiles = new ArrayList<Profile>();
 
     public void setLocations(List<Location> locations) {
         mLocation = locations;
@@ -142,6 +144,22 @@ public class DataContext {
                 result.add(device);
         }
         return result;
+    }
+
+    public void addProfiles(List<Profile> profiles) {
+        for (Profile profile : profiles) {
+            final int i = mProfiles.indexOf(profile);
+            if (i >= 0) {
+                mProfiles.remove(i);
+                mProfiles.add(i, profile);
+            } else {
+                mProfiles.add(profile);
+            }
+        }
+    }
+
+    public List<Profile> getProfiles(){
+        return mProfiles;
     }
 
 }

@@ -23,6 +23,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:swipe="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -33,9 +34,13 @@
             android:gravity="center"
             android:text="@string/msg_empty_dashboard"/>
 
-    <GridView android:id="@+id/dashboard_widgets"
+    <me.z_wave.android.ui.views.SwipeGridView android:id="@+id/dashboard_widgets"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            swipe:swipeFrontView="@+id/front_view"
+            swipe:swipeBackView="@+id/back_view"
+            swipe:swipeMode="left"
+            swipe:swipeOffsetLeft="@dimen/grid_item_back_view_width"
             android:numColumns="@integer/devices_list_columns_count"
             android:scrollbars="vertical"
             android:horizontalSpacing="8dp"/>
