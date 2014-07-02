@@ -31,6 +31,9 @@
     <string name="widgets">Widgets</string>
     <string name="notifications">Notifications</string>
     <string name="profiles">Profiles</string>
+    <string name="done">Done</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
 
     <string name="msg_empty_dashboard">
         The dashboard is empty now.\n
@@ -52,8 +55,6 @@
     
     <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
     <string name="profile_auto_switch_location">Switch automatically</string>
-    <string name="profile_edit">Edit</string>
-    <string name="profile_add">Add</string>
 
     <string name="profile_name">Name</string>
     <string name="profile_indoor_server">Indoor server</string>
@@ -71,5 +72,6 @@
     <string name="profile_connection_authorized">Authorised</string>
     <string name="profile_connection_filed">Can\'t connect to this URL</string>
     <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
+
 
 </resources>

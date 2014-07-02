@@ -29,7 +29,7 @@ public class Profile {
     public int id;
     public String name;
     public String description;
-    public List<String> positions;
+    public List<SimpleDevice> widgets;
     public boolean active;
 
     @Override
@@ -51,7 +51,7 @@ public class Profile {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", positions=" + positions +
+                ", widgets=" + widgets +
                 ", active=" + active +
                 '}';
     }

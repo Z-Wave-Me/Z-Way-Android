@@ -31,6 +31,8 @@ import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.fragments.*;
+import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
+import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
 
 import javax.inject.Singleton;
 
@@ -45,7 +47,8 @@ import javax.inject.Singleton;
                 ProfileFragment.class,
                 DevicesFragment.class,
                 DataUpdateService.class,
-                NotificationService.class
+                NotificationService.class,
+                EditDashboardFragment.class
         },
         library = true,
         complete = false

@@ -27,6 +27,7 @@ import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.dataModel.SimpleDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,10 +182,14 @@ public class DataContext {
     public List<Device> getDashboardDevices(){
         final Profile profile = getActiveProfile();
         final List<Device> result = new ArrayList<Device>();
-        if(profile != null){
-            for(Device device : mDevices){
-                if(profile.positions.contains(device.id))
-                    result.add(device);
+        //TODO uncnown widgets instead strings
+        if(profile != null && profile.widgets != null){
+            for(SimpleDevice simpleDevice :profile.widgets){
+                for(Device device : mDevices){
+                    if(simpleDevice.id.equalsIgnoreCase(device.id)){
+                        result.add(device);
+                    }
+                }
             }
         }
         return result;

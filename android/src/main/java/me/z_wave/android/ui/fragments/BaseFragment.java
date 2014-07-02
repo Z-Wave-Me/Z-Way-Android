@@ -37,10 +37,10 @@ import javax.inject.Inject;
 public class BaseFragment extends Fragment{
 
     @Inject
-    DataContext dataContext;
+    public DataContext dataContext;
 
     @Inject
-    Bus bus;
+    public Bus bus;
 
     @Override
     public void onAttach(Activity activity) {

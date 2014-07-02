@@ -20,10 +20,13 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.ui.fragments;
+package me.z_wave.android.ui.fragments.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -34,8 +37,12 @@ import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
+import me.z_wave.android.ui.fragments.BaseFragment;
+import me.z_wave.android.ui.fragments.EditProfilesFragment;
+import me.z_wave.android.ui.fragments.ProfileFragment;
 import timber.log.Timber;
 
 public class DashboardFragment extends BaseFragment implements
@@ -64,6 +71,23 @@ public class DashboardFragment extends BaseFragment implements
         prepareDevicesView();
         changeEmptyDashboardMsgVisibility();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_dashboard, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.dashboard_edit:
+                bus.post(new CommitFragmentEvent(new EditDashboardFragment(), true));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onExactChanged(Device updatedDevice) {
@@ -102,7 +126,7 @@ public class DashboardFragment extends BaseFragment implements
 
 
     private void changeEmptyDashboardMsgVisibility(){
-        final int msgVisibility = dataContext.getDevices() == null || dataContext.getDevices().isEmpty() ? View.VISIBLE : View.GONE;
+        final int msgVisibility = mAdapter.isEmpty() ? View.VISIBLE : View.GONE;
         if(emptyListMsg.getVisibility() != msgVisibility){
             emptyListMsg.setVisibility(msgVisibility);
         }

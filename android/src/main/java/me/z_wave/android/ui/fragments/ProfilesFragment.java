@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -87,7 +88,7 @@ public class ProfilesFragment extends BaseFragment {
     }
 
     private void prepareProfilesList(){
-        mAdapter = new ProfilesListAdapter(getActivity(), dataContext.getProfiles(), false);
+        mAdapter = new ProfilesListAdapter(getActivity(),dataContext.getProfiles(), false);
         profilesList.addFooterView(createListFooter(), null, false);
         profilesList.setAdapter(mAdapter);
     }
@@ -96,8 +97,10 @@ public class ProfilesFragment extends BaseFragment {
         mApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
-                dataContext.addProfiles(result);
-                prepareProfilesList();
+                if(isAdded()){
+                    dataContext.addProfiles(result);
+                    prepareProfilesList();
+                }
             }
 
             @Override

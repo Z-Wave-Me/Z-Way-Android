@@ -29,6 +29,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
@@ -63,7 +65,9 @@ public class EditProfilesFragment extends BaseFragment implements AdapterView.On
     }
 
     private void prepareProfilesList(){
-        mAdapter = new ProfilesListAdapter(getActivity(), dataContext.getProfiles(), true);
+        //TODO remove hardcode
+        mAdapter = new ProfilesListAdapter(getActivity(),
+                dataContext.getProfiles() == null ? new ArrayList<Profile>() : dataContext.getProfiles(), true);
         profilesList.setOnItemClickListener(this);
         profilesList.setAdapter(mAdapter);
     }

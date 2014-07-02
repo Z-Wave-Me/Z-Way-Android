@@ -3,7 +3,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 22.06.14 22:07.
+  ~ Created by Ivan Platonov on 02.07.14 16:33.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -23,11 +23,8 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/profile_add"
-        android:title="@string/add"
-        android:showAsAction="ifRoom|withText"/>
 
-    <item android:id="@+id/profile_edit"
+    <item android:id="@+id/dashboard_edit"
         android:title="@string/edit"
         android:showAsAction="ifRoom|withText"/>
 

@@ -3,7 +3,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 22.06.14 22:07.
+  ~ Created by Ivan Platonov on 02.07.14 15:37.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -22,13 +22,11 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/profile_add"
-        android:title="@string/add"
-        android:showAsAction="ifRoom|withText"/>
-
-    <item android:id="@+id/profile_edit"
-        android:title="@string/edit"
-        android:showAsAction="ifRoom|withText"/>
-
-</menu>
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/accelerate_quad" 
+    android:fromAlpha="1.0"
+    android:toAlpha="0.0"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:fillEnabled="true"
+    android:fillAfter="true"
+/>
