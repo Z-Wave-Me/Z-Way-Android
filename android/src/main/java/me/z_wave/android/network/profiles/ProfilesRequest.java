@@ -27,7 +27,7 @@ import retrofit.http.GET;
 
 public interface ProfilesRequest {
 
-    @GET("/profiles")
+    @GET("/ZAutomation/api/v1/profiles")
     void getProfiles(Callback<ProfilesResponse> callback);
 
 }

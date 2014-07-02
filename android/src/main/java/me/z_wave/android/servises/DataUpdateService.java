@@ -53,6 +53,7 @@ public class DataUpdateService extends Service {
 
     private long mLastUpdateTime;
     private Timer mTimer;
+    private ApiClient mApiClient;
 
     @Override
     public void onCreate() {
@@ -60,6 +61,8 @@ public class DataUpdateService extends Service {
         Timber.v("On start");
         ((ZWayApplication)getApplication()).inject(this);
         bus.register(this);
+
+        mApiClient = new ApiClient(getApplicationContext());
     }
 
     @Override
@@ -102,7 +105,7 @@ public class DataUpdateService extends Service {
     }
 
     private void updateDevices() {
-        ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
+        mApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
 
             @Override
             public void onSuccess(DevicesStatus result) {
@@ -126,7 +129,7 @@ public class DataUpdateService extends Service {
     }
 
     public void requestLocations(){
-        ApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
+        mApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
             @Override
             public void onSuccess(List<Location> result) {
                 Timber.v(result.toString());
@@ -146,9 +149,10 @@ public class DataUpdateService extends Service {
     }
 
     public void requestProfiles(){
-        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
+        mApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
+                Timber.tag("sdfsdfsdfsdfs");
                 Timber.v(result.toString());
                 dataContext.addProfiles(result);
             }

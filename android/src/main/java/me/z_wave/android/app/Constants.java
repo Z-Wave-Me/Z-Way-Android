@@ -26,7 +26,13 @@ import retrofit.RestAdapter;
 
 public class Constants {
 
-    public static final String BASE_API_URL = "http://mskoff.z-wave.me:10483/ZAutomation/api/v1";
+    public static final String BASE_API_URL = "/ZAutomation/api/v1";
     public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.FULL;
+
+    public static final String Z_WAY_PREFERENCES = "z_way_preferences";
+
+    //TODO remove stub
+    public static final String URL_KEY = "url_key";
+    public static final String DEFAULT_URL = "https://find.z-wave.me";//"http://mskoff.z-wave.me:10483";
 
 }

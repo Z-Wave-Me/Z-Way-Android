@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 15.06.14 22:53.
+ * Created by Ivan Platonov on 30.06.14 18:49.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,15 +20,24 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.network.notification;
+package me.z_wave.android.network.auth;
 
 import retrofit.Callback;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit.http.Header;
+import retrofit.http.Headers;
+import retrofit.http.POST;
 
-public interface NotificationRequest {
+/**
+ * Created by Ivan PL on 30.06.2014.
+ */
+public interface AuthRequest {
 
-    @GET("/ZAutomation/api/v1/notifications")
-    void getNotifications(@Query("since") long updateTime, Callback<NotificationResponse> callback);
+    @FormUrlEncoded
+    @POST("/zboxweb")
+    public void auth(@Field("act") String act, @Field("login") String login,
+                     @Field("pass") String password, Callback<Object> callback);
 
 }

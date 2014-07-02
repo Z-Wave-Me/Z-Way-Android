@@ -29,10 +29,10 @@ import retrofit.http.Query;
 
 public interface DevicesStateRequest {
 
-    @GET("/devices")
+    @GET("/ZAutomation/api/v1/devices")
     void getDevices(@Query("since")long updateTime, Callback<DevicesStateResponse> callback);
 
-    @GET("/devices/{id}")
+    @GET("/ZAutomation/api/v1/devices/{id}")
     void getDevice(@Path("id")String deviceId, Callback callback);
 
 }

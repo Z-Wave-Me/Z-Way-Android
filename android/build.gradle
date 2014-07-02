@@ -33,7 +33,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.retrofit:retrofit:1.5.1'
+    compile 'com.squareup.retrofit:retrofit:1.6.0'
     compile 'com.nineoldandroids:library:2.4.0+'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.4.1'
     compile 'com.jakewharton:butterknife:4.0.1'

@@ -47,6 +47,7 @@ public class ProfilesFragment extends BaseFragment {
     ListView profilesList;
 
     private ProfilesListAdapter mAdapter;
+    private ApiClient mApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class ProfilesFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mApiClient = new ApiClient(getActivity());
         if(dataContext.getProfiles().size() != 0){
             prepareProfilesList();
         } else {
@@ -91,7 +93,7 @@ public class ProfilesFragment extends BaseFragment {
     }
 
     private void requestProfiles(){
-        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
+        mApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
                 dataContext.addProfiles(result);

@@ -29,12 +29,12 @@ import retrofit.http.*;
 public interface UpdateDeviceRequest {
 
     @Headers("Content-type: application/json")
-    @PUT("/devices/{id}")
+    @PUT("/ZAutomation/api/v1/devices/{id}")
     void updateDeviceState(@Path("id") String id, @Body() String updatedDeviceJson,
                            Callback<Device> callback);
 
     //TODO refactor this!
-    @GET("/devices/{id}/command/{state}")
+    @GET("/ZAutomation/api/v1/devices/{id}/command/{state}")
     void updateDeviceExact(@Path("id") String id, @Path("state") String state,
                            Callback<Device> callback);
 

@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
+import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
@@ -47,6 +48,7 @@ public class DashboardFragment extends BaseFragment implements
     View emptyListMsg;
 
     private DevicesGridAdapter mAdapter;
+    private ApiClient mApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,13 +60,14 @@ public class DashboardFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mApiClient = new ApiClient(getActivity());
         prepareDevicesView();
         changeEmptyDashboardMsgVisibility();
     }
 
     @Override
     public void onExactChanged(Device updatedDevice) {
-        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Device state changed!");
@@ -86,12 +89,14 @@ public class DashboardFragment extends BaseFragment implements
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Dashboard list updated!");
+        mAdapter.clear();
+        mAdapter.addAll(dataContext.getDashboardDevices());
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView(){
-        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDevices(), this);
+        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
 

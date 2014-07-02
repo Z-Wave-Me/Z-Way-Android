@@ -110,7 +110,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         }
     }
 
-//    if (model.get('deviceType') === "sensorBinary" || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
+//    if (model.get('deviceType') === "sensorBinary"
+// || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
 //        modelView = new ProbeWidgetView({model: model});
 //    } else if (model.get('deviceType') === "fan") {
 //        modelView = new FanWidgetView({model: model});
@@ -130,7 +131,14 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 //        modelView = new SwitchControlView({model: model});
 //    } else {
 //        log(model);
+
 //    }
+
+    //тогл - только кнопка
+    //свич ремоут - в последнюю очередь
+    //камера - важно! при клике открывать окно, там 8 кнопок чтобы вертеть камеру зум + оноф;
+    // + окошко. где стримится видео с камеры
+    //свичg rgb - вкл/выкл + колорпиккер
 
     private class ViewHolder{
         public ImageView icon;

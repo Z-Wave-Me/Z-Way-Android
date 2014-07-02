@@ -27,7 +27,7 @@ import retrofit.http.GET;
 
 public interface LocationsRequest {
 
-    @GET("/locations")
+    @GET("/ZAutomation/api/v1/locations")
     void getLocations(Callback<LocationsResponse> callback);
 
 }

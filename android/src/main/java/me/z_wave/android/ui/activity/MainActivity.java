@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.servises.BindHelper;
