@@ -33,6 +33,7 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import timber.log.Timber;
@@ -53,6 +54,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
+    private ApiClient mApiClient;
 
     public static DevicesFragment newInstance(Filter filter, String filterValue){
         final DevicesFragment devicesFragment = new DevicesFragment();
@@ -73,13 +75,77 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mApiClient = new ApiClient(getActivity());
         prepareDevicesView();
         changeEmptyMsgVisibility();
     }
 
     @Override
-    public void onExactChanged(Device updatedDevice) {
+    public void onSwitchStateChanged(Device updatedDevice) {
+        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Device state changed!");
+            }
 
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSeekBarStateChanged(final Device updatedDevice) {
+        mApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Seek changed " + updatedDevice.metrics.level);
+            }
+
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onToggleClicked(Device updatedDevice) {
+        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Toggle clicked");
+            }
+
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onColorViewClicked(Device updatedDevice) {
+        showToast("rgb clicked");
     }
 
     @Subscribe

@@ -28,38 +28,17 @@ import retrofit.http.*;
 
 public interface UpdateDeviceRequest {
 
-    @Headers("Content-type: application/json")
-    @PUT("/ZAutomation/api/v1/devices/{id}")
-    void updateDeviceState(@Path("id") String id, @Body() String updatedDeviceJson,
-                           Callback<Device> callback);
-
     //TODO refactor this!
     @GET("/ZAutomation/api/v1/devices/{id}/command/{state}")
-    void updateDeviceExact(@Path("id") String id, @Path("state") String state,
-                           Callback<Device> callback);
+    void updateDeviceSwitchState(@Path("id") String id, @Path("state") String state, Callback<Device> callback);
 
-//    switch:
-//
-//    devices/:deviceId/command/on
-//    devices/:deviceId/command/off
-//
-//            thermostat
-//    devices/:deviceId/command/etMode/:integer
-//    devices/:deviceId/command/setTempo/:integer
-//
-//    multilevel:
-//    devices/:deviceId/command/exact/:integer
-//
-//    fan:
-//    devices/:deviceId/command/setMode/:mode
-//    devices/:deviceId/command/setMode/off (возможно deprecated)
-//
-//    door:
-//    devices/:deviceId/command/exact/open
-//    devices/:deviceId/command/exact/close
-//    [1:07:31] Stanislav Morozov: вот так получается
-//    [1:07:34] Stanislav Morozov: видимо
-//    [1:07:41] Stanislav Morozov: devices/:deviceId/command/on
-//    devices/:deviceId/command/off
+    @GET("/ZAutomation/api/v1/devices/{id}/command/setMode")
+    void updateMode(@Path("id") String id, @Query("mode") String mode, Callback<Device> callback);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/exact")
+    void updateLevel(@Path("id") String id, @Query("level") String level, Callback<Device> callback);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/on")
+    void updateTogle(@Path("id") String id, Callback<Device> callback);
 
 }

@@ -102,7 +102,7 @@ public class NotificationService extends Service {
                     public void onSuccess(NotificationDataWrapper result) {
                         mLastUpdateTime = result.updateTime;
                         if (result.notifications != null && !result.notifications.isEmpty()) {
-                            Timber.v("Notification updated!" + result.toString());
+                            Timber.v("Notification updated! notifications count " + result.notifications.size());
                             dataContext.addNotifications(result.notifications);
                             bus.post(new OnGetNotificationEvent());
                         }

@@ -39,6 +39,7 @@ import org.apache.http.params.HttpParams;
 
 import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.DeviceType;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Profile;
@@ -81,9 +82,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class ApiClient {
-
-    private static final String TAG = ApiClient.class.getSimpleName();
-
 
     public static interface ApiCallback<T, K> {
         public void onSuccess(T result);
@@ -151,29 +149,117 @@ public class ApiClient {
     }
 
     public void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
-        adaptor.create(UpdateDeviceRequest.class).updateDeviceExact(updatedDevice.id, updatedDevice.metrics.level,
-         new  Callback<Device>() {
-            @Override
-            public void success(Device objects, Response response) {
-                Timber.v(objects.toString());
-            }
+        final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
+                ? updatedDevice.metrics.mode : updatedDevice.metrics.level;
 
-            @Override
-            public void failure(RetrofitError error) {
-                boolean networkUnreachable = isNetworkUnreachableError(error);
-                if(!networkUnreachable && !authInProgress){
-                    auth("10382", "demo", new OnAuthCompleteListener() {
-                        @Override
-                        public void onAuthComplete() {
-                            updateDevicesState(updatedDevice, callback);
+        adaptor.create(UpdateDeviceRequest.class).updateDeviceSwitchState(updatedDevice.id, state,
+                new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !authInProgress) {
+                            auth("10382", "demo", new OnAuthCompleteListener() {
+                                @Override
+                                public void onAuthComplete() {
+                                    updateDevicesState(updatedDevice, callback);
+                                }
+                            });
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
                         }
-                    });
-                } else {
-                    callback.onFailure(updatedDevice, networkUnreachable);
-                }
 
-            }
-        });
+                    }
+                }
+        );
+    }
+
+    public void updateDevicesMode(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        adaptor.create(UpdateDeviceRequest.class).updateMode(updatedDevice.id,
+                updatedDevice.metrics.mode, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !authInProgress) {
+                            auth("10382", "demo", new OnAuthCompleteListener() {
+                                @Override
+                                public void onAuthComplete() {
+                                    updateDevicesState(updatedDevice, callback);
+                                }
+                            });
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void updateDevicesLevel(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        adaptor.create(UpdateDeviceRequest.class).updateLevel(updatedDevice.id,
+                updatedDevice.metrics.level, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !authInProgress) {
+                            auth("10382", "demo", new OnAuthCompleteListener() {
+                                @Override
+                                public void onAuthComplete() {
+                                    updateDevicesState(updatedDevice, callback);
+                                }
+                            });
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void updateTogle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        adaptor.create(UpdateDeviceRequest.class).updateTogle(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !authInProgress) {
+                            auth("10382", "demo", new OnAuthCompleteListener() {
+                                @Override
+                                public void onAuthComplete() {
+                                    updateDevicesState(updatedDevice, callback);
+                                }
+                            });
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
     }
 
     public void getLocations(final ApiCallback<List<Location>, String> callback) {

@@ -27,7 +27,7 @@ import retrofit.RestAdapter;
 public class Constants {
 
     public static final String BASE_API_URL = "/ZAutomation/api/v1";
-    public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.FULL;
+    public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.BASIC;
 
     public static final String Z_WAY_PREFERENCES = "z_way_preferences";
 

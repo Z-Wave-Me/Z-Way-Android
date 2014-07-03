@@ -109,7 +109,7 @@ public class DataUpdateService extends Service {
 
             @Override
             public void onSuccess(DevicesStatus result) {
-                Timber.v("Device updated!", result);
+                Timber.v("Device updated! Devices count " + result.devices.size());
                 mLastUpdateTime = result.updateTime;
                 if (result.devices != null && !result.devices.isEmpty()) {
                     dataContext.addDevices(result.devices);
@@ -132,7 +132,7 @@ public class DataUpdateService extends Service {
         mApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
             @Override
             public void onSuccess(List<Location> result) {
-                Timber.v(result.toString());
+                Timber.v("Location updated. Locations count " + result.size());
                 dataContext.setLocations(result);
                 bus.post(new OnDataUpdatedEvent());
             }
@@ -152,8 +152,7 @@ public class DataUpdateService extends Service {
         mApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
-                Timber.tag("sdfsdfsdfsdfs");
-                Timber.v(result.toString());
+                Timber.v("profiles updated. Profiles count " + result.size());
                 dataContext.addProfiles(result);
             }
 

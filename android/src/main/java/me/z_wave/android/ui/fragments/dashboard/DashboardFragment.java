@@ -30,6 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
@@ -90,7 +92,7 @@ public class DashboardFragment extends BaseFragment implements
 
 
     @Override
-    public void onExactChanged(Device updatedDevice) {
+    public void onSwitchStateChanged(Device updatedDevice) {
         mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
@@ -108,6 +110,53 @@ public class DashboardFragment extends BaseFragment implements
                 }
             }
         });
+    }
+
+    @Override
+    public void onSeekBarStateChanged(final Device updatedDevice) {
+        mApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Seek changed " + updatedDevice.metrics.level);
+            }
+
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onToggleClicked(Device updatedDevice) {
+        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+            @Override
+            public void onSuccess() {
+                showToast("Toggle clicked");
+            }
+
+            @Override
+            public void onFailure(Device request, boolean isNetworkError) {
+                if(isAdded()){
+                    if(isNetworkError){
+                        showToast(R.string.request_network_problem);
+                    } else {
+                        showToast(R.string.request_server_problem_msg);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onColorViewClicked(Device updatedDevice) {
+        showToast("rgb clicked");
     }
 
     @Subscribe

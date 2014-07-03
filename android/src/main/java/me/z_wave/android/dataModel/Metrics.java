@@ -30,14 +30,6 @@ public class Metrics {
     public String title;
     public String iconBase;
     public String icon;
-
-//    "metrics": {
-//        "probeTitle": "Temperature",
-//                "scaleTitle": "°C",
-//                "level": 57,
-//                "title": "Temperature Sensor",
-//                "iconBase": "zwave",
-//                "icon": "multilevel"
-//    },
+    public String mode;
 
 }

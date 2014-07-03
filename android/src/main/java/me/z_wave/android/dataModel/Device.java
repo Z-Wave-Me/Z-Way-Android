@@ -35,7 +35,8 @@ public class Device {
     public Metrics metrics;
     public List<String> tags;
     public String location;
-    public String deviceType;
+    public DeviceType deviceType;
+
 
     public boolean isIconLink(){
         return URLUtil.isValidUrl(metrics.icon);
@@ -44,7 +45,7 @@ public class Device {
     public int getIconId(){
         final String icon = metrics.icon;
         if(TextUtils.isEmpty(icon))
-            return -1;
+            return 0;
 
         if(icon.equalsIgnoreCase("switch")){
             return R.drawable.ic_device_switch;
@@ -100,45 +101,11 @@ public class Device {
         } else if(icon.equalsIgnoreCase("window")){
             return R.drawable.ic_device_window;
         }
-        return -1;
-
-//        blinds (Жалюзи)
-//        light
-//                energy
-//        meter
-//                temperature
-//        door
-//                motion
-
-//        if(deviceType.equalsIgnoreCase("fan")){
-//            return R.drawable.ic_device_fan;
-//        } else if(deviceType.equalsIgnoreCase("thermostat")){
-//            return R.drawable.ic_device_thermostat;
-//        } else if(deviceType.equalsIgnoreCase("switchMultilevel")){
-//            return R.drawable.ic_device_light;
-//        } else if(deviceType.equalsIgnoreCase("switchBinary")){
-//            return R.drawable.ic_device_switch;
-//        } else if(deviceType.equalsIgnoreCase("probe") || deviceType.equalsIgnoreCase("battery")) {
-//            return R.drawable.ic_device_battery;
-//        }
-//        return R.drawable.ic_plase_holder;
+        return 0;
     }
 
     public String getValue(){
         return String.format("%s %s", metrics.level, metrics.scaleTitle);
-    }
-
-    public boolean isSensor(){
-        return deviceType.equalsIgnoreCase("sensorBinary")
-                || deviceType.equalsIgnoreCase("sensorMultilevel")
-                || deviceType.equalsIgnoreCase("battery");
-    }
-
-    public boolean isSwitch(){
-        return deviceType.equalsIgnoreCase("switchControl")
-                || deviceType.equalsIgnoreCase("switchBinary")
-                || deviceType.equalsIgnoreCase("switchRGBW")
-                || deviceType.equalsIgnoreCase("toggleButton");
     }
 
     @Override
@@ -149,27 +116,5 @@ public class Device {
         if (id != null ? !id.equals(device.id) : device.id != null) return false;
         return true;
     }
-
-    //    if (model.get('deviceType') === "sensorBinary" || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
-//        modelView = new ProbeWidgetView({model: model});
-//    } else if (model.get('deviceType') === "fan") {
-//        modelView = new FanWidgetView({model: model});
-//    } else if (model.get('deviceType') === "switchMultilevel") {
-//        modelView = new MultilevelWidgetView({model: model});
-//    } else if (model.get('deviceType') === "thermostat") {
-//        modelView = new ThermostatView({model: model});
-//    } else if (model.get('deviceType') === "doorlock") {
-//        modelView = new DoorLockView({model: model});
-//    } else if (model.get('deviceType') === "switchBinary" || model.get('deviceType') === "switchRGBW") {
-//        modelView = new SwitchView({model: model});
-//    } else if (model.get('deviceType') === "toggleButton") {
-//        modelView = new ToggleView({model: model});
-//    } else if (model.get('deviceType') === "camera") {
-//        modelView = new CameraView({model: model});
-//    } else if (model.get('deviceType') === "switchControl") {
-//        modelView = new SwitchControlView({model: model});
-//    } else {
-//        log(model);
-//    }
 
 }

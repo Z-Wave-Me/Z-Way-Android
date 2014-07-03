@@ -83,7 +83,7 @@ public class DataContext {
         final List<String> result = new ArrayList<String>();
         if(mDevices != null){
             for (Device device : mDevices) {
-                final String deviceType = device.deviceType;
+                final String deviceType = device.deviceType.toString();
                 if (!result.contains(deviceType))
                     result.add(deviceType);
             }
@@ -130,7 +130,7 @@ public class DataContext {
 
         final ArrayList<Device> result = new ArrayList<Device>();
         for(Device device : mDevices){
-            if(device.deviceType.equalsIgnoreCase(deviceType))
+            if(device.deviceType.toString().equalsIgnoreCase(deviceType))
                 result.add(device);
         }
         return result;

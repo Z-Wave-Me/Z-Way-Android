@@ -31,32 +31,17 @@ import com.squareup.picasso.Picasso;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.DeviceType;
 
 import java.util.List;
 
 public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
     public interface DeviceStateUpdatedListener{
-        void onExactChanged(Device updatedDevice);
-
-//        devices/:deviceId/exact/on
-//        devices/:deviceId/exact/off
-//
-//                thermostat
-//        devices/:deviceId/setMode/:integer
-//        devices/:deviceId/setTempo/:integer
-//
-//        multilevel:
-//        devices/:deviceId/exact/:integer
-//
-//        fan:
-//        devices/:deviceId/setMode/:mode (возможно :integer)
-//        devices/:deviceId/setMode/off (возможно deprecated)
-//
-//        door:
-//        devices/:deviceId/exact/open
-//        devices/:deviceId/exact/close
-
+        void onSwitchStateChanged(Device updatedDevice);
+        void onSeekBarStateChanged(Device updatedDevice);
+        void onToggleClicked(Device updatedDevice);
+        void onColorViewClicked(Device updatedDevice);
     }
 
     private final DeviceStateUpdatedListener listener;
@@ -77,9 +62,12 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final ViewHolder holder = (ViewHolder) convertView.getTag();
         final Device device = getItem(position);
 
-        prepareViewVisibility(device, holder);
         holder.name.setText(device.metrics.title);
-        holder.value.setText(device.getValue());
+        prepareValueView(holder, device);
+        prepareSwitch(holder, device);
+        prepareSeekBar(holder, device);
+        prepareRgbView(holder, device);
+        prepareToggle(holder, device);
 
         if(device.isIconLink()){
             Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
@@ -87,36 +75,137 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
             holder.icon.setImageResource(device.getIconId());
         }
 
-        if(device.metrics.level != null)
-            holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
 
-        holder.switchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String newState = ((Switch)v).isChecked() ? "on" : "off";
-                updateDeviceState(device, newState);
-            }
-        });
-
+        final DeviceType deviceType = device.deviceType;
+        if(deviceType == DeviceType.FAN ||
+                deviceType == DeviceType.THERMOSTAT){
+            //TODO unknown device
+        }  else if(deviceType == DeviceType.TOGGLE_BUTTON){
+            //TODO unknown device
+        }
 
         return convertView;
     }
 
-    private void prepareViewVisibility(Device device, ViewHolder holder){
-        changeViewVisibility(holder.value, device.isSensor());
-        changeViewVisibility(holder.switchView, device.isSwitch());
+    private void prepareValueView(ViewHolder holder, Device device){
+        final DeviceType deviceType = device.deviceType;
+        final boolean isValueVisible = deviceType == DeviceType.SENSOR_BINARY
+                || deviceType == DeviceType.BATTERY
+                || deviceType == DeviceType.SENSOR_MULTILEVEL;
+
+        changeViewVisibility(holder.value, isValueVisible);
+        if(isValueVisible)
+            holder.value.setText(device.getValue());
+    }
+
+    private void prepareSwitch(ViewHolder holder, final Device device){
+        final DeviceType deviceType = device.deviceType;
+        final boolean isSwitcherVisible = deviceType == DeviceType.SWITCH_CONTROLL
+                || deviceType == DeviceType.SWITCH_BINARY
+                || deviceType == DeviceType.DOORLOCK
+                || deviceType == DeviceType.SWITCH_RGBW;
+
+        holder.switcher.setOnClickListener(null);
+        changeViewVisibility(holder.switcher, isSwitcherVisible);
+        if(isSwitcherVisible) {
+            if(deviceType == DeviceType.DOORLOCK) {
+                holder.switcher.setTextOff("close");
+                holder.switcher.setTextOn("open");
+
+                if(device.metrics.mode != null)
+                    holder.switcher.setChecked(!device.metrics.mode.equalsIgnoreCase("close"));
+            } else {
+                if(device.metrics.level != null)
+                    holder.switcher.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
+            }
+
+            holder.switcher.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String newState = ((Switch) v).isChecked()
+                            ? ((Switch) v).getTextOn().toString()
+                            : ((Switch) v).getTextOff().toString();
+
+                    if(device.deviceType == DeviceType.DOORLOCK){
+                        if(!device.metrics.mode.equalsIgnoreCase(newState)){
+                            device.metrics.mode = newState;
+                            listener.onSwitchStateChanged(device);
+                        }
+                    } else {
+                        if(!device.metrics.level.equalsIgnoreCase(newState)){
+                            device.metrics.level = newState;
+                            listener.onSwitchStateChanged(device);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void prepareSeekBar(ViewHolder holder, final Device device){
+        final DeviceType deviceType = device.deviceType;
+        final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL;
+
+        holder.seekBar.setOnSeekBarChangeListener(null);
+        changeViewVisibility(holder.seekBar, isSeekBarVisible);
+        if(isSeekBarVisible){
+            holder.seekBar.setProgress(Integer.valueOf(device.metrics.level));
+            holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    device.metrics.level = String.valueOf(seekBar.getProgress());
+                    listener.onSeekBarStateChanged(device);
+                }
+            });
+        }
+    }
+
+    private void prepareRgbView(ViewHolder holder, final Device device){
+        final DeviceType deviceType = device.deviceType;
+        final boolean isRgbViewVisible = deviceType == DeviceType.SWITCH_RGBW;
+
+        holder.rgbView.setOnClickListener(null);
+        changeViewVisibility(holder.rgbView, isRgbViewVisible);
+        if(isRgbViewVisible){
+            holder.rgbView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onColorViewClicked(device);
+                }
+            });
+        }
+    }
+
+    private void prepareToggle(ViewHolder holder, final Device device){
+        final DeviceType deviceType = device.deviceType;
+        final boolean isToggleVisible = deviceType == DeviceType.TOGGLE_BUTTON;
+
+        holder.toggle.setOnClickListener(null);
+        changeViewVisibility(holder.toggle, isToggleVisible);
+        if(isToggleVisible){
+            holder.toggle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onToggleClicked(device);
+                }
+            });
+
+        }
     }
 
     private void changeViewVisibility(View view, boolean isVisible){
         final int visibility = isVisible ? View.VISIBLE : View.GONE;
         view.setVisibility(visibility);
-    }
-
-    private void updateDeviceState(Device device, String level){
-        if(!device.metrics.level.equalsIgnoreCase(level)){
-            device.metrics.level = level;
-            listener.onExactChanged(device);
-        }
     }
 
     //тогл - только кнопка
@@ -129,14 +218,22 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         public ImageView icon;
         public TextView name;
         public TextView value;
-        public Switch switchView;
+        public Switch switcher;
+        public SeekBar seekBar;
+        public View rgbView;
+        public Button toggle;
+
+        public TextView addRemove;
 
         private ViewHolder(View parent) {
             icon = (ImageView) parent.findViewById(R.id.device_grid_item_icon);
             name = (TextView) parent.findViewById(R.id.device_grid_item_name);
             value = (TextView) parent.findViewById(R.id.device_grid_item_value);
-            switchView = (Switch) parent.findViewById(R.id.device_grid_item_switch);
-
+            switcher = (Switch) parent.findViewById(R.id.device_grid_item_switch);
+            seekBar = (SeekBar) parent.findViewById(R.id.device_grid_item_seek_bar);
+            addRemove = (TextView) parent.findViewById(R.id.device_grid_item_add_remove);
+            rgbView = parent.findViewById(R.id.device_grid_item_rgb_color);
+            toggle = (Button) parent.findViewById(R.id.device_grid_item_toggle);
         }
     }
 
