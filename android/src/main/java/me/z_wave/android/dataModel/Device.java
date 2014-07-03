@@ -22,6 +22,9 @@
 
 package me.z_wave.android.dataModel;
 
+import android.text.TextUtils;
+import android.webkit.URLUtil;
+
 import me.z_wave.android.R;
 
 import java.util.List;
@@ -33,12 +36,15 @@ public class Device {
     public List<String> tags;
     public String location;
     public String deviceType;
-    public long updateTime;
+
+    public boolean isIconLink(){
+        return URLUtil.isValidUrl(metrics.icon);
+    }
 
     public int getIconId(){
         final String icon = metrics.icon;
-        if(icon == null)
-            return R.drawable.ic_plase_holder;
+        if(TextUtils.isEmpty(icon))
+            return -1;
 
         if(icon.equalsIgnoreCase("switch")){
             return R.drawable.ic_device_switch;
@@ -59,8 +65,50 @@ public class Device {
             return R.drawable.ic_device_luminosity;
         } else if(icon.equalsIgnoreCase("temperature")){
             return R.drawable.ic_device_temperature;
+        } else if(icon.equalsIgnoreCase("blinds")){
+            return R.drawable.ic_device_blinds;
+        } else if(icon.equalsIgnoreCase("light")){
+            return R.drawable.ic_device_light;
+        } else if(icon.equalsIgnoreCase("energy")){
+            return R.drawable.ic_device_energy;
+        } else if(icon.equalsIgnoreCase("door")){
+            return R.drawable.ic_device_door;
+        } else if(icon.equalsIgnoreCase("motion")){
+            return R.drawable.ic_device_motion;
+        } else if(icon.equalsIgnoreCase("cooling")){
+            return R.drawable.ic_device_cooling;
+        } else if(icon.equalsIgnoreCase("fan")){
+            return R.drawable.ic_device_fan;
+        } else if(icon.equalsIgnoreCase("flood")){
+            return R.drawable.ic_device_flood;
+        } else if(icon.equalsIgnoreCase("gas")){
+            return R.drawable.ic_device_gas;
+        } else if(icon.equalsIgnoreCase("heating")){
+            return R.drawable.ic_device_heating;
+        } else if(icon.equalsIgnoreCase("humidity")){
+            return R.drawable.ic_device_humidity;
+        } else if(icon.equalsIgnoreCase("luminosity")){
+            return R.drawable.ic_device_luminosity;
+        } else if(icon.equalsIgnoreCase("media")){
+            return R.drawable.ic_device_media;
+        } else if(icon.equalsIgnoreCase("smoke")){
+            return R.drawable.ic_device_smoke;
+        } else if(icon.equalsIgnoreCase("thermostat")){
+            return R.drawable.ic_device_thermostat;
+        } else if(icon.equalsIgnoreCase("water")){
+            return R.drawable.ic_device_water;
+        } else if(icon.equalsIgnoreCase("window")){
+            return R.drawable.ic_device_window;
         }
-        return R.drawable.ic_plase_holder;
+        return -1;
+
+//        blinds (Жалюзи)
+//        light
+//                energy
+//        meter
+//                temperature
+//        door
+//                motion
 
 //        if(deviceType.equalsIgnoreCase("fan")){
 //            return R.drawable.ic_device_fan;

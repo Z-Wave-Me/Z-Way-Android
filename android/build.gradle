@@ -35,6 +35,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.retrofit:retrofit:1.6.0'
     compile 'com.nineoldandroids:library:2.4.0+'
+    compile 'com.squareup.picasso:picasso:2.2.0'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.4.1'
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'com.jakewharton.timber:timber:2.2.2'

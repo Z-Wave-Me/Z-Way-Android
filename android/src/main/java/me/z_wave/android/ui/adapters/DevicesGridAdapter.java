@@ -26,6 +26,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.squareup.picasso.Picasso;
+
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 
@@ -75,9 +78,15 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final Device device = getItem(position);
 
         prepareViewVisibility(device, holder);
-        holder.icon.setImageResource(device.getIconId());
         holder.name.setText(device.metrics.title);
         holder.value.setText(device.getValue());
+
+        if(device.isIconLink()){
+            Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
+        } else {
+            holder.icon.setImageResource(device.getIconId());
+        }
+
         if(device.metrics.level != null)
             holder.switchView.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
 
@@ -109,30 +118,6 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
             listener.onExactChanged(device);
         }
     }
-
-//    if (model.get('deviceType') === "sensorBinary"
-// || model.get('deviceType') === "sensorMultilevel" || model.get('deviceType') === "battery") {
-//        modelView = new ProbeWidgetView({model: model});
-//    } else if (model.get('deviceType') === "fan") {
-//        modelView = new FanWidgetView({model: model});
-//    } else if (model.get('deviceType') === "switchMultilevel") {
-//        modelView = new MultilevelWidgetView({model: model});
-//    } else if (model.get('deviceType') === "thermostat") {
-//        modelView = new ThermostatView({model: model});
-//    } else if (model.get('deviceType') === "doorlock") {
-//        modelView = new DoorLockView({model: model});
-//    } else if (model.get('deviceType') === "switchBinary" || model.get('deviceType') === "switchRGBW") {
-//        modelView = new SwitchView({model: model});
-//    } else if (model.get('deviceType') === "toggleButton") {
-//        modelView = new ToggleView({model: model});
-//    } else if (model.get('deviceType') === "camera") {
-//        modelView = new CameraView({model: model});
-//    } else if (model.get('deviceType') === "switchControl") {
-//        modelView = new SwitchControlView({model: model});
-//    } else {
-//        log(model);
-
-//    }
 
     //тогл - только кнопка
     //свич ремоут - в последнюю очередь
