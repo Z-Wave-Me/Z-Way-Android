@@ -292,7 +292,7 @@ public class ApiClient {
     }
 
     public static void auth(final String login, final String password,final OnAuthCompleteListener listener) {
-        authInProgress = true;
+        authInProgress = false;
         adaptor.create(AuthRequest.class).auth("login", login, password,
                 new Callback<Object>() {
                     @Override

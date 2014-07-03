@@ -164,22 +164,25 @@ public class DashboardFragment extends BaseFragment implements
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Dashboard list updated!");
-        mDevices = dataContext.getDashboardDevices();
+        mAdapter.clear();
+        mAdapter.addAll(dataContext.getDashboardDevices());
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView(){
-        mDevices = dataContext.getDashboardDevices();
-        mAdapter = new DevicesGridAdapter(getActivity(), mDevices, this);
+        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
-
 
     private void changeEmptyDashboardMsgVisibility(){
         final int msgVisibility = mAdapter.isEmpty() ? View.VISIBLE : View.GONE;
         if(emptyListMsg.getVisibility() != msgVisibility){
             emptyListMsg.setVisibility(msgVisibility);
         }
+    }
+
+    private List<Device> getDashboardDevices(){
+        return dataContext.getDashboardDevices();
     }
 }

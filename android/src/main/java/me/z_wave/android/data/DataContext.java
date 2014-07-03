@@ -166,6 +166,23 @@ public class DataContext {
         return result;
     }
 
+    public List<Device> getDashboardDevices(){
+        if(mDevices == null)
+            mDevices = new ArrayList<Device>();
+
+        final Profile profile = getActiveProfile();
+        final List<Device> result = new ArrayList<Device>();
+
+        if(profile != null && profile.positions != null && mDevices != null){
+            for(Device device : mDevices){
+                if(profile.positions.contains(device.id)){
+                    result.add(device);
+                }
+            }
+        }
+        return result;
+    }
+
     public void addProfiles(List<Profile> profiles) {
         if (mProfiles == null || mProfiles.isEmpty()){
             mProfiles = profiles;
@@ -206,20 +223,6 @@ public class DataContext {
             }
         }
         return null;
-    }
-
-    public List<Device> getDashboardDevices(){
-        final Profile profile = getActiveProfile();
-        final List<Device> result = new ArrayList<Device>();
-        //TODO uncnown widgets instead strings
-        if(profile != null && profile.positions != null && mDevices != null){
-                for(Device device : mDevices){
-                    if(profile.positions.contains(device.id)){
-                        result.add(device);
-                    }
-                }
-        }
-        return result;
     }
 
 }
