@@ -50,7 +50,6 @@ public class NotificationService extends Service {
 
     private long mLastUpdateTime;
     private Timer mTimer;
-    private ApiClient mApiClient;
 
     @Override
     public void onCreate() {
@@ -58,7 +57,6 @@ public class NotificationService extends Service {
         Timber.v("On start");
         ((ZWayApplication)getApplication()).inject(this);
         bus.register(this);
-        mApiClient = new ApiClient(getApplicationContext());
     }
 
     @Override
@@ -95,7 +93,7 @@ public class NotificationService extends Service {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                mApiClient.getNotifications(mLastUpdateTime,
+                ApiClient.getNotifications(mLastUpdateTime,
                         new ApiClient.ApiCallback<NotificationDataWrapper, Long>() {
 
                     @Override

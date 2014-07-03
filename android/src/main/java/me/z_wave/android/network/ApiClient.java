@@ -28,12 +28,14 @@ import android.text.TextUtils;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
@@ -95,31 +97,23 @@ public class ApiClient {
         public void onFailure(T request, boolean isNetworkError);
     }
 
-    private interface OnAuthCompleteListener{
+    public interface OnAuthCompleteListener{
         public void onAuthComplete();
     }
 
-    private RestAdapter adaptor;
-    private DefaultHttpClient client;
+    private static DefaultHttpClient client = getHttpsClient();
+    private static RestAdapter adaptor = new RestAdapter.Builder()
+            .setEndpoint(Constants.DEFAULT_URL)
+            .setLogLevel(Constants.API_LOG_LEVEL)
+            .setClient(new ApacheClient(client))
+            .setRequestInterceptor(createCookiesInterceptor())
+    .build();;
 
-    private Cookie cookie;
+    private static Cookie cookie;
 
-    private boolean authInProgress;
+    private static boolean authInProgress;
 
-    public ApiClient(Context context) {
-        final SharedPreferences preferences = context.getSharedPreferences(Constants.Z_WAY_PREFERENCES, 0);
-        final String serverUrl = preferences.getString(Constants.URL_KEY, Constants.DEFAULT_URL);
-
-        client = getHttpsClient((createHttpClient()));
-        adaptor = new RestAdapter.Builder()
-                .setEndpoint(serverUrl)
-                .setLogLevel(Constants.API_LOG_LEVEL)
-                .setClient(new ApacheClient(client))
-                .setRequestInterceptor(createCookiesInterceptor())
-                .build();
-    }
-
-    public void getDevicesState(final long lastUpdateTime, final ApiCallback<DevicesStatus, Long> callback) {
+    public static void getDevicesState(final long lastUpdateTime, final ApiCallback<DevicesStatus, Long> callback) {
         adaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime, new Callback<DevicesStateResponse>() {
             @Override
             public void success(DevicesStateResponse devicesDataResponse, Response response) {
@@ -135,12 +129,13 @@ public class ApiClient {
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
                 if(!networkUnreachable && !authInProgress){
-                    auth("10382", "demo", new OnAuthCompleteListener() {
-                        @Override
-                        public void onAuthComplete() {
-                            getDevicesState(lastUpdateTime, callback);
-                        }
-                    });
+                    getDevicesState(lastUpdateTime, callback);
+//                    auth("10903", "newui", new OnAuthCompleteListener() {
+//                        @Override
+//                        public void onAuthComplete() {
+//                            getDevicesState(lastUpdateTime, callback);
+//                        }
+//                    });
                 } else {
                     callback.onFailure(lastUpdateTime, networkUnreachable);
                 }
@@ -148,7 +143,7 @@ public class ApiClient {
         });
     }
 
-    public void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public static void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
                 ? updatedDevice.metrics.mode : updatedDevice.metrics.level;
 
@@ -164,12 +159,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if (!networkUnreachable && !authInProgress) {
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    updateDevicesState(updatedDevice, callback);
-                                }
-                            });
+                            updateDevicesState(updatedDevice, callback);
+//                            auth("10903", "newui", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    updateDevicesState(updatedDevice, callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure(updatedDevice, networkUnreachable);
                         }
@@ -179,7 +175,7 @@ public class ApiClient {
         );
     }
 
-    public void updateDevicesMode(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public static void updateDevicesMode(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         adaptor.create(UpdateDeviceRequest.class).updateMode(updatedDevice.id,
                 updatedDevice.metrics.mode, new Callback<Device>() {
                     @Override
@@ -192,12 +188,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if (!networkUnreachable && !authInProgress) {
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    updateDevicesState(updatedDevice, callback);
-                                }
-                            });
+                            updateDevicesState(updatedDevice, callback);
+//                            auth("10903", "newui", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    updateDevicesState(updatedDevice, callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure(updatedDevice, networkUnreachable);
                         }
@@ -207,7 +204,7 @@ public class ApiClient {
         );
     }
 
-    public void updateDevicesLevel(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public static void updateDevicesLevel(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         adaptor.create(UpdateDeviceRequest.class).updateLevel(updatedDevice.id,
                 updatedDevice.metrics.level, new Callback<Device>() {
                     @Override
@@ -220,12 +217,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if (!networkUnreachable && !authInProgress) {
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    updateDevicesState(updatedDevice, callback);
-                                }
-                            });
+                            updateDevicesState(updatedDevice, callback);
+//                            auth("10903", "newui", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    updateDevicesState(updatedDevice, callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure(updatedDevice, networkUnreachable);
                         }
@@ -235,7 +233,7 @@ public class ApiClient {
         );
     }
 
-    public void updateTogle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public static void updateTogle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         adaptor.create(UpdateDeviceRequest.class).updateTogle(updatedDevice.id, new Callback<Device>() {
                     @Override
                     public void success(Device objects, Response response) {
@@ -247,12 +245,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if (!networkUnreachable && !authInProgress) {
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    updateDevicesState(updatedDevice, callback);
-                                }
-                            });
+                            updateDevicesState(updatedDevice, callback);
+//                            auth("10903", "newui", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    updateDevicesState(updatedDevice, callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure(updatedDevice, networkUnreachable);
                         }
@@ -262,7 +261,7 @@ public class ApiClient {
         );
     }
 
-    public void getLocations(final ApiCallback<List<Location>, String> callback) {
+    public static void getLocations(final ApiCallback<List<Location>, String> callback) {
         adaptor.create(LocationsRequest.class).getLocations(new Callback<LocationsResponse>() {
             @Override
             public void success(LocationsResponse locationsResponse, Response response) {
@@ -278,12 +277,13 @@ public class ApiClient {
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
                 if(!networkUnreachable && !authInProgress){
-                    auth("10382", "demo", new OnAuthCompleteListener() {
-                        @Override
-                        public void onAuthComplete() {
-                            getLocations(callback);
-                        }
-                    });
+                    getLocations(callback);
+//                    auth("10903", "newui", new OnAuthCompleteListener() {
+//                        @Override
+//                        public void onAuthComplete() {
+//                            getLocations(callback);
+//                        }
+//                    });
                 } else {
                     callback.onFailure("", networkUnreachable);
                 }
@@ -291,32 +291,36 @@ public class ApiClient {
         });
     }
 
-    public void auth(final String login, final String password,final OnAuthCompleteListener listener) {
+    public static void auth(final String login, final String password,final OnAuthCompleteListener listener) {
         authInProgress = true;
         adaptor.create(AuthRequest.class).auth("login", login, password,
                 new Callback<Object>() {
                     @Override
                     public void success(Object obj, Response response) {
-                        Timber.v(obj.toString());
-                        if(client.getCookieStore().getCookies().size() > 0)
+                        if(client.getCookieStore() == null || client.getCookieStore().getCookies().size() == 0){
+                            auth(login, password, listener);
+                        } else {
                             cookie = client.getCookieStore().getCookies().get(0);
-                        listener.onAuthComplete();
-                        authInProgress = false;
+                            listener.onAuthComplete();
+                            authInProgress = false;
+                        }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        error.printStackTrace();
-                        if(client.getCookieStore().getCookies().size() > 0)
+                        if(client.getCookieStore() == null || client.getCookieStore().getCookies().size() == 0){
+                            auth(login, password, listener);
+                        } else {
                             cookie = client.getCookieStore().getCookies().get(0);
-                        listener.onAuthComplete();
-                        authInProgress = false;
+                            listener.onAuthComplete();
+                            authInProgress = false;
+                        }
                     }
                 }
         );
     }
 
-    public void getNotifications(final long lastUpdateTime,
+    public static void getNotifications(final long lastUpdateTime,
                                         final ApiCallback<NotificationDataWrapper, Long> callback) {
         adaptor.create(NotificationRequest.class).getNotifications(
                 lastUpdateTime, new Callback<NotificationResponse>() {
@@ -330,12 +334,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if(!networkUnreachable && !authInProgress){
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    getNotifications(lastUpdateTime, callback);
-                                }
-                            });
+                            getNotifications(lastUpdateTime, callback);
+//                            auth("10903", "newui", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    getNotifications(lastUpdateTime, callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure(lastUpdateTime, networkUnreachable);
                         }
@@ -344,7 +349,7 @@ public class ApiClient {
         );
     }
 
-    public void getProfiles(final ApiCallback<List<Profile>, String> callback) {
+    public static void getProfiles(final ApiCallback<List<Profile>, String> callback) {
         adaptor.create(ProfilesRequest.class).getProfiles(
                 new Callback<ProfilesResponse>() {
                     @Override
@@ -357,12 +362,13 @@ public class ApiClient {
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
                         if(!networkUnreachable && !authInProgress){
-                            auth("10382", "demo", new OnAuthCompleteListener() {
-                                @Override
-                                public void onAuthComplete() {
-                                    getProfiles(callback);
-                                }
-                            });
+                            getProfiles(callback);
+//                            auth("10903", "new", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    getProfiles(callback);
+//                                }
+//                            });
                         } else {
                             callback.onFailure("", networkUnreachable);
                         }
@@ -371,65 +377,12 @@ public class ApiClient {
         );
     }
 
-    private boolean isNetworkUnreachableError(RetrofitError retrofitError) {
+    private static boolean isNetworkUnreachableError(RetrofitError retrofitError) {
         return retrofitError.isNetworkError() && (retrofitError.getResponse() == null
                 || retrofitError.getResponse().getStatus() != 404);
     }
 
-    private HttpClient createHttpClient(){
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("https",
-                SSLSocketFactory.getSocketFactory(), 443));
-
-        HttpParams params = new BasicHttpParams();
-
-        SingleClientConnManager mgr = new SingleClientConnManager(params, schemeRegistry);
-
-        return new DefaultHttpClient(mgr, params);
-    }
-
-    public class ExSSLSocketFactory extends SSLSocketFactory {
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-
-        public ExSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
-            super(truststore);
-            TrustManager x509TrustManager = new X509TrustManager() {
-
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
-
-                }
-
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
-
-                }
-
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-
-            sslContext.init(null, new TrustManager[] { x509TrustManager }, null);
-        }
-
-        public ExSSLSocketFactory(SSLContext context) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
-            super(null);
-            sslContext = context;
-        }
-
-        @Override
-        public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
-            return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
-        }
-
-        @Override
-        public Socket createSocket() throws IOException {
-            return sslContext.getSocketFactory().createSocket();
-        }
-    }
-
-    public DefaultHttpClient getHttpsClient(HttpClient client) {
+    public static DefaultHttpClient getHttpsClient() {
         try{
             X509TrustManager x509TrustManager = new X509TrustManager() {
 
@@ -449,20 +402,22 @@ public class ApiClient {
                 }
             };
 
+            HttpClient client = new DefaultHttpClient();
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{x509TrustManager}, null);
             SSLSocketFactory sslSocketFactory = new ExSSLSocketFactory(sslContext);
             sslSocketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            ClientConnectionManager clientConnectionManager = client.getConnectionManager();
-            SchemeRegistry schemeRegistry = clientConnectionManager.getSchemeRegistry();
+            SchemeRegistry schemeRegistry = new SchemeRegistry();
+            ClientConnectionManager cm = new ThreadSafeClientConnManager(client.getParams(), schemeRegistry);
             schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-            return new DefaultHttpClient(clientConnectionManager, client.getParams());
+            return new DefaultHttpClient(cm, client.getParams());
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    private RequestInterceptor createCookiesInterceptor(){
+    private static RequestInterceptor createCookiesInterceptor(){
         final CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cookieManager);
@@ -471,22 +426,10 @@ public class ApiClient {
         return new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-
                 if (cookie != null && !TextUtils.isEmpty(cookie.getValue())) {
-                    // Set up expiration in format desired by cookies
-                    // (arbitrarily one hour from now).
                     Timber.tag("Cookie values");
                     Timber.v(cookie.toString());
-                    Date expiration = new Date(System.currentTimeMillis() + 60 * 60 * 1000);
-                    String expires = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz")
-                            .format(expiration);
-
                     String cookieValue = cookie.getName() + "=" + cookie.getValue();
-//                    + "; " +
-//                            "path=" + cookie.getPath() + "; " +
-//                            "domain=" + cookie.getDomain() + ";" +
-//                            "expires=" + cookie.getExpiryDate().toGMTString();
-
                     request.addHeader("Cookie", cookieValue);
                 }
             }

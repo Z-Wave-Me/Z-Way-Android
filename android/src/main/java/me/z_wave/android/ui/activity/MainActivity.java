@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.activity;
 
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -34,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.servises.BindHelper;
@@ -43,8 +45,9 @@ import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
 import me.z_wave.android.ui.fragments.ProfilesFragment;
+import me.z_wave.android.utils.FragmentUtils;
 
-public class MainActivity extends BaseActivity implements ActionBar.TabListener{
+public class MainActivity extends BaseActivity {
 
     private BindHelper mBindHelper = new BindHelper();
 
@@ -54,6 +57,12 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
         mBindHelper.keep(DataUpdateService.class);
+        ApiClient.auth("10903","newui", new ApiClient.OnAuthCompleteListener() {
+            @Override
+            public void onAuthComplete() {
+
+            }
+        });
 //        mBindHelper.keep(NotificationService.class);
         setupActionBar();
     }
@@ -74,30 +83,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        final int tabPosition = tab.getPosition();
-        if(tabPosition == 0) {
-            commitFragment(new DashboardFragment(), false);
-        } else if(tabPosition == 1) {
-            commitFragment(new FiltersFragment(), false);
-        } else if(tabPosition == 2) {
-            commitFragment(new NotificationsFragment(), false);
-        }else if(tabPosition == 3) {
-            commitFragment(new ProfilesFragment(), false);
-        }
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
     }
 
     @Subscribe
@@ -121,16 +106,20 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        actionBar.addTab(createTab(R.string.dashboard, R.drawable.ic_dashboard));
-        actionBar.addTab(createTab(R.string.widgets, R.drawable.ic_widgets));
-        actionBar.addTab(createTab(R.string.notifications, R.drawable.ic_notifications));
-        actionBar.addTab(createTab(R.string.profiles, R.drawable.ic_profiles));
+        actionBar.addTab(createTab(R.string.dashboard, R.drawable.ic_dashboard,
+                new ZWayTabListener(new DashboardFragment())));
+        actionBar.addTab(createTab(R.string.widgets, R.drawable.ic_widgets,
+                new ZWayTabListener(new FiltersFragment())));
+        actionBar.addTab(createTab(R.string.notifications, R.drawable.ic_notifications,
+                new ZWayTabListener(new NotificationsFragment())));
+        actionBar.addTab(createTab(R.string.profiles, R.drawable.ic_profiles,
+                new ZWayTabListener(new ProfilesFragment())));
     }
 
-    private ActionBar.Tab createTab(int titleId, int iconId){
+    private ActionBar.Tab createTab(int titleId, int iconId, ZWayTabListener listener){
         final View tabView = createTabView(titleId, iconId);
         return getActionBar().newTab().setCustomView(tabView)
-                .setTabListener(this);
+                .setTabListener(listener);
     }
 
     private View createTabView(int titleId, int iconId){
@@ -147,6 +136,35 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener{
     private void startNotificationListening(){
         final Intent i = new Intent(this, NotificationService.class);
         startService(i);
+    }
+
+    public void commitFragment(Fragment fragment, boolean addToBackStack){
+        FragmentUtils.commitFragment(getFragmentManager(),
+                R.id.fragment_container, fragment, addToBackStack);
+    }
+
+    private class ZWayTabListener implements ActionBar.TabListener{
+
+        public Fragment fragment;
+
+        public ZWayTabListener(Fragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            ft.replace(R.id.fragment_container, fragment);
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            ft.remove(fragment);
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
     }
 
 }

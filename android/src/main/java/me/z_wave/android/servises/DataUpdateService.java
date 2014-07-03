@@ -53,7 +53,6 @@ public class DataUpdateService extends Service {
 
     private long mLastUpdateTime;
     private Timer mTimer;
-    private ApiClient mApiClient;
 
     @Override
     public void onCreate() {
@@ -61,8 +60,6 @@ public class DataUpdateService extends Service {
         Timber.v("On start");
         ((ZWayApplication)getApplication()).inject(this);
         bus.register(this);
-
-        mApiClient = new ApiClient(getApplicationContext());
     }
 
     @Override
@@ -105,7 +102,7 @@ public class DataUpdateService extends Service {
     }
 
     private void updateDevices() {
-        mApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
+        ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
 
             @Override
             public void onSuccess(DevicesStatus result) {
@@ -129,7 +126,7 @@ public class DataUpdateService extends Service {
     }
 
     public void requestLocations(){
-        mApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
+        ApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
             @Override
             public void onSuccess(List<Location> result) {
                 Timber.v("Location updated. Locations count " + result.size());
@@ -149,7 +146,7 @@ public class DataUpdateService extends Service {
     }
 
     public void requestProfiles(){
-        mApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
+        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
                 Timber.v("profiles updated. Profiles count " + result.size());

@@ -54,7 +54,6 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
-    private ApiClient mApiClient;
 
     public static DevicesFragment newInstance(Filter filter, String filterValue){
         final DevicesFragment devicesFragment = new DevicesFragment();
@@ -75,14 +74,13 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mApiClient = new ApiClient(getActivity());
         prepareDevicesView();
         changeEmptyMsgVisibility();
     }
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
-        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Device state changed!");
@@ -103,7 +101,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
-        mApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Seek changed " + updatedDevice.metrics.level);
@@ -124,7 +122,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
@@ -151,9 +149,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
-        mDevices.clear();
-        mDevices.addAll(getFilteredDeviceList());
-
+        mDevices = getFilteredDeviceList();
         mAdapter.notifyDataSetChanged();
         changeEmptyMsgVisibility();
     }

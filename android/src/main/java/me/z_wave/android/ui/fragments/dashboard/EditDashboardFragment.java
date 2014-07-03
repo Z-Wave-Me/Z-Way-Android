@@ -52,7 +52,6 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
 
     private EditDashboardGridAdapter mAdapter;
     private List<Device> mDashboardDevices;
-    private ApiClient mApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +64,6 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDashboardDevices = dataContext.getDashboardDevices();
-        mApiClient = new ApiClient(getActivity());
         prepareDevicesView();
     }
 

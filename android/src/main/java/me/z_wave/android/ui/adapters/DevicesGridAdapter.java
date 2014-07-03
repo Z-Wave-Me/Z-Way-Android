@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -31,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.DeviceRgbColor;
 import me.z_wave.android.dataModel.DeviceType;
 
 import java.util.List;
@@ -72,7 +74,11 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         if(device.isIconLink()){
             Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
         } else {
-            holder.icon.setImageResource(device.getIconId());
+            if(device.getIconId() == 0){
+                holder.icon.setImageDrawable(null);
+            } else {
+                holder.icon.setImageResource(device.getIconId());
+            }
         }
 
 
@@ -115,6 +121,9 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
                 if(device.metrics.mode != null)
                     holder.switcher.setChecked(!device.metrics.mode.equalsIgnoreCase("close"));
             } else {
+                holder.switcher.setTextOff("off");
+                holder.switcher.setTextOn("on");
+
                 if(device.metrics.level != null)
                     holder.switcher.setChecked(!device.metrics.level.equalsIgnoreCase("off"));
             }
@@ -177,6 +186,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         holder.rgbView.setOnClickListener(null);
         changeViewVisibility(holder.rgbView, isRgbViewVisible);
         if(isRgbViewVisible){
+            final DeviceRgbColor color = device.metrics.color;
+            holder.rgbView.setBackgroundColor(Color.rgb(color.r, color.g, color.b));
             holder.rgbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

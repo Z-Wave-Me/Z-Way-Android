@@ -35,6 +35,9 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
+
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
@@ -56,8 +59,8 @@ public class DashboardFragment extends BaseFragment implements
     @InjectView(R.id.dashboard_msg_empty)
     View emptyListMsg;
 
+    private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
-    private ApiClient mApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +72,6 @@ public class DashboardFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mApiClient = new ApiClient(getActivity());
         prepareDevicesView();
         changeEmptyDashboardMsgVisibility();
     }
@@ -93,7 +95,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
-        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Device state changed!");
@@ -114,7 +116,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
-        mApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Seek changed " + updatedDevice.metrics.level);
@@ -135,7 +137,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        mApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        ApiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
@@ -162,14 +164,14 @@ public class DashboardFragment extends BaseFragment implements
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Dashboard list updated!");
-        mAdapter.clear();
-        mAdapter.addAll(dataContext.getDashboardDevices());
+        mDevices = dataContext.getDashboardDevices();
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView(){
-        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(), this);
+        mDevices = dataContext.getDashboardDevices();
+        mAdapter = new DevicesGridAdapter(getActivity(), mDevices, this);
         widgetsGridView.setAdapter(mAdapter);
     }
 

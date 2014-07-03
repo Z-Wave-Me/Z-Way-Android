@@ -212,14 +212,12 @@ public class DataContext {
         final Profile profile = getActiveProfile();
         final List<Device> result = new ArrayList<Device>();
         //TODO uncnown widgets instead strings
-        if(profile != null && profile.widgets != null && mDevices != null){
-            for(SimpleDevice simpleDevice :profile.widgets){
+        if(profile != null && profile.positions != null && mDevices != null){
                 for(Device device : mDevices){
-                    if(simpleDevice.id.equalsIgnoreCase(device.id)){
+                    if(profile.positions.contains(device.id)){
                         result.add(device);
                     }
                 }
-            }
         }
         return result;
     }

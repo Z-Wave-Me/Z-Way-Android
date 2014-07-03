@@ -23,12 +23,9 @@
 package me.z_wave.android.ui.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import com.squareup.otto.Bus;
-import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
-import me.z_wave.android.utils.FragmentUtils;
 
 import javax.inject.Inject;
 
@@ -53,11 +50,6 @@ public class BaseActivity extends Activity {
     public void onPause() {
         super.onPause();
         bus.unregister(this);
-    }
-
-    public void commitFragment(Fragment fragment, boolean addToBackStack){
-        FragmentUtils.commitFragment(getFragmentManager(),
-                R.id.fragment_container, fragment, addToBackStack);
     }
 
 }

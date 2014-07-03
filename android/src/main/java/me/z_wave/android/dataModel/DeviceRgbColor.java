@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 18:28.
+ * Created by Ivan Platonov on 03.07.14 15:25.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -22,15 +22,8 @@
 
 package me.z_wave.android.dataModel;
 
-public class Metrics {
-
-    public String probeTitle;
-    public String scaleTitle;
-    public String level;
-    public String title;
-    public String iconBase;
-    public String icon;
-    public String mode;
-    public DeviceRgbColor color;
-
+public class DeviceRgbColor {
+    public int r;
+    public int g;
+    public int b;
 }
