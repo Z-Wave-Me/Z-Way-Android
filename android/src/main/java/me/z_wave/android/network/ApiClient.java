@@ -56,6 +56,7 @@ import me.z_wave.android.network.notification.NotificationRequest;
 import me.z_wave.android.network.notification.NotificationResponse;
 import me.z_wave.android.network.profiles.ProfilesRequest;
 import me.z_wave.android.network.profiles.ProfilesResponse;
+import me.z_wave.android.network.profiles.UpdateProfileRequest;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -308,12 +309,13 @@ public class ApiClient {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        if(client.getCookieStore() == null || client.getCookieStore().getCookies().size() == 0){
+                        if(client.getCookieStore() == null || client.getCookieStore().getCookies().size() == 0 ||
+                                TextUtils.isEmpty(client.getCookieStore().getCookies().get(0).getValue())){
                             auth(login, password, listener);
                         } else {
                             cookie = client.getCookieStore().getCookies().get(0);
-                            listener.onAuthComplete();
-                            authInProgress = false;
+                                listener.onAuthComplete();
+                                authInProgress = false;
                         }
                     }
                 }
@@ -351,6 +353,34 @@ public class ApiClient {
 
     public static void getProfiles(final ApiCallback<List<Profile>, String> callback) {
         adaptor.create(ProfilesRequest.class).getProfiles(
+                new Callback<ProfilesResponse>() {
+                    @Override
+                    public void success(ProfilesResponse profileResponse, Response response) {
+                        Timber.v(profileResponse.toString());
+                        callback.onSuccess(profileResponse.data);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if(!networkUnreachable && !authInProgress){
+                            getProfiles(callback);
+//                            auth("10903", "new", new OnAuthCompleteListener() {
+//                                @Override
+//                                public void onAuthComplete() {
+//                                    getProfiles(callback);
+//                                }
+//                            });
+                        } else {
+                            callback.onFailure("", networkUnreachable);
+                        }
+                    }
+                }
+        );
+    }
+
+    public static void updateProfiles(Profile profile, final ApiCallback<List<Profile>, String> callback) {
+        adaptor.create(UpdateProfileRequest.class).updateProfile(profile.id, profile,
                 new Callback<ProfilesResponse>() {
                     @Override
                     public void success(ProfilesResponse profileResponse, Response response) {

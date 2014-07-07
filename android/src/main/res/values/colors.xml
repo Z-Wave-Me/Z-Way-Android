@@ -36,6 +36,7 @@
     <color name="black">#000000</color>
 
     <color name="red">#ff3b30</color>
+    <color name="dark_gray">#c0c0c0</color>
     <color name="profiles_bg">#e5e5e5</color>
     <color name="profile_text_hint_color">#808080</color>
 

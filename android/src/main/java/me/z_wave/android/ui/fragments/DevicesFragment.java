@@ -33,9 +33,11 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
+import me.z_wave.android.ui.views.SwipeGridView;
 import timber.log.Timber;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     public static final String FILTER_NAME_KEY = "filter_name_key";
 
     @InjectView(R.id.devices_widgets)
-    GridView widgetsGridView;
+    SwipeGridView widgetsGridView;
 
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
@@ -130,8 +132,8 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
             @Override
             public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
+                if (isAdded()) {
+                    if (isNetworkError) {
                         showToast(R.string.request_network_problem);
                     } else {
                         showToast(R.string.request_server_problem_msg);
@@ -146,9 +148,34 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
         showToast("rgb clicked");
     }
 
+    @Override
+    public void onAddRemoveClicked(Device updatedDevice) {
+        final Profile profile = dataContext.getActiveProfile();
+        if(profile != null){
+            widgetsGridView.closeOpenedItems();
+            if(profile.positions.contains(updatedDevice.id)){
+                profile.positions.remove(updatedDevice.id);
+            } else {
+                profile.positions.add(updatedDevice.id);
+            }
+            ApiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+                @Override
+                public void onSuccess(List<Profile> result) {
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(String request, boolean isNetworkError) {
+
+                }
+            });
+        }
+    }
+
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
+        mAdapter.setProfile(dataContext.getActiveProfile());
         mDevices = getFilteredDeviceList();
         mAdapter.notifyDataSetChanged();
         changeEmptyMsgVisibility();
@@ -163,7 +190,8 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     private void prepareDevicesView(){
         mDevices =  getFilteredDeviceList();
-        mAdapter = new DevicesGridAdapter(getActivity(), mDevices, this);
+        mAdapter = new DevicesGridAdapter(getActivity(), mDevices,
+                dataContext.getActiveProfile(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
 

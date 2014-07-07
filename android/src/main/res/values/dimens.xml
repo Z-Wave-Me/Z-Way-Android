@@ -22,6 +22,6 @@
 
 <resources>
     <dimen name="grid_item_height">86dp</dimen>
-    <dimen name="grid_item_back_view_width">100dp</dimen>
+    <dimen name="grid_item_back_view_width">120dp</dimen>
 
     </resources>

@@ -31,6 +31,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import me.z_wave.android.R;
@@ -63,7 +65,6 @@ public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
         final Device device = getItem(position);
 
         holder.name.setText(device.metrics.title);
-        holder.icon.setImageResource(device.getIconId());
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +79,16 @@ public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
                 return false;
             }
         });
+
+        if(device.isIconLink()){
+            Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
+        } else {
+            if(device.getIconId() == 0){
+                holder.icon.setImageDrawable(null);
+            } else {
+                holder.icon.setImageResource(device.getIconId());
+            }
+        }
 
         return convertView;
     }

@@ -41,6 +41,7 @@ import java.util.List;
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
@@ -48,18 +49,18 @@ import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
 import me.z_wave.android.ui.fragments.EditProfilesFragment;
 import me.z_wave.android.ui.fragments.ProfileFragment;
+import me.z_wave.android.ui.views.SwipeGridView;
 import timber.log.Timber;
 
 public class DashboardFragment extends BaseFragment implements
         DevicesGridAdapter.DeviceStateUpdatedListener {
 
     @InjectView(R.id.dashboard_widgets)
-    GridView widgetsGridView;
+    SwipeGridView widgetsGridView;
 
     @InjectView(R.id.dashboard_msg_empty)
     View emptyListMsg;
 
-    private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
 
     @Override
@@ -161,9 +162,32 @@ public class DashboardFragment extends BaseFragment implements
         showToast("rgb clicked");
     }
 
+    @Override
+    public void onAddRemoveClicked(Device updatedDevice) {
+        final Profile profile = dataContext.getActiveProfile();
+        if(profile != null){
+            widgetsGridView.closeOpenedItems();
+            mAdapter.remove(updatedDevice);
+            profile.positions.remove(updatedDevice.id);
+            mAdapter.notifyDataSetChanged();
+            ApiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+                @Override
+                public void onSuccess(List<Profile> result) {
+
+                }
+
+                @Override
+                public void onFailure(String request, boolean isNetworkError) {
+
+                }
+            });
+        }
+    }
+
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Dashboard list updated!");
+        mAdapter.setProfile(dataContext.getActiveProfile());
         mAdapter.clear();
         mAdapter.addAll(dataContext.getDashboardDevices());
         mAdapter.notifyDataSetChanged();
@@ -171,7 +195,8 @@ public class DashboardFragment extends BaseFragment implements
     }
 
     private void prepareDevicesView(){
-        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(), this);
+        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(),
+                dataContext.getActiveProfile(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
 

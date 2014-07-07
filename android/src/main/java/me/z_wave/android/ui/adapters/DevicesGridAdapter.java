@@ -34,6 +34,7 @@ import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DeviceRgbColor;
 import me.z_wave.android.dataModel.DeviceType;
+import me.z_wave.android.dataModel.Profile;
 
 import java.util.List;
 
@@ -44,14 +45,22 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         void onSeekBarStateChanged(Device updatedDevice);
         void onToggleClicked(Device updatedDevice);
         void onColorViewClicked(Device updatedDevice);
+        void onAddRemoveClicked(Device updatedDevice);
     }
 
-    private final DeviceStateUpdatedListener listener;
+    private final DeviceStateUpdatedListener mListener;
+    private Profile mProfile;
 
-    public DevicesGridAdapter(Context context, List<Device> objects,
+
+    public DevicesGridAdapter(Context context, List<Device> objects, Profile profile,
                               DeviceStateUpdatedListener listener) {
         super(context, 0, objects);
-        this.listener = listener;
+        mListener = listener;
+        mProfile = profile;
+    }
+
+    public void setProfile(Profile profile){
+        mProfile = profile;
     }
 
     @Override
@@ -65,21 +74,15 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final Device device = getItem(position);
 
         holder.name.setText(device.metrics.title);
+        setDeviceIcon(holder, device);
+
         prepareValueView(holder, device);
         prepareSwitch(holder, device);
         prepareSeekBar(holder, device);
         prepareRgbView(holder, device);
         prepareToggle(holder, device);
+        prepareAddRemoveView(holder, device);
 
-        if(device.isIconLink()){
-            Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
-        } else {
-            if(device.getIconId() == 0){
-                holder.icon.setImageDrawable(null);
-            } else {
-                holder.icon.setImageResource(device.getIconId());
-            }
-        }
 
 
         final DeviceType deviceType = device.deviceType;
@@ -91,6 +94,37 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         }
 
         return convertView;
+    }
+
+    private void setDeviceIcon(ViewHolder holder, Device device) {
+        if(device.isIconLink()){
+            Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
+        } else {
+            if(device.getIconId() == 0){
+                holder.icon.setImageDrawable(null);
+            } else {
+                holder.icon.setImageResource(device.getIconId());
+            }
+        }
+    }
+
+    private void prepareAddRemoveView(ViewHolder holder, final Device device) {
+        final boolean isOnDashboard = mProfile != null && mProfile.positions != null
+                && mProfile.positions.contains(device.id);
+        final int addRemoveTextResId = isOnDashboard ? R.string.dashboadr_remove
+                : R.string.dashboard_to_dashboard;
+        final int addRemoveBgColorResId = isOnDashboard ? R.color.red
+                : R.color.dark_gray;
+
+        holder.addRemove.setText(addRemoveTextResId);
+        holder.addRemove.setBackgroundColor(
+                getContext().getResources().getColor(addRemoveBgColorResId));
+        holder.addRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onAddRemoveClicked(device);
+            }
+        });
     }
 
     private void prepareValueView(ViewHolder holder, Device device){
@@ -138,12 +172,12 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
                     if(device.deviceType == DeviceType.DOORLOCK){
                         if(!device.metrics.mode.equalsIgnoreCase(newState)){
                             device.metrics.mode = newState;
-                            listener.onSwitchStateChanged(device);
+                            mListener.onSwitchStateChanged(device);
                         }
                     } else {
                         if(!device.metrics.level.equalsIgnoreCase(newState)){
                             device.metrics.level = newState;
-                            listener.onSwitchStateChanged(device);
+                            mListener.onSwitchStateChanged(device);
                         }
                     }
                 }
@@ -173,7 +207,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     device.metrics.level = String.valueOf(seekBar.getProgress());
-                    listener.onSeekBarStateChanged(device);
+                    mListener.onSeekBarStateChanged(device);
                 }
             });
         }
@@ -191,7 +225,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
             holder.rgbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onColorViewClicked(device);
+                    mListener.onColorViewClicked(device);
                 }
             });
         }
@@ -207,7 +241,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onToggleClicked(device);
+                    mListener.onToggleClicked(device);
                 }
             });
 
