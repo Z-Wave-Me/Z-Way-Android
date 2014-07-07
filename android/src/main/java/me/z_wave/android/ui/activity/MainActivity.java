@@ -34,7 +34,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import me.z_wave.android.R;
+import me.z_wave.android.data.DataContext;
+import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
@@ -49,7 +56,11 @@ import me.z_wave.android.utils.FragmentUtils;
 
 public class MainActivity extends BaseActivity {
 
+    @Inject
+    public DataContext dataContext;
+
     private BindHelper mBindHelper = new BindHelper();
+    private TextView mNotificationsCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +103,7 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe
     public void onGetNotification(OnGetNotificationEvent event){
-
+        updateNotificationsCount();
     }
 
     private int getScreenOrientationOption(){
@@ -110,7 +121,7 @@ public class MainActivity extends BaseActivity {
                 new ZWayTabListener(new DashboardFragment())));
         actionBar.addTab(createTab(R.string.widgets, R.drawable.ic_widgets,
                 new ZWayTabListener(new FiltersFragment())));
-        actionBar.addTab(createTab(R.string.notifications, R.drawable.ic_notifications,
+        actionBar.addTab(createNotificationTab(R.string.notifications, R.drawable.ic_notifications,
                 new ZWayTabListener(new NotificationsFragment())));
         actionBar.addTab(createTab(R.string.profiles, R.drawable.ic_profiles,
                 new ZWayTabListener(new ProfilesFragment())));
@@ -122,15 +133,42 @@ public class MainActivity extends BaseActivity {
                 .setTabListener(listener);
     }
 
+    private ActionBar.Tab createNotificationTab(int titleId, int iconId, ZWayTabListener listener){
+        final View tabView = createNotificationTabView(titleId, iconId);
+        return getActionBar().newTab().setCustomView(tabView)
+                .setTabListener(listener);
+    }
+
     private View createTabView(int titleId, int iconId){
-        final LayoutInflater inflater = getLayoutInflater();
-        final View tabView = inflater.inflate(R.layout.layout_tab_view, null);
+        final View tabView = getLayoutInflater().inflate(R.layout.layout_tab_view, null);
         final TextView tabTitle = (TextView) tabView.findViewById(R.id.tab_title);
         final ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
 
         tabIcon.setImageResource(iconId);
         tabTitle.setText(titleId);
         return tabView;
+    }
+
+    private View createNotificationTabView(int titleId, int iconId){
+        final View tabView = getLayoutInflater().inflate(R.layout.layout_tab_view_notifications, null);
+        final TextView tabTitle = (TextView) tabView.findViewById(R.id.tab_title);
+        final ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
+        mNotificationsCount = (TextView) tabView.findViewById(R.id.tab_notifications_count);
+
+        tabIcon.setImageResource(iconId);
+        tabTitle.setText(titleId);
+        updateNotificationsCount();
+        return tabView;
+    }
+
+    private void updateNotificationsCount() {
+        final List<Notification> notifications = dataContext.getNotifications();
+        if(notifications != null && !notifications.isEmpty()){
+            mNotificationsCount.setText("" + notifications.size());
+            mNotificationsCount.setVisibility(View.VISIBLE);
+        } else {
+            mNotificationsCount.setVisibility(View.GONE);
+        }
     }
 
     private void startNotificationListening(){

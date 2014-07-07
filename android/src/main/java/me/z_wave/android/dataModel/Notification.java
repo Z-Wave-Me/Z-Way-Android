@@ -28,7 +28,7 @@ public class Notification {
     public String timestamp;
     public String level;
     public String message;
-    public String redeemed;
+    public boolean redeemed;
 
     @Override
     public boolean equals(Object o) {

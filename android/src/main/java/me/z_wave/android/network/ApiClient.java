@@ -44,6 +44,7 @@ import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DeviceType;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.auth.AuthRequest;
 import me.z_wave.android.network.devices.DevicesStateRequest;
@@ -54,6 +55,7 @@ import me.z_wave.android.network.locations.LocationsResponse;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
 import me.z_wave.android.network.notification.NotificationRequest;
 import me.z_wave.android.network.notification.NotificationResponse;
+import me.z_wave.android.network.notification.UpdateNotificationRequest;
 import me.z_wave.android.network.profiles.ProfilesRequest;
 import me.z_wave.android.network.profiles.ProfilesResponse;
 import me.z_wave.android.network.profiles.UpdateProfileRequest;
@@ -351,6 +353,25 @@ public class ApiClient {
         );
     }
 
+    public static void updateNotifications(final Notification notification,
+                                        final EmptyApiCallback<String> callback) {
+        adaptor.create(UpdateNotificationRequest.class).updateNotification(notification.id, notification
+                , new Callback<NotificationResponse>() {
+                    @Override
+                    public void success(NotificationResponse notificationResponse, Response response) {
+                        Timber.v(notificationResponse.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        callback.onFailure("", networkUnreachable);
+                    }
+                }
+        );
+    }
+
     public static void getProfiles(final ApiCallback<List<Profile>, String> callback) {
         adaptor.create(ProfilesRequest.class).getProfiles(
                 new Callback<ProfilesResponse>() {
@@ -391,7 +412,7 @@ public class ApiClient {
                     @Override
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
-                        if(!networkUnreachable && !authInProgress){
+                        if (!networkUnreachable && !authInProgress) {
                             getProfiles(callback);
 //                            auth("10903", "new", new OnAuthCompleteListener() {
 //                                @Override

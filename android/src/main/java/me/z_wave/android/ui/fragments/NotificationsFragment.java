@@ -26,15 +26,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.Notification;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.adapters.NotificationsListAdapter;
 
-public class NotificationsFragment extends BaseFragment {
+public class NotificationsFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     //TODO replace BaseFragment to BaseListFragment!
 
@@ -58,12 +61,33 @@ public class NotificationsFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         prepareListView();
         changeEmptyDashboardMsgVisibility();
+        notificationList.setOnItemClickListener(this);
     }
 
     @Subscribe
     public void onGetNotification(OnGetNotificationEvent event){
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Notification notification = mAdapter.getItem(position);
+        notification.redeemed = true;
+        ApiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
+            @Override
+            public void onSuccess() {
+                mAdapter.remove(notification);
+                bus.post(new OnGetNotificationEvent());
+            }
+
+            @Override
+            public void onFailure(String request, boolean isNetworkError) {
+
+            }
+        });
+
+
     }
 
     private void prepareListView(){
