@@ -22,6 +22,7 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,23 +30,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
-public class ProfilesFragment extends BaseFragment {
+public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener{
 
     @InjectView(R.id.profiles_list)
     ListView profilesList;
+
+    @Inject
+    ApiClient apiClient;
 
     private ProfilesListAdapter mAdapter;
 
@@ -59,11 +71,11 @@ public class ProfilesFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(dataContext.getProfiles().size() != 0){
+//        if(dataContext.getProfiles().size() != 0){
             prepareProfilesList();
-        } else {
-            requestProfiles();
-        }
+//        } else {
+//            requestProfiles();
+//        }
     }
 
     @Override
@@ -85,33 +97,45 @@ public class ProfilesFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepareProfilesList(){
-        mAdapter = new ProfilesListAdapter(getActivity(),dataContext.getProfiles(), false);
-        profilesList.addFooterView(createListFooter(), null, false);
-        profilesList.setAdapter(mAdapter);
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final LocalProfile selectedProfile = mAdapter.getItem(position);
+        if(!selectedProfile.active) {
+            selectedProfile.active = true;
+            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+            unselectedProfile.active = false;
+            provider.updateLocalProfile(selectedProfile);
+            provider.updateLocalProfile(unselectedProfile);
+            dataContext.clear();
+
+            mAdapter.clear();
+            mAdapter.addAll(provider.getLocalProfiles());
+            mAdapter.notifyDataSetChanged();
+
+
+            apiClient.init(selectedProfile);
+            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+                @Override
+                public void onAuthComplete() {
+                    Intent intent = new Intent(getActivity(), StartActivity.class);
+                    bus.post(new StartActivityEvent(intent));
+                }
+
+                @Override
+                public void onAuthFiled() {
+
+                }
+            });
+        }
     }
 
-    private void requestProfiles(){
-        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
-            @Override
-            public void onSuccess(List<Profile> result) {
-                if(isAdded()){
-                    dataContext.addProfiles(result);
-                    prepareProfilesList();
-                }
-            }
-
-            @Override
-            public void onFailure(String request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
+    private void prepareProfilesList(){
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        mAdapter = new ProfilesListAdapter(getActivity(), provider.getLocalProfiles(), false);
+        profilesList.addFooterView(createListFooter(), null, false);
+        profilesList.setOnItemClickListener(this);
+        profilesList.setAdapter(mAdapter);
     }
 
     private View createListFooter(){

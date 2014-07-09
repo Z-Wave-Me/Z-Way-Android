@@ -43,6 +43,8 @@ import timber.log.Timber;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.DeviceStateUpdatedListener {
 
     public static final String FILTER_KEY = "filter_key";
@@ -53,6 +55,9 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
+
+    @Inject
+    ApiClient apiClient;
 
     private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
@@ -82,7 +87,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
-        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Device state changed!");
@@ -103,7 +108,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
-        ApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Seek changed " + updatedDevice.metrics.level);
@@ -124,7 +129,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        ApiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
@@ -152,13 +157,16 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     public void onAddRemoveClicked(Device updatedDevice) {
         final Profile profile = dataContext.getActiveProfile();
         if(profile != null){
+            if(profile.positions == null)
+                profile.positions = new ArrayList<String>();
+
             widgetsGridView.closeOpenedItems();
             if(profile.positions.contains(updatedDevice.id)){
                 profile.positions.remove(updatedDevice.id);
             } else {
                 profile.positions.add(updatedDevice.id);
             }
-            ApiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
                 @Override
                 public void onSuccess(List<Profile> result) {
                     mAdapter.notifyDataSetChanged();

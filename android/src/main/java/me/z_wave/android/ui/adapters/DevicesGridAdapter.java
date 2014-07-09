@@ -140,7 +140,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
     private void prepareSwitch(ViewHolder holder, final Device device){
         final DeviceType deviceType = device.deviceType;
-        final boolean isSwitcherVisible = deviceType == DeviceType.SWITCH_CONTROLL
+        final boolean isSwitcherVisible = deviceType == DeviceType.SWITCH_CONTROLL //свич контрол выглядит как две кнопки, ап и даун. свитчер при этом не показывается
                 || deviceType == DeviceType.SWITCH_BINARY
                 || deviceType == DeviceType.DOORLOCK
                 || deviceType == DeviceType.SWITCH_RGBW;

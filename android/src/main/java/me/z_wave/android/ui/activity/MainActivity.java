@@ -45,6 +45,7 @@ import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
@@ -68,13 +69,6 @@ public class MainActivity extends BaseActivity {
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
         mBindHelper.keep(DataUpdateService.class);
-        ApiClient.auth("10903","newui", new ApiClient.OnAuthCompleteListener() {
-            @Override
-            public void onAuthComplete() {
-
-            }
-        });
-//        mBindHelper.keep(NotificationService.class);
         setupActionBar();
     }
 
@@ -102,14 +96,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onGetNotification(OnGetNotificationEvent event){
-        updateNotificationsCount();
+    public void onStartActivity(StartActivityEvent event){
+        startActivity(event.intent);
+        finish();
     }
 
-    private int getScreenOrientationOption(){
-        final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
-        return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    @Subscribe
+    public void onGetNotification(OnGetNotificationEvent event){
+        updateNotificationsCount();
     }
 
     private void setupActionBar() {
@@ -174,11 +168,6 @@ public class MainActivity extends BaseActivity {
     private void startNotificationListening(){
         final Intent i = new Intent(this, NotificationService.class);
         startService(i);
-    }
-
-    public void commitFragment(Fragment fragment, boolean addToBackStack){
-        FragmentUtils.commitFragment(getFragmentManager(),
-                R.id.fragment_container, fragment, addToBackStack);
     }
 
     private class ZWayTabListener implements ActionBar.TabListener{

@@ -23,9 +23,14 @@
 package me.z_wave.android.ui.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import com.squareup.otto.Bus;
+
+import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
+import me.z_wave.android.utils.FragmentUtils;
 
 import javax.inject.Inject;
 
@@ -51,5 +56,17 @@ public class BaseActivity extends Activity {
         super.onPause();
         bus.unregister(this);
     }
+
+    public int getScreenOrientationOption(){
+        final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+        return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    }
+
+    public void commitFragment(Fragment fragment, boolean addToBackStack){
+        FragmentUtils.commitFragment(getFragmentManager(),
+                R.id.fragment_container, fragment, addToBackStack);
+    }
+
 
 }

@@ -31,6 +31,9 @@ import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
+
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.network.ApiClient;
@@ -46,6 +49,9 @@ public class NotificationsFragment extends BaseFragment implements AdapterView.O
 
     @InjectView(R.id.notification_msg_ok)
     View everythingOkMsg;
+
+    @Inject
+    ApiClient apiClient;
 
     private NotificationsListAdapter mAdapter;
 
@@ -74,7 +80,7 @@ public class NotificationsFragment extends BaseFragment implements AdapterView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Notification notification = mAdapter.getItem(position);
         notification.redeemed = true;
-        ApiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
+        apiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
             @Override
             public void onSuccess() {
                 mAdapter.remove(notification);

@@ -26,10 +26,12 @@ import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
 import me.z_wave.android.data.DataContext;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.fragments.*;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
@@ -39,6 +41,7 @@ import javax.inject.Singleton;
 @Module(
         injects = {
                 MainActivity.class,
+                StartActivity.class,
                 DashboardFragment.class,
                 FiltersFragment.class,
                 NotificationsFragment.class,
@@ -48,7 +51,8 @@ import javax.inject.Singleton;
                 DevicesFragment.class,
                 DataUpdateService.class,
                 NotificationService.class,
-                EditDashboardFragment.class
+                EditDashboardFragment.class,
+                SplashFragment.class
         },
         library = true,
         complete = false
@@ -66,5 +70,11 @@ public class ZWayModule {
     @Singleton
     Bus provideBus() {
         return new MainThreadBus(new Bus());
+    }
+
+    @Provides
+    @Singleton
+    ApiClient provideApiClient() {
+        return new ApiClient();
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 22.06.14 22:15.
+ * Created by Ivan Platonov on 08.07.14 10:24.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -22,34 +22,36 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
-import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.DatabaseDataProvider;
+import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.ui.adapters.ProfilesListAdapter;
+import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.ui.activity.MainActivity;
 
-public class EditProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+/**
+ * Created by Ivan PL on 08.07.2014.
+ */
+public class SplashFragment extends BaseFragment {
 
-    @InjectView(R.id.profiles_list)
-    ListView profilesList;
-
-    private ProfilesListAdapter mAdapter;
+    private static final long SPLASH_DISPLAY_LENGTH = 3000;
+    @Inject
+    ApiClient apiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_profiles, container, false);
+        final View view = inflater.inflate(R.layout.fragment_splash, container, false);
         ButterKnife.inject(this, view);
         return view;
     }
@@ -57,20 +59,31 @@ public class EditProfilesFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        prepareProfilesList();
-    }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final LocalProfile profile = mAdapter.getItem(position);
-        bus.post(new CommitFragmentEvent(ProfileFragment.newInstance(profile.id), true));
-    }
-
-    private void prepareProfilesList(){
-        //TODO remove hardcode
         DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-        mAdapter = new ProfilesListAdapter(getActivity(),provider.getLocalProfiles(), true);
-        profilesList.setOnItemClickListener(this);
-        profilesList.setAdapter(mAdapter);
+        LocalProfile localProfile = provider.getActiveLocalProfile();
+        if(localProfile == null){
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                }
+            }, SPLASH_DISPLAY_LENGTH);
+        } else {
+            apiClient.init(localProfile);
+            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+                @Override
+                public void onAuthComplete() {
+                    final Intent intent = new Intent(getActivity(), MainActivity.class);
+                    bus.post(new StartActivityEvent(intent));
+                }
+
+                @Override
+                public void onAuthFiled() {
+                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                }
+            });
+        }
     }
+
 }

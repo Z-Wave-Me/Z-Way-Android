@@ -31,16 +31,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
 
 /**
  * Created by Ivan PL on 22.06.2014.
  */
-public class ProfilesListAdapter extends ArrayAdapter<Profile> {
+public class ProfilesListAdapter extends ArrayAdapter<LocalProfile> {
 
     private boolean mIsEditMode;
 
-    public ProfilesListAdapter(Context context, List<Profile> profiles, boolean isEditMode) {
+    public ProfilesListAdapter(Context context, List<LocalProfile> profiles, boolean isEditMode) {
         super(context, 0, profiles);
         mIsEditMode = isEditMode;
     }
@@ -52,7 +53,7 @@ public class ProfilesListAdapter extends ArrayAdapter<Profile> {
             convertView.setTag(new ViewHolder(convertView));
         }
 
-        final Profile profile = getItem(position);
+        final LocalProfile profile = getItem(position);
         final ViewHolder holder = (ViewHolder) convertView.getTag();
         holder.name.setText(profile.name);
 
@@ -61,6 +62,8 @@ public class ProfilesListAdapter extends ArrayAdapter<Profile> {
         } else {
             if(profile.active)
                 holder.name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_checked, 0);
+            else
+                holder.name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         return convertView;

@@ -22,18 +22,30 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import me.z_wave.android.R;
-import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.database.DatabaseDataProvider;
+import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.activity.StartActivity;
 
 public class ProfileFragment extends BaseFragment{
 
@@ -61,8 +73,12 @@ public class ProfileFragment extends BaseFragment{
     @InjectView(R.id.profile_delete)
     View deleteButton;
 
+    @Inject
+    ApiClient apiClient;
 
-    private Profile mProfile;
+
+    private LocalProfile mProfile;
+    private boolean mIsCreateMode;
 
     public static ProfileFragment newInstance(int profileId){
         final ProfileFragment fragment = new ProfileFragment();
@@ -83,11 +99,63 @@ public class ProfileFragment extends BaseFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mProfile = getProfile();
-
-        profileName.setText(mProfile.name);
-        if(mProfile.id == DEFAULT_PROFILE_ID){
+        if(mProfile != null){
+            profileName.setText(mProfile.name);
+            profileUrl.setText(mProfile.indoorServer);
+            profileLogin.setText(mProfile.login);
+            profilePassword.setText(mProfile.password);
+            deleteButton.setVisibility(View.VISIBLE);
+        } else {
+            mProfile = new LocalProfile();
             deleteButton.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_profile, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_done){
+            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            mProfile.name = profileName.getText().toString();
+            mProfile.indoorServer = profileUrl.getText().toString();
+            mProfile.login = profileLogin.getText().toString();
+            mProfile.password = profilePassword.getText().toString();
+            if(mIsCreateMode){
+
+                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                if(unselectedProfile != null){
+                    unselectedProfile.active = false;
+                    provider.updateLocalProfile(unselectedProfile);
+                }
+
+                mProfile.active = true;
+                provider.addLocalProfile(mProfile);
+
+                apiClient.init(mProfile);
+                apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+                    @Override
+                    public void onAuthComplete() {
+                        Intent intent = new Intent(getActivity(), StartActivity.class);
+                        bus.post(new StartActivityEvent(intent));
+                    }
+
+                    @Override
+                    public void onAuthFiled() {
+
+                    }
+                });
+            } else {
+                provider.updateLocalProfile(mProfile);
+                showToast(R.string.profile_changes_are_saved);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @OnClick(R.id.profile_delete)
@@ -100,17 +168,15 @@ public class ProfileFragment extends BaseFragment{
         showToast("change location");
     }
 
-    public Profile getProfile(){
-        Profile profile = null;
-        if(getArguments() != null){
-            final int profileId = getArguments().getInt(PROFILE_ID_KEY, DEFAULT_PROFILE_ID);
-            profile = dataContext.getProfileWithId(profileId);
+    public LocalProfile getProfile(){
+        if(getArguments() == null){
+            mIsCreateMode = true;
+            return null;
         }
-        if(profile == null){
-            profile = new Profile();
-            profile.id = DEFAULT_PROFILE_ID;
-        }
-        return profile;
+
+        final int profileId = getArguments().getInt(PROFILE_ID_KEY, DEFAULT_PROFILE_ID);
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        return provider.getLocalProfileWithId(profileId);
     }
 
 }

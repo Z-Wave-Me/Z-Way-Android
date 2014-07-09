@@ -46,6 +46,9 @@ public class NotificationService extends Service {
     Bus bus;
 
     @Inject
+    ApiClient apiClient;
+
+    @Inject
     DataContext dataContext;
 
     private long mLastUpdateTime;
@@ -93,7 +96,7 @@ public class NotificationService extends Service {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                ApiClient.getNotifications(mLastUpdateTime,
+                apiClient.getNotifications(mLastUpdateTime,
                         new ApiClient.ApiCallback<NotificationDataWrapper, Long>() {
 
                     @Override

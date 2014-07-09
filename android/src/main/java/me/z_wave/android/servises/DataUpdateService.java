@@ -49,6 +49,9 @@ public class DataUpdateService extends Service {
     Bus bus;
 
     @Inject
+    ApiClient apiClient;
+
+    @Inject
     DataContext dataContext;
 
     private long mLastUpdateTime;
@@ -102,7 +105,7 @@ public class DataUpdateService extends Service {
     }
 
     private void updateDevices() {
-        ApiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
+        apiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
 
             @Override
             public void onSuccess(DevicesStatus result) {
@@ -126,7 +129,7 @@ public class DataUpdateService extends Service {
     }
 
     public void requestLocations(){
-        ApiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
+        apiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
             @Override
             public void onSuccess(List<Location> result) {
                 Timber.v("Location updated. Locations count " + result.size());
@@ -146,7 +149,7 @@ public class DataUpdateService extends Service {
     }
 
     public void requestProfiles(){
-        ApiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
+        apiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
             @Override
             public void onSuccess(List<Profile> result) {
                 Timber.v("profiles updated. Profiles count " + result.size());

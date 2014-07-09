@@ -38,6 +38,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
@@ -60,6 +62,9 @@ public class DashboardFragment extends BaseFragment implements
 
     @InjectView(R.id.dashboard_msg_empty)
     View emptyListMsg;
+
+    @Inject
+    ApiClient apiClient;
 
     private DevicesGridAdapter mAdapter;
 
@@ -96,7 +101,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
-        ApiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Device state changed!");
@@ -117,7 +122,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
-        ApiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Seek changed " + updatedDevice.metrics.level);
@@ -138,7 +143,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        ApiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
@@ -170,7 +175,7 @@ public class DashboardFragment extends BaseFragment implements
             mAdapter.remove(updatedDevice);
             profile.positions.remove(updatedDevice.id);
             mAdapter.notifyDataSetChanged();
-            ApiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
                 @Override
                 public void onSuccess(List<Profile> result) {
 

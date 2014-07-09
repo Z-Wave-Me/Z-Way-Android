@@ -27,7 +27,6 @@ import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
-import me.z_wave.android.dataModel.SimpleDevice;
 import timber.log.Timber;
 
 import java.util.ArrayList;
@@ -223,6 +222,13 @@ public class DataContext {
             }
         }
         return null;
+    }
+
+    public void clear(){
+        mDevices.clear();
+        mLocation.clear();
+        mNotifications.clear();
+        mProfiles.clear();
     }
 
 }
