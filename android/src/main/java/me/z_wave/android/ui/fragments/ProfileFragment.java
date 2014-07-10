@@ -24,6 +24,7 @@ package me.z_wave.android.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,11 +44,14 @@ import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.AccountChangedEvent;
+import me.z_wave.android.otto.events.ProgressEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
 
-public class ProfileFragment extends BaseFragment{
+public class ProfileFragment extends BaseFragment {
 
     private static final int DEFAULT_PROFILE_ID = -1;
     public static final String PROFILE_ID_KEY = "profile_id";
@@ -80,7 +84,7 @@ public class ProfileFragment extends BaseFragment{
     private LocalProfile mProfile;
     private boolean mIsCreateMode;
 
-    public static ProfileFragment newInstance(int profileId){
+    public static ProfileFragment newInstance(int profileId) {
         final ProfileFragment fragment = new ProfileFragment();
         final Bundle args = new Bundle();
         args.putInt(PROFILE_ID_KEY, profileId);
@@ -99,7 +103,7 @@ public class ProfileFragment extends BaseFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mProfile = getProfile();
-        if(mProfile != null){
+        if (mProfile != null) {
             profileName.setText(mProfile.name);
             profileUrl.setText(mProfile.indoorServer);
             profileLogin.setText(mProfile.login);
@@ -119,39 +123,51 @@ public class ProfileFragment extends BaseFragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_done){
-            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-            mProfile.name = profileName.getText().toString();
-            mProfile.indoorServer = profileUrl.getText().toString();
-            mProfile.login = profileLogin.getText().toString();
-            mProfile.password = profilePassword.getText().toString();
-            if(mIsCreateMode){
-
-                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                if(unselectedProfile != null){
-                    unselectedProfile.active = false;
-                    provider.updateLocalProfile(unselectedProfile);
-                }
-
-                mProfile.active = true;
-                provider.addLocalProfile(mProfile);
-
-                apiClient.init(mProfile);
-                apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-                    @Override
-                    public void onAuthComplete() {
-                        Intent intent = new Intent(getActivity(), StartActivity.class);
-                        bus.post(new StartActivityEvent(intent));
-                    }
-
-                    @Override
-                    public void onAuthFiled() {
-
-                    }
-                });
+        if (item.getItemId() == R.id.action_done) {
+            if (TextUtils.isEmpty(profileName.getText())) {
+                showToast("Profile name can't be empty");
+            } else if (TextUtils.isEmpty(profileUrl.getText())) {
+                showToast("Server url can't be empty");
+            } else if (TextUtils.isEmpty(profileLogin.getText())) {
+                showToast("Login can't be empty");
+            } else if (TextUtils.isEmpty(profilePassword.getText())) {
+                showToast("Password can't be empty");
             } else {
-                provider.updateLocalProfile(mProfile);
-                showToast(R.string.profile_changes_are_saved);
+
+                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                mProfile.name = profileName.getText().toString();
+                mProfile.indoorServer = profileUrl.getText().toString();
+                mProfile.login = profileLogin.getText().toString();
+                mProfile.password = profilePassword.getText().toString();
+                if (mIsCreateMode) {
+                    bus.post(new ProgressEvent(true, false));
+                    apiClient.init(mProfile);
+                    apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+                        @Override
+                        public void onAuthComplete() {
+                            final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                            if (unselectedProfile != null) {
+                                unselectedProfile.active = false;
+                                provider.updateLocalProfile(unselectedProfile);
+                            }
+
+                            mProfile.active = true;
+                            provider.addLocalProfile(mProfile);
+
+                            dataContext.clear();
+                            bus.post(new AccountChangedEvent());
+                        }
+
+                        @Override
+                        public void onAuthFiled() {
+                            bus.post(new ProgressEvent(true, false));
+                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+                        }
+                    });
+                } else {
+                    provider.updateLocalProfile(mProfile);
+                    showToast(R.string.profile_changes_are_saved);
+                }
             }
             return true;
         }
@@ -159,17 +175,22 @@ public class ProfileFragment extends BaseFragment{
     }
 
     @OnClick(R.id.profile_delete)
-    void deleteProfile(){
-        showToast("Delete profile");
+    void deleteProfile() {
+        if(!mProfile.active){
+            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            provider.removeLocalProfile(mProfile);
+        } else {
+            bus.post(new ShowAttentionDialogEvent("You can't delete active profile!"));
+        }
     }
 
     @OnClick(R.id.profile_location)
-    void changeLocation(){
+    void changeLocation() {
         showToast("change location");
     }
 
-    public LocalProfile getProfile(){
-        if(getArguments() == null){
+    public LocalProfile getProfile() {
+        if (getArguments() == null) {
             mIsCreateMode = true;
             return null;
         }

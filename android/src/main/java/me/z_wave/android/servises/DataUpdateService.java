@@ -27,13 +27,19 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.DevicesStatus;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.network.devices.DevicesStateResponse;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.otto.events.ProgressEvent;
+import retrofit.RetrofitError;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -74,9 +80,7 @@ public class DataUpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Timber.v("On bind");
-        startDevicesUpdates();
-        requestLocations();
-        requestProfiles();
+        requestAppData();
         return mBinder;
     }
 
@@ -92,6 +96,39 @@ public class DataUpdateService extends Service {
         super.onDestroy();
         Timber.v("On destroy");
         bus.unregister(this);
+    }
+
+    @Subscribe
+    public void onAccountChanged(AccountChangedEvent event){
+        mLastUpdateTime = 0;
+        mTimer.cancel();
+        requestAppData();
+    }
+
+    private void requestAppData() {
+        final Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    List<Profile> profiles = apiClient.getProfiles().data;
+                    List<Location> locations = apiClient.getLocations().data;
+                    DevicesStateResponse devicesStateResponse = apiClient.getDevices();
+                    mLastUpdateTime = devicesStateResponse.data.updateTime;
+
+                    dataContext.setProfiles(profiles);
+                    dataContext.setLocations(locations);
+                    dataContext.setDevices(devicesStateResponse.data.devices);
+
+                    bus.post(new OnDataUpdatedEvent());
+                    startDevicesUpdates();
+                    bus.post(new ProgressEvent(false, false));
+
+                } catch (RetrofitError e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     private void startDevicesUpdates() {
@@ -123,45 +160,6 @@ public class DataUpdateService extends Service {
                     Timber.v("Device update filed! Something wrong with network connection.");
                 } else {
                     Timber.v("Device update filed! Something wrong with server.");
-                }
-            }
-        });
-    }
-
-    public void requestLocations(){
-        apiClient.getLocations(new ApiClient.ApiCallback<List<Location>, String>() {
-            @Override
-            public void onSuccess(List<Location> result) {
-                Timber.v("Location updated. Locations count " + result.size());
-                dataContext.setLocations(result);
-                bus.post(new OnDataUpdatedEvent());
-            }
-
-            @Override
-            public void onFailure(String request, boolean isNetworkError) {
-                    if(isNetworkError){
-                        Timber.v("Request Location update filed! Something wrong with network connection.");
-                    } else {
-                        Timber.v("Request Location update filed! Something wrong with server.");
-                    }
-            }
-        });
-    }
-
-    public void requestProfiles(){
-        apiClient.getProfiles(new ApiClient.ApiCallback<List<Profile>, String>() {
-            @Override
-            public void onSuccess(List<Profile> result) {
-                Timber.v("profiles updated. Profiles count " + result.size());
-                dataContext.addProfiles(result);
-            }
-
-            @Override
-            public void onFailure(String request, boolean isNetworkError) {
-                if(isNetworkError){
-                    Timber.v("Request Profile update filed! Something wrong with network connection.");
-                } else {
-                    Timber.v("Request Profile update filed! Something wrong with server.");
                 }
             }
         });

@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 20:05.
+ * Created by Ivan Platonov on 10.07.14 14:44.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,22 +20,25 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.network.devices;
+package me.z_wave.android.ui.dialogs;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import android.os.Bundle;
+import android.view.View;
 
-public interface DevicesStateRequest {
+import me.z_wave.android.R;
 
-    @GET("/ZAutomation/api/v1/devices")
-    void getDevices(@Query("since")long updateTime, Callback<DevicesStateResponse> callback);
+public class ProgressDialog extends BaseDialogFragment {
 
-    @GET("/ZAutomation/api/v1/devices")
-    DevicesStateResponse getDevices();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setDialogBody(initAlertDialogBody());
+        showTitle(false);
+        setCancelable(false);
+    }
 
-    @GET("/ZAutomation/api/v1/devices/{id}")
-    void getDevice(@Path("id")String deviceId, Callback callback);
+    private View initAlertDialogBody() {
+        return getActivity().getLayoutInflater().inflate(R.layout.layout_dialog_progress, null);
+    }
 
 }

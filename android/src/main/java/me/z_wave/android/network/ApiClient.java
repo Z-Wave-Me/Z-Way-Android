@@ -134,6 +134,10 @@ public class ApiClient {
         });
     }
 
+    public DevicesStateResponse getDevices() {
+        return mAdaptor.create(DevicesStateRequest.class).getDevices();
+    }
+
     public void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
                 ? updatedDevice.metrics.mode : updatedDevice.metrics.level;
@@ -243,13 +247,13 @@ public class ApiClient {
             @Override
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
-                if(!networkUnreachable && !mAuthInProgress){
-                    getLocations(callback);
-                } else {
-                    callback.onFailure("", networkUnreachable);
-                }
+                callback.onFailure("", networkUnreachable);
             }
         });
+    }
+
+    public LocationsResponse getLocations() {
+        return mAdaptor.create(LocationsRequest.class).getLocations();
     }
 
     public void auth(final OnAuthCompleteListener listener) {
@@ -273,7 +277,8 @@ public class ApiClient {
         mAuthTriesCounter++;
         if(mClient.getCookieStore() == null || mClient.getCookieStore().getCookies().size() == 0 ||
                 TextUtils.isEmpty(mClient.getCookieStore().getCookies().get(0).getValue())){
-            if(mAuthTriesCounter == Constants.AUTH_TRIES_COUNT){
+            if(mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT){
+                mAuthTriesCounter = 0;
                 listener.onAuthFiled();
             } else {
                 auth(listener);
@@ -339,14 +344,14 @@ public class ApiClient {
                     @Override
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
-                        if(!networkUnreachable && !mAuthInProgress){
-                            getProfiles(callback);
-                        } else {
-                            callback.onFailure("", networkUnreachable);
-                        }
+                        callback.onFailure("", networkUnreachable);
                     }
                 }
         );
+    }
+
+    public ProfilesResponse getProfiles() {
+        return mAdaptor.create(ProfilesRequest.class).getProfiles();
     }
 
     public void updateProfiles(Profile profile, final ApiCallback<List<Profile>, String> callback) {
@@ -361,11 +366,7 @@ public class ApiClient {
                     @Override
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
-                        if (!networkUnreachable && !mAuthInProgress) {
-                            getProfiles(callback);
-                        } else {
-                            callback.onFailure("", networkUnreachable);
-                        }
+                        callback.onFailure("", networkUnreachable);
                     }
                 }
         );

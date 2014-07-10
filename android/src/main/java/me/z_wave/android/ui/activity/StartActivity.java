@@ -22,11 +22,16 @@
 
 package me.z_wave.android.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.ProgressEvent;
+import me.z_wave.android.otto.events.ShowAlertDialogEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.ui.fragments.SplashFragment;
 
@@ -52,8 +57,26 @@ public class StartActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onStartActivity(StartActivityEvent event){
-        startActivity(event.intent);
+    public void onAccountChanged(AccountChangedEvent event){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
+
+    @Subscribe
+    public void onShowAlertDialog(ShowAlertDialogEvent event){
+        super.onShowAlertDialog(event);
+    }
+
+    @Subscribe
+    public void showAttentionDialog(ShowAttentionDialogEvent event){
+        super.showAttentionDialog(event);
+    }
+
+    @Subscribe
+    public void onShowHideProgress(ProgressEvent event){
+        super.onShowHideProgress(event);
+    }
+
+
 }

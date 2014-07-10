@@ -27,10 +27,13 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import timber.log.Timber;
 
@@ -91,6 +94,13 @@ public class NotificationService extends Service {
         bus.unregister(this);
     }
 
+    @Subscribe
+    public void onAccountChanged(AccountChangedEvent event){
+        mLastUpdateTime = 0;
+        mTimer.cancel();
+        startNotificationListening();
+    }
+
     private void startNotificationListening() {
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
@@ -125,6 +135,5 @@ public class NotificationService extends Service {
 
     public class LocalBinder extends Binder {
     }
-
 
 }

@@ -26,10 +26,19 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
+
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
+import me.z_wave.android.otto.events.ProgressEvent;
+import me.z_wave.android.otto.events.ShowAlertDialogEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.ui.dialogs.AlertDialog;
+import me.z_wave.android.ui.dialogs.BaseDialogFragment;
+import me.z_wave.android.ui.dialogs.ProgressDialog;
 import me.z_wave.android.utils.FragmentUtils;
 
 import javax.inject.Inject;
@@ -38,6 +47,9 @@ public class BaseActivity extends Activity {
 
     @Inject
     Bus bus;
+
+    private ProgressDialog mProgressDialog;
+    private boolean mIsDialogVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,5 +80,41 @@ public class BaseActivity extends Activity {
                 R.id.fragment_container, fragment, addToBackStack);
     }
 
+    public void onShowAlertDialog(ShowAlertDialogEvent event){
+        final AlertDialog alertDialog = new AlertDialog.AlertDialogBuilder(this).build(event);
+        alertDialog.show(getFragmentManager(), AlertDialog.class.getSimpleName());
+    }
+
+    public void showAttentionDialog(ShowAttentionDialogEvent event){
+        if(!mIsDialogVisible){
+            onShowHideProgress(new ProgressEvent(false, false));
+            AlertDialog.AlertDialogBuilder builder = new AlertDialog.AlertDialogBuilder(this);
+            builder.setTitle(R.string.attention);
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setMessage(event.alertMessage);
+            builder.setPositiveButton(R.string.ok, new BaseDialogFragment.DialogOnClickListener() {
+                @Override
+                public void onClick(View view, BaseDialogFragment dialog) {
+                    dialog.dismiss();
+                    mIsDialogVisible = false;
+                }
+            });
+
+            final AlertDialog dialog = builder.build();
+            dialog.setCancelable(false);
+            dialog.show(getFragmentManager(), AlertDialog.class.getSimpleName());
+            mIsDialogVisible = true;
+        }
+    }
+
+    public void onShowHideProgress(ProgressEvent event){
+        if(event.show && mProgressDialog == null){
+            mProgressDialog = new ProgressDialog();
+            mProgressDialog.show(getFragmentManager(), ProgressDialog.class.getSimpleName());
+        } else if(!event.show && mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
 
 }

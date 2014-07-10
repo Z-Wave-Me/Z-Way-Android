@@ -30,4 +30,7 @@ public interface LocationsRequest {
     @GET("/ZAutomation/api/v1/locations")
     void getLocations(Callback<LocationsResponse> callback);
 
+    @GET("/ZAutomation/api/v1/locations")
+    LocationsResponse getLocations();
+
 }

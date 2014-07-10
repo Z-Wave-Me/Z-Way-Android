@@ -22,7 +22,6 @@
 
 package me.z_wave.android.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -36,9 +35,8 @@ import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.otto.events.StartActivityEvent;
-import me.z_wave.android.ui.activity.MainActivity;
 
 /**
  * Created by Ivan PL on 08.07.2014.
@@ -74,8 +72,7 @@ public class SplashFragment extends BaseFragment {
             apiClient.auth(new ApiClient.OnAuthCompleteListener() {
                 @Override
                 public void onAuthComplete() {
-                    final Intent intent = new Intent(getActivity(), MainActivity.class);
-                    bus.post(new StartActivityEvent(intent));
+                    bus.post(new AccountChangedEvent());
                 }
 
                 @Override

@@ -26,9 +26,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,18 +40,23 @@ import javax.inject.Inject;
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Notification;
-import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
+import me.z_wave.android.otto.events.ProgressEvent;
+import me.z_wave.android.otto.events.ShowAlertDialogEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
+import me.z_wave.android.ui.dialogs.AlertDialog;
+import me.z_wave.android.ui.dialogs.BaseDialogFragment;
+import me.z_wave.android.ui.dialogs.ProgressDialog;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
 import me.z_wave.android.ui.fragments.ProfilesFragment;
-import me.z_wave.android.utils.FragmentUtils;
 
 public class MainActivity extends BaseActivity {
 
@@ -104,6 +107,27 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onGetNotification(OnGetNotificationEvent event){
         updateNotificationsCount();
+    }
+
+    @Subscribe
+    public void onAccountChanged(AccountChangedEvent event){
+        mNotificationsCount.setVisibility(View.GONE);
+        mNotificationsCount.setText("");
+    }
+
+    @Subscribe
+    public void onShowAlertDialog(ShowAlertDialogEvent event){
+        super.onShowAlertDialog(event);
+    }
+
+    @Subscribe
+    public void showAttentionDialog(ShowAttentionDialogEvent event){
+        super.showAttentionDialog(event);
+    }
+
+    @Subscribe
+    public void onShowHideProgress(ProgressEvent event){
+        super.onShowHideProgress(event);
     }
 
     private void setupActionBar() {

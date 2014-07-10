@@ -56,5 +56,21 @@
         <item name="android:textColor">@drawable/sl_filter_radio_btn_text_selector</item>
     </style>
 
+    <style name="HermesDialogWindowTitle" parent="android:Widget">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.DialogWindowTitle</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
+    <style name="TextAppearance.DialogWindowTitle" parent="android:Widget">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/blue_light</item>
+    </style>
+
+
 
 </resources>

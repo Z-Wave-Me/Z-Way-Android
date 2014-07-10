@@ -32,6 +32,9 @@ import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
+import me.z_wave.android.ui.dialogs.AlertDialog;
+import me.z_wave.android.ui.dialogs.BaseDialogFragment;
+import me.z_wave.android.ui.dialogs.ProgressDialog;
 import me.z_wave.android.ui.fragments.*;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
@@ -52,7 +55,11 @@ import javax.inject.Singleton;
                 DataUpdateService.class,
                 NotificationService.class,
                 EditDashboardFragment.class,
-                SplashFragment.class
+                SplashFragment.class,
+                BaseDialogFragment.class,
+                ProgressDialog.class,
+                AlertDialog.class
+
         },
         library = true,
         complete = false

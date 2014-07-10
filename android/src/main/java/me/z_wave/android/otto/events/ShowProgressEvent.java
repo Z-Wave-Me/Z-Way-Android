@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 20:05.
+ * Created by Ivan Platonov on 10.07.14 15:01.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,22 +20,16 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.network.devices;
+package me.z_wave.android.otto.events;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
+/**
+ * Created by Ivan PL on 10.07.2014.
+ */
+public class ShowProgressEvent {
 
-public interface DevicesStateRequest {
+    public final boolean show;
 
-    @GET("/ZAutomation/api/v1/devices")
-    void getDevices(@Query("since")long updateTime, Callback<DevicesStateResponse> callback);
-
-    @GET("/ZAutomation/api/v1/devices")
-    DevicesStateResponse getDevices();
-
-    @GET("/ZAutomation/api/v1/devices/{id}")
-    void getDevice(@Path("id")String deviceId, Callback callback);
-
+    public ShowProgressEvent(boolean show) {
+        this.show = show;
+    }
 }

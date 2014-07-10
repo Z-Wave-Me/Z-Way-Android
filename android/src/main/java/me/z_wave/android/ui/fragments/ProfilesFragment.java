@@ -22,7 +22,6 @@
 
 package me.z_wave.android.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,22 +32,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
-import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.otto.events.StartActivityEvent;
-import me.z_wave.android.ui.activity.MainActivity;
-import me.z_wave.android.ui.activity.StartActivity;
+import me.z_wave.android.otto.events.ProgressEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
 public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener{
@@ -101,6 +96,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final LocalProfile selectedProfile = mAdapter.getItem(position);
         if(!selectedProfile.active) {
+            bus.post(new ProgressEvent(true, false));
             selectedProfile.active = true;
             final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
             final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
@@ -118,13 +114,13 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             apiClient.auth(new ApiClient.OnAuthCompleteListener() {
                 @Override
                 public void onAuthComplete() {
-                    Intent intent = new Intent(getActivity(), StartActivity.class);
-                    bus.post(new StartActivityEvent(intent));
+                    dataContext.clear();
+                    bus.post(new AccountChangedEvent());
                 }
 
                 @Override
                 public void onAuthFiled() {
-
+                    bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
                 }
             });
         }

@@ -43,6 +43,14 @@ public class DataContext {
         mLocation = locations;
     }
 
+    public void setProfiles(List<Profile> profiles){
+        mProfiles = profiles;
+    }
+
+    public void setDevices(List<Device> devices){
+        mDevices = devices;
+    }
+
     public void addNotifications(List<Notification> notifications){
         if(mNotifications == null || mNotifications.isEmpty()){
             mNotifications = notifications;
@@ -225,10 +233,15 @@ public class DataContext {
     }
 
     public void clear(){
-        mDevices.clear();
-        mLocation.clear();
-        mNotifications.clear();
-        mProfiles.clear();
+        clearList(mDevices);
+        clearList(mLocation);
+        clearList(mNotifications);
+        clearList(mProfiles);
+    }
+
+    private void clearList(List list){
+        if(list != null && !list.isEmpty())
+            list.clear();
     }
 
 }

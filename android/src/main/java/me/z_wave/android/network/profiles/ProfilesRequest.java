@@ -30,4 +30,7 @@ public interface ProfilesRequest {
     @GET("/ZAutomation/api/v1/profiles")
     void getProfiles(Callback<ProfilesResponse> callback);
 
+    @GET("/ZAutomation/api/v1/profiles")
+    ProfilesResponse getProfiles();
+
 }
