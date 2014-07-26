@@ -26,6 +26,7 @@ import android.text.TextUtils;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
@@ -404,6 +405,8 @@ public class ApiClient {
             sslSocketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             SchemeRegistry schemeRegistry = new SchemeRegistry();
             ClientConnectionManager cm = new ThreadSafeClientConnManager(client.getParams(), schemeRegistry);
+            schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            schemeRegistry.register(new Scheme("https", sslSocketFactory, 80));
             schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
             return new DefaultHttpClient(cm, client.getParams());
         } catch (Exception ex) {

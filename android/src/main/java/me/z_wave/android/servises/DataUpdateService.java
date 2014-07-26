@@ -87,7 +87,8 @@ public class DataUpdateService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         Timber.v("On unbind");
-        mTimer.cancel();
+        if(mTimer != null)
+            mTimer.cancel();
         return super.onUnbind(intent);
     }
 
