@@ -160,8 +160,7 @@ public class MainMenuFragment extends BaseFragment {
 
     @Subscribe
     public void onAccountChanged(AccountChangedEvent event){
-//        mNotificationsCount.setVisibility(View.GONE);
-//        mNotificationsCount.setText("");
+
     }
 
     @OnClick(R.id.nav_drawer_profile)
@@ -248,115 +247,6 @@ public class MainMenuFragment extends BaseFragment {
         }
         closeDrawer();
     }
-
-
-
-//    @OnClick(R.id.menu_profile)
-//    public void showProfile(){
-//        Toast.makeText(getActivity(), "menu_profile", Toast.LENGTH_SHORT).show();
-//        closeDrawer();
-//    }
-
-//    @OnClick(R.id.menu_buy)
-//    public void searchSales(){
-//        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-//            @Override
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
-//            }
-//
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                mDrawerToggle.onDrawerOpened(drawerView);
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                mDrawerToggle.onDrawerClosed(drawerView);
-//                mDrawerLayout.setDrawerListener(mDrawerToggle);
-//                bus.post(new CommitFragmentEvent(SearchFragment.newInstance(true), true));
-//            }
-//
-//            @Override
-//            public void onDrawerStateChanged(int newState) {
-//                mDrawerToggle.onDrawerStateChanged(newState);
-//            }
-//        });
-//        mDrawerLayout.closeDrawers();
-//    }
-
-//    @OnClick(R.id.menu_rent)
-//    public void searchRent(){
-//        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-//            @Override
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
-//            }
-//
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                mDrawerToggle.onDrawerOpened(drawerView);
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                mDrawerToggle.onDrawerClosed(drawerView);
-//                mDrawerLayout.setDrawerListener(mDrawerToggle);
-//                bus.post(new CommitFragmentEvent(SearchFragment.newInstance(false), true));
-//            }
-//
-//            @Override
-//            public void onDrawerStateChanged(int newState) {
-//                mDrawerToggle.onDrawerStateChanged(newState);
-//            }
-//        });
-//        mDrawerLayout.closeDrawers();
-//    }
-
-//    @OnClick(R.id.menu_add)
-//    public void addRealty(){
-//        mDrawerLayout.closeDrawers();
-//        Toast.makeText(getActivity(), "menu_add", Toast.LENGTH_SHORT).show();
-//    }
-
-//    @OnClick(R.id.menu_favourite)
-//    public void showFavourites(){
-//        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-//            @Override
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
-//            }
-//
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                mDrawerToggle.onDrawerOpened(drawerView);
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                mDrawerToggle.onDrawerClosed(drawerView);
-//                mDrawerLayout.setDrawerListener(mDrawerToggle);
-//                bus.post(new CommitFragmentEvent(RealtyListFragment.newInstance(true), false));
-//            }
-//
-//            @Override
-//            public void onDrawerStateChanged(int newState) {
-//                mDrawerToggle.onDrawerStateChanged(newState);
-//            }
-//        });
-//        mDrawerLayout.closeDrawers();
-//    }
-//
-//    @OnClick(R.id.menu_history)
-//    public void showHistory(){
-//        Toast.makeText(getActivity(), "menu_history", Toast.LENGTH_SHORT).show();
-//        mDrawerLayout.closeDrawers();
-//    }
-
-//    @Subscribe
-//    public void onUnlockMainMenu(UnlockMainMenuEvent event){
-//        setNavigationMenuEnabled(true);
-//    }
 
     public void setNavigationMenuEnabled(boolean enabled){
         final int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
