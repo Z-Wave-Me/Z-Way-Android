@@ -43,6 +43,7 @@ public class ProfileTable {
     public static final String P_PASSWORD = "PPassword";
     public static final String P_LONGITUDE = "PLongitude";
     public static final String P_LATITUDE = "PLatitude";
+    public static final String P_ADDRESS = "PAddress";
     public static final String P_ACTIVE = "PActive";
 
     private static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
@@ -54,6 +55,7 @@ public class ProfileTable {
             + P_PASSWORD + " TEXT NOT NULL,"
             + P_LONGITUDE + " REAL,"
             + P_LATITUDE + " REAL,"
+            + P_ADDRESS + " TEXT,"
             + P_ACTIVE + " TEXT,"
             + "UNIQUE (" + BaseColumns._ID + "," + P_SERVER_ID + ") ON CONFLICT REPLACE)";
 
@@ -74,6 +76,7 @@ public class ProfileTable {
         values.put(P_PASSWORD, profile.password);
         values.put(P_LONGITUDE, profile.longitude);
         values.put(P_LATITUDE, profile.latitude);
+        values.put(P_ADDRESS, profile.address);
         values.put(P_ACTIVE, profile.active ? 1 : 0);
         return values;
     }

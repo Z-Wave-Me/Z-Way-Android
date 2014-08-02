@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,12 +48,15 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
+import me.z_wave.android.otto.events.ProfileUpdatedEvent;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import timber.log.Timber;
 
@@ -84,11 +88,11 @@ public class MainMenuFragment extends BaseFragment {
     @InjectView(R.id.nav_drawer_tags_menu)
     ViewGroup tagsGroupMenuView;
 
-    @InjectView(R.id.nav_drawer_profile)
-    View profileView;
-
     @InjectView(R.id.nav_drawer_profile_name)
     TextView profileName;
+
+    @InjectView(R.id.nav_drawer_profile)
+    View profileView;
 
     @InjectView(R.id.nav_drawer_profile_location)
     TextView profileLocation;
@@ -112,11 +116,7 @@ public class MainMenuFragment extends BaseFragment {
         prepareRoomsList();
         prepareTypesList();
         prepareTagsList();
-
-        final Profile profile = dataContext.getActiveProfile();
-        if(profile != null)
-            profileName.setText(profile.name);
-
+        prepareProfileInfo();
     }
 
     @Override
@@ -160,7 +160,12 @@ public class MainMenuFragment extends BaseFragment {
 
     @Subscribe
     public void onAccountChanged(AccountChangedEvent event){
+        prepareProfileInfo();
+    }
 
+    @Subscribe
+    public void onProfileUpdated(ProfileUpdatedEvent event){
+        prepareProfileInfo();
     }
 
     @OnClick(R.id.nav_drawer_profile)
@@ -246,6 +251,15 @@ public class MainMenuFragment extends BaseFragment {
             setSelectedView(v);
         }
         closeDrawer();
+    }
+
+    private void prepareProfileInfo() {
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        LocalProfile activeProfile = provider.getActiveLocalProfile();
+        profileLocation.setVisibility(
+                TextUtils.isEmpty(activeProfile.address) ? View.GONE : View.VISIBLE);
+        profileLocation.setText(activeProfile.address);
+        profileName.setText(activeProfile.name);
     }
 
     public void setNavigationMenuEnabled(boolean enabled){

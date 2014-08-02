@@ -32,7 +32,6 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
-import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.ui.fragments.SplashFragment;
 
 /**
@@ -44,7 +43,7 @@ public class StartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_base);
 
         if(savedInstanceState == null)
             commitFragment(new SplashFragment(), false);

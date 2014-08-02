@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.07.14 21:56.
+ * Created by Ivan Platonov on 02.08.14 17:19.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,32 +20,13 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.data;
+package me.z_wave.android.otto.events;
 
-import me.z_wave.android.dataModel.LocalProfile;
+/**
+ * Created by Ivan PL on 02.08.2014.
+ */
+public class ProfileUpdatedEvent {
 
-public class NewProfileContext {
 
-    private LocalProfile mProfile;
-
-    public void createNew(){
-        mProfile = new LocalProfile();
-    }
-
-    public LocalProfile getProfile(){
-        return mProfile;
-    }
-
-    public void setProfile(LocalProfile profile){
-        mProfile = profile;
-    }
-
-    public void reset() {
-        mProfile = null;
-    }
-
-    public boolean isEmpty() {
-        return mProfile == null;
-    }
 
 }

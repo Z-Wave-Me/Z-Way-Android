@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="48dp">
+        android:paddingTop="10dp">
 
         <View
             android:layout_width="match_parent"

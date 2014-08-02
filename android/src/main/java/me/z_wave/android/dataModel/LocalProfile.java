@@ -40,6 +40,7 @@ public class LocalProfile {
     public String indoorServer;
     public String login;
     public String password;
+    public String address;
     public double latitude;
     public double longitude;
     public boolean active;
@@ -56,6 +57,7 @@ public class LocalProfile {
         password  = cursor.getString(cursor.getColumnIndex(ProfileTable.P_PASSWORD));
         latitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LATITUDE));
         longitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LONGITUDE));
+        address = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ADDRESS));
         active  = cursor.getInt(cursor.getColumnIndex(ProfileTable.P_ACTIVE)) == 1;
     }
 

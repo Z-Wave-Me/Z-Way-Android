@@ -22,8 +22,11 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,22 +42,25 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import me.z_wave.android.R;
 import me.z_wave.android.data.NewProfileContext;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.otto.events.ShowProgressEvent;
 
-/**
- * Created by Ivan PL on 26.07.2014.
- */
 public class ChooseLocationFragment extends BaseFragment implements GoogleMap.OnMapClickListener {
 
     private GoogleMap googleMap;
     private Marker mSelectedPositionMarker;
 
     @Inject
-    NewProfileContext newProfileContext;
+    NewProfileContext profileContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,8 +106,16 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_done){
-            if(mSelectedPositionMarker != null)
-            goBack();
+            if(mSelectedPositionMarker != null){
+                bus.post(new ShowProgressEvent(true));
+                final LocalProfile profile = profileContext.getProfile();
+                LatLng position = mSelectedPositionMarker.getPosition();
+                profile.latitude = position.latitude;
+                profile.longitude = position.longitude;
+                profile.address = getAddress(position);
+                bus.post(new ShowProgressEvent(false));
+                goBack();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -120,6 +134,38 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
             final LatLng currentPoint = new LatLng(location.getLatitude(),
                     location.getLongitude());
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPoint, 12f));
+        }
+    }
+
+    private String getAddress(LatLng position){
+        final Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            final List<Address> addresses = geocoder.getFromLocation(position.latitude,
+                    position.longitude, 1);
+            final Address address = addresses.get(0);
+            if(address != null){
+                final StringBuilder builder = new StringBuilder();
+                if(!TextUtils.isEmpty(address.getThoroughfare())){
+                    builder.append(address.getThoroughfare());
+                    if(!TextUtils.isEmpty(address.getSubThoroughfare()))
+                        builder.append(" " + address.getSubThoroughfare());
+                }
+                appendIfNotEmpty(builder, address.getLocality());
+                appendIfNotEmpty(builder, address.getAdminArea());
+                appendIfNotEmpty(builder, address.getCountryName());
+                return builder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private void appendIfNotEmpty(StringBuilder builder, String substr) {
+        if(!TextUtils.isEmpty(substr)){
+            if(builder.length() > 0)
+                builder.append(", ");
+            builder.append(substr);
         }
     }
 }
