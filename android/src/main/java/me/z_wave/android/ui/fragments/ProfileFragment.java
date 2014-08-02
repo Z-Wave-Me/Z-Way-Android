@@ -45,6 +45,7 @@ import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
+import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
@@ -174,6 +175,11 @@ public class ProfileFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @OnClick(R.id.profile_delete)
     void deleteProfile() {
         if(!mProfile.active){
@@ -186,6 +192,7 @@ public class ProfileFragment extends BaseFragment {
 
     @OnClick(R.id.profile_location)
     void changeLocation() {
+        bus.post(new CommitFragmentEvent(new ChooseLocationFragment(), true));
         showToast("change location");
     }
 

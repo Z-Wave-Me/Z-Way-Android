@@ -26,6 +26,7 @@ import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
 import me.z_wave.android.data.DataContext;
+import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
@@ -58,7 +59,9 @@ import javax.inject.Singleton;
                 SplashFragment.class,
                 BaseDialogFragment.class,
                 ProgressDialog.class,
-                AlertDialog.class
+                AlertDialog.class,
+                ChooseLocationFragment.class,
+                MainMenuFragment.class
 
         },
         library = true,
@@ -83,5 +86,11 @@ public class ZWayModule {
     @Singleton
     ApiClient provideApiClient() {
         return new ApiClient();
+    }
+
+    @Provides
+    @Singleton
+    NewProfileContext provideNewProfileClient() {
+        return new NewProfileContext();
     }
 }

@@ -66,16 +66,13 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        if(dataContext.getProfiles().size() != 0){
-            prepareProfilesList();
-//        } else {
-//            requestProfiles();
-//        }
+        prepareProfilesList();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        getActionBar().show();
         inflater.inflate(R.menu.menu_profiles, menu);
     }
 
@@ -108,7 +105,6 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             mAdapter.clear();
             mAdapter.addAll(provider.getLocalProfiles());
             mAdapter.notifyDataSetChanged();
-
 
             apiClient.init(selectedProfile);
             apiClient.auth(new ApiClient.OnAuthCompleteListener() {

@@ -70,6 +70,27 @@
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/blue_light</item>
     </style>
+    
+    <style name="NavDrawerItem">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nav_drawer_text_color</item>
+        <item name="android:background">@drawable/sl_drawer_item_selector</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="NavDrawerCategory">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nav_drawer_group_title_color</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingTop">26dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+    </style>
 
 
 

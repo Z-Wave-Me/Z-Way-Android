@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Created by Ivan Platonov on 02.08.14 11:03.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -20,10 +22,23 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <dimen name="grid_item_height">86dp</dimen>
-    <dimen name="grid_item_back_view_width">120dp</dimen>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <dimen name="navigation_drawer_width">240dp</dimen>
+    <item android:left="14dp"
+        android:right="14dp">
+        <shape
+            android:shape="rectangle">
+            <padding android:bottom="1dp"/>
+            <solid android:color="@color/nav_drawer_item_divider_color" />
+        </shape>
+    </item>
 
-    </resources>
+        <item android:bottom="1dp">
+            <shape
+                android:shape="rectangle">
+                <padding android:bottom="10dp"/>
+                <solid android:color="@color/main_app_color" />
+            </shape>
+        </item>
+
+</layer-list>

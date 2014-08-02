@@ -54,6 +54,7 @@
     <string name="devices_empty_msg">Nothing found</string>
     
     <string name="notification_everything_ok">Everything OK</string>
+    <string name="notification_count">You have %d notifications</string>
     
     <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
     <string name="profile_auto_switch_location">Switch automatically</string>
@@ -81,5 +82,10 @@
     <string name="attention">Attention!</string>
     <string name="ok">Ok</string>
 
+    <string name="choose_location_error_msg">You should select any location first.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="all_devices">All Widgets</string>
 
 </resources>

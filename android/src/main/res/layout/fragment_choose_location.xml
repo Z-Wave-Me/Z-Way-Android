@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Created by Ivan Platonov on 26.07.14 14:12.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -19,11 +21,14 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-<resources>
-    <dimen name="grid_item_height">86dp</dimen>
-    <dimen name="grid_item_back_view_width">120dp</dimen>
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-    <dimen name="navigation_drawer_width">240dp</dimen>
-
-    </resources>
+</RelativeLayout>

@@ -24,10 +24,12 @@ package me.z_wave.android.ui.activity;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,29 +52,35 @@ import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.NotificationService;
-import me.z_wave.android.ui.dialogs.AlertDialog;
-import me.z_wave.android.ui.dialogs.BaseDialogFragment;
-import me.z_wave.android.ui.dialogs.ProgressDialog;
+import me.z_wave.android.ui.fragments.MainMenuFragment;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.FiltersFragment;
 import me.z_wave.android.ui.fragments.NotificationsFragment;
 import me.z_wave.android.ui.fragments.ProfilesFragment;
+import timber.log.Timber;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity  implements FragmentManager.OnBackStackChangedListener {
 
     @Inject
     public DataContext dataContext;
 
     private BindHelper mBindHelper = new BindHelper();
     private TextView mNotificationsCount;
+    private MainMenuFragment mMainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
         setContentView(R.layout.activity_main);
+        getFragmentManager().addOnBackStackChangedListener(this);
+        setupNavigationDrawerFragment();
+
         mBindHelper.keep(DataUpdateService.class);
         setupActionBar();
+
+        if(savedInstanceState == null)
+            commitFragment(new DashboardFragment(), false);
     }
 
     @Override
@@ -86,11 +94,6 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         mBindHelper.onUnbind(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Subscribe
@@ -133,6 +136,7 @@ public class MainActivity extends BaseActivity {
     private void setupActionBar() {
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.show();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.addTab(createTab(R.string.dashboard, R.drawable.ic_dashboard,
@@ -194,6 +198,13 @@ public class MainActivity extends BaseActivity {
         startService(i);
     }
 
+    @Override
+    public void onBackStackChanged() {
+        final int entryCount = getFragmentManager().getBackStackEntryCount();
+        mMainMenu.setNavigationMenuEnabled(entryCount == 0);
+        Timber.v("entryCount " + entryCount + "; showDrawer " + (entryCount == 0));
+    }
+
     private class ZWayTabListener implements ActionBar.TabListener{
 
         public Fragment fragment;
@@ -217,5 +228,12 @@ public class MainActivity extends BaseActivity {
 
         }
     }
+
+    private void setupNavigationDrawerFragment() {
+        mMainMenu = (MainMenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mMainMenu.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+        mMainMenu.showDrawer();
+    }
+
 
 }
