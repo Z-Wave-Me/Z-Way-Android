@@ -105,7 +105,7 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_done){
+        if(item.getItemId() == R.id.action_choose){
             if(mSelectedPositionMarker != null){
                 bus.post(new ShowProgressEvent(true));
                 final LocalProfile profile = profileContext.getProfile();

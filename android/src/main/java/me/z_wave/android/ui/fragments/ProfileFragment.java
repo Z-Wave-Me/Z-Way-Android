@@ -107,6 +107,7 @@ public class ProfileFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if(profileContext.isEmpty()){
             final LocalProfile profile = getProfile();
+            deleteButton.setVisibility(profile != null ? View.VISIBLE : View.GONE);
             if(profile != null){
                 profileContext.setProfile(profile);
             } else {
@@ -120,7 +121,6 @@ public class ProfileFragment extends BaseFragment {
         super.onResume();
             LocalProfile profile = profileContext.getProfile();
             fillPage(profile);
-            deleteButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -167,7 +167,6 @@ public class ProfileFragment extends BaseFragment {
             } else if (TextUtils.isEmpty(profilePassword.getText())) {
                 showToast("Password can't be empty");
             } else {
-
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 if (mIsCreateMode) {
                     bus.post(new ProgressEvent(true, false));
@@ -186,6 +185,7 @@ public class ProfileFragment extends BaseFragment {
 
                             dataContext.clear();
                             bus.post(new AccountChangedEvent());
+                            goBack();
                         }
 
                         @Override
@@ -215,7 +215,9 @@ public class ProfileFragment extends BaseFragment {
         final LocalProfile profile = profileContext.getProfile();
         if(!profile.active){
             final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            showToast("Profile " + profile.name + " deleted");
             provider.removeLocalProfile(profile);
+            goBack();
         } else {
             bus.post(new ShowAttentionDialogEvent("You can't delete active profile!"));
         }
