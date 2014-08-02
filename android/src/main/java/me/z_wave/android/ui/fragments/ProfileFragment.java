@@ -107,7 +107,6 @@ public class ProfileFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if(profileContext.isEmpty()){
             final LocalProfile profile = getProfile();
-            deleteButton.setVisibility(profile != null ? View.VISIBLE : View.GONE);
             if(profile != null){
                 profileContext.setProfile(profile);
             } else {
@@ -119,6 +118,7 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        deleteButton.setVisibility(getProfile() != null ? View.VISIBLE : View.GONE);
             LocalProfile profile = profileContext.getProfile();
             fillPage(profile);
     }
