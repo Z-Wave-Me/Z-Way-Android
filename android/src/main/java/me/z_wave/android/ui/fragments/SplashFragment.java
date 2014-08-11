@@ -24,6 +24,7 @@ package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +36,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
@@ -71,17 +73,12 @@ public class SplashFragment extends BaseFragment {
             }, SPLASH_DISPLAY_LENGTH);
         } else {
             apiClient.init(localProfile);
-            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-                @Override
-                public void onAuthComplete() {
-                    bus.post(new AccountChangedEvent());
-                }
-
-                @Override
-                public void onAuthFiled() {
-                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
-                }
-            });
+            if(!TextUtils.isEmpty(localProfile.login)
+                    || !TextUtils.isEmpty(localProfile.password)) {
+                authenticate();
+            } else {
+                checkServerState();
+            }
         }
     }
 
@@ -89,5 +86,33 @@ public class SplashFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         getActionBar().hide();
+    }
+
+    private void authenticate() {
+        apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+            @Override
+            public void onAuthComplete() {
+                bus.post(new AccountChangedEvent());
+            }
+
+            @Override
+            public void onAuthFiled() {
+                bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+            }
+        });
+    }
+
+    private void checkServerState(){
+        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
+            @Override
+            public void onSuccess(ServerStatus response) {
+                bus.post(new AccountChangedEvent());
+            }
+
+            @Override
+            public void onFailure(boolean isNetworkError) {
+                bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+            }
+        });
     }
 }

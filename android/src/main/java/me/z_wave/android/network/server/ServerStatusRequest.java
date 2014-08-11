@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 18:05.
+ * Created by Ivan Platonov on 10.08.14 14:39.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,22 +20,18 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.app;
+package me.z_wave.android.network.server;
 
-import retrofit.RestAdapter;
+import me.z_wave.android.dataModel.ServerStatus;
+import retrofit.Callback;
+import retrofit.http.GET;
 
-public class Constants {
+/**
+ * Created by Ivan PL on 10.08.2014.
+ */
+public interface ServerStatusRequest {
 
-    public static final String BASE_API_URL = "/ZAutomation/api/v1";
-    public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.FULL;
-
-    public static final int AUTH_TRIES_COUNT = 3;
-
-    public static final String Z_WAY_PREFERENCES = "z_way_preferences";
-
-    //TODO remove stub
-    public static final String URL_KEY = "url_key";
-    public static final String DEFAULT_URL = "https://find.z-wave.me";//"http://mskoff.z-wave.me:10483";
-    public static final String DEFAULT_PORT = "8083";
+    @GET("/ZAutomation/api/v1/status")
+    void getServerStatus(Callback<ServerStatus> callback);
 
 }

@@ -42,6 +42,7 @@ import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.network.auth.AuthRequest;
 import me.z_wave.android.network.devices.DevicesStateRequest;
 import me.z_wave.android.network.devices.DevicesStateResponse;
@@ -55,6 +56,7 @@ import me.z_wave.android.network.notification.UpdateNotificationRequest;
 import me.z_wave.android.network.profiles.ProfilesRequest;
 import me.z_wave.android.network.profiles.ProfilesResponse;
 import me.z_wave.android.network.profiles.UpdateProfileRequest;
+import me.z_wave.android.network.server.ServerStatusRequest;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -86,8 +88,16 @@ public class ApiClient {
         public void onFailure(T request, boolean isNetworkError);
     }
 
-    public interface OnAuthCompleteListener{
+    public static interface SimpleApiCallback<T> {
+        public void onSuccess(T response);
+
+        public void onFailure( boolean isNetworkError);
+    }
+
+
+    public interface OnAuthCompleteListener {
         public void onAuthComplete();
+
         public void onAuthFiled();
     }
 
@@ -99,16 +109,26 @@ public class ApiClient {
     private boolean mAuthInProgress;
     private int mAuthTriesCounter;
 
-    public void init(LocalProfile localProfile){
+    public void init(LocalProfile localProfile) {
         Timber.v("init ApiClient for " + localProfile.toString());
         mLocalProfile = localProfile;
+        final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
+                ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
         mClient = getHttpsClient();
-         mAdaptor = new RestAdapter.Builder()
-                .setEndpoint(mLocalProfile.indoorServer)
+        mAdaptor = new RestAdapter.Builder()
+                .setEndpoint(url)
                 .setLogLevel(Constants.API_LOG_LEVEL)
                 .setClient(new ApacheClient(mClient))
                 .setRequestInterceptor(createCookiesInterceptor())
                 .build();
+    }
+
+    public void getServerState() {
+
+    }
+
+    public void getServerState(String login, String password) {
+
     }
 
     public void getDevicesState(final long lastUpdateTime, final ApiCallback<DevicesStatus, Long> callback) {
@@ -126,7 +146,7 @@ public class ApiClient {
             @Override
             public void failure(RetrofitError error) {
                 boolean networkUnreachable = isNetworkUnreachableError(error);
-                if(!networkUnreachable && !mAuthInProgress){
+                if (!networkUnreachable && !mAuthInProgress) {
                     getDevicesState(lastUpdateTime, callback);
                 } else {
                     callback.onFailure(lastUpdateTime, networkUnreachable);
@@ -274,11 +294,29 @@ public class ApiClient {
         );
     }
 
+    public void checkServerStatus(final SimpleApiCallback<ServerStatus> callback) {
+        mAdaptor.create(ServerStatusRequest.class).getServerStatus(
+                new Callback<ServerStatus>() {
+                    @Override
+                    public void success(ServerStatus profileResponse, Response response) {
+                        Timber.v(profileResponse.toString());
+                        callback.onSuccess(profileResponse);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        callback.onFailure(networkUnreachable);
+                    }
+                }
+        );
+    }
+
     private void onAuthResult(OnAuthCompleteListener listener) {
         mAuthTriesCounter++;
-        if(mClient.getCookieStore() == null || mClient.getCookieStore().getCookies().size() == 0 ||
-                TextUtils.isEmpty(mClient.getCookieStore().getCookies().get(0).getValue())){
-            if(mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT){
+        if (mClient.getCookieStore() == null || mClient.getCookieStore().getCookies().size() == 0 ||
+                TextUtils.isEmpty(mClient.getCookieStore().getCookies().get(0).getValue())) {
+            if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
                 mAuthTriesCounter = 0;
                 listener.onAuthFiled();
             } else {
@@ -286,13 +324,13 @@ public class ApiClient {
             }
         } else {
             mCookie = mClient.getCookieStore().getCookies().get(0);
-                listener.onAuthComplete();
-                mAuthInProgress = false;
+            listener.onAuthComplete();
+            mAuthInProgress = false;
         }
     }
 
     public void getNotifications(final long lastUpdateTime,
-                                        final ApiCallback<NotificationDataWrapper, Long> callback) {
+                                 final ApiCallback<NotificationDataWrapper, Long> callback) {
         mAdaptor.create(NotificationRequest.class).getNotifications(
                 lastUpdateTime, new Callback<NotificationResponse>() {
                     @Override
@@ -304,7 +342,7 @@ public class ApiClient {
                     @Override
                     public void failure(RetrofitError error) {
                         boolean networkUnreachable = isNetworkUnreachableError(error);
-                        if(!networkUnreachable && !mAuthInProgress){
+                        if (!networkUnreachable && !mAuthInProgress) {
                             getNotifications(lastUpdateTime, callback);
                         } else {
                             callback.onFailure(lastUpdateTime, networkUnreachable);
@@ -315,7 +353,7 @@ public class ApiClient {
     }
 
     public void updateNotifications(final Notification notification,
-                                        final EmptyApiCallback<String> callback) {
+                                    final EmptyApiCallback<String> callback) {
         mAdaptor.create(UpdateNotificationRequest.class).updateNotification(notification.id, notification
                 , new Callback<NotificationResponse>() {
                     @Override
@@ -379,7 +417,7 @@ public class ApiClient {
     }
 
     private DefaultHttpClient getHttpsClient() {
-        try{
+        try {
             X509TrustManager x509TrustManager = new X509TrustManager() {
 
                 @Override
@@ -415,7 +453,7 @@ public class ApiClient {
         }
     }
 
-    private RequestInterceptor createCookiesInterceptor(){
+    private RequestInterceptor createCookiesInterceptor() {
         final CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cookieManager);

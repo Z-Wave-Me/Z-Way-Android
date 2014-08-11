@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
@@ -107,18 +109,12 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             mAdapter.notifyDataSetChanged();
 
             apiClient.init(selectedProfile);
-            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-                @Override
-                public void onAuthComplete() {
-                    dataContext.clear();
-                    bus.post(new AccountChangedEvent());
-                }
-
-                @Override
-                public void onAuthFiled() {
-                    bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
-                }
-            });
+            if(!TextUtils.isEmpty(selectedProfile.login)
+                    || !TextUtils.isEmpty(selectedProfile.password)) {
+                authenticate();
+            } else {
+                checkServerState();
+            }
         }
     }
 
@@ -132,5 +128,35 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
     private View createListFooter(){
         return View.inflate(getActivity(), R.layout.layout_profile_footer, null);
+    }
+
+    private void authenticate() {
+        apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+            @Override
+            public void onAuthComplete() {
+                dataContext.clear();
+                bus.post(new AccountChangedEvent());
+            }
+
+            @Override
+            public void onAuthFiled() {
+                bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
+            }
+        });
+    }
+
+    private void checkServerState(){
+        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
+            @Override
+            public void onSuccess(ServerStatus response) {
+                dataContext.clear();
+                bus.post(new AccountChangedEvent());
+            }
+
+            @Override
+            public void onFailure(boolean isNetworkError) {
+                bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
+            }
+        });
     }
 }
