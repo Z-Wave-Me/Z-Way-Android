@@ -33,36 +33,43 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.askerov.dynamicgrid.BaseDynamicGridAdapter;
+
 import java.util.List;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Profile;
 
-public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
+public class EditDashboardGridAdapter extends BaseDynamicGridAdapter {
 
-    public interface EditDashboardListener{
+    public interface EditDashboardListener {
         void onDeleteDevice(Device device);
+
         void onRearrangeStarted(View item, int position);
     }
 
     private EditDashboardListener mListener;
+    private Profile mProfile;
 
-    public EditDashboardGridAdapter(Context context, List<Device> objects, EditDashboardListener listener) {
-        super(context, 0, objects);
+    public EditDashboardGridAdapter(Context context, List<Device> objects,
+                                    int columnCoun, Profile profile, EditDashboardListener listener) {
+        super(context, objects, columnCoun);
         mListener = listener;
+        mProfile = profile;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.layout_edit_dashboard_fragment, parent, false);
             convertView.setTag(new ViewHolder(convertView));
         }
 
         final ViewHolder holder = (ViewHolder) convertView.getTag();
-        final Device device = getItem(position);
+        final Device device = (Device) getItem(position);
 
         holder.name.setText(device.metrics.title);
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
@@ -80,20 +87,41 @@ public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
             }
         });
 
-        if(device.isIconLink()){
+        if (device.isIconLink()) {
             Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
         } else {
-            if(device.getIconId() == 0){
+            if (device.getIconId() == 0) {
                 holder.icon.setImageDrawable(null);
             } else {
                 holder.icon.setImageResource(device.getIconId());
             }
         }
 
+        prepareAddRemoveView(holder, device);
+
         return convertView;
     }
 
-    private class ViewHolder{
+    private void prepareAddRemoveView(ViewHolder holder, final Device device) {
+        final boolean isOnDashboard = mProfile != null && mProfile.positions != null
+                && mProfile.positions.contains(device.id);
+        final int addRemoveTextResId = isOnDashboard ? R.string.dashboadr_remove
+                : R.string.dashboard_to_dashboard;
+        final int addRemoveBgColorResId = isOnDashboard ? R.color.red
+                : R.color.dark_gray;
+
+        holder.addRemove.setText(addRemoveTextResId);
+        holder.addRemove.setBackgroundColor(
+                getContext().getResources().getColor(addRemoveBgColorResId));
+        holder.addRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                mListener.onAddRemoveClicked(device);
+            }
+        });
+    }
+
+    private class ViewHolder {
 
         public View parent;
 
@@ -101,13 +129,15 @@ public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
         public View btnRearrange;
         public ImageView icon;
         public TextView name;
+        public TextView addRemove;
 
-        public ViewHolder(View parent){
+        public ViewHolder(View parent) {
             this.parent = parent;
             btnRemove = parent.findViewById(R.id.edit_device_grid_item_remove);
             btnRearrange = parent.findViewById(R.id.edit_device_grid_item_rearrange);
             icon = (ImageView) parent.findViewById(R.id.edit_device_grid_item_icon);
             name = (TextView) parent.findViewById(R.id.edit_device_grid_item_name);
+            addRemove = (TextView) parent.findViewById(R.id.device_grid_item_add_remove);
         }
 
     }

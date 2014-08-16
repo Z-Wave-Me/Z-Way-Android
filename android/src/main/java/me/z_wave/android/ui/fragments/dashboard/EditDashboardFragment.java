@@ -23,14 +23,18 @@
 package me.z_wave.android.ui.fragments.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.squareup.otto.Subscribe;
+
+import org.askerov.dynamicgrid.DynamicGridView;
 
 import java.util.List;
 
@@ -38,7 +42,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.EditDashboardGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
@@ -48,7 +51,7 @@ import timber.log.Timber;
 public class EditDashboardFragment extends BaseFragment implements EditDashboardGridAdapter.EditDashboardListener, DragSortGridView.OnReorderingListener {
 
     @InjectView(R.id.edit_dashboard_widgets)
-    DragSortGridView dragSortGridView;
+    DynamicGridView dragSortGridView;
 
     private EditDashboardGridAdapter mAdapter;
     private List<Device> mDashboardDevices;
@@ -96,8 +99,52 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
     }
 
     private void prepareDevicesView() {
-        mAdapter = new EditDashboardGridAdapter(getActivity(), mDashboardDevices, this);
-        dragSortGridView.setOnReorderingListener(this);
+        mAdapter = new EditDashboardGridAdapter(getActivity(), mDashboardDevices,
+                getResources().getInteger(R.integer.devices_list_columns_count), dataContext.getActiveProfile(), this);
+        dragSortGridView.setWobbleInEditMode(false);
+
+        //        add callback to stop edit mode if needed
+        dragSortGridView.setOnDropListener(new DynamicGridView.OnDropListener()
+        {
+            @Override
+            public void onActionDrop(){
+                dragSortGridView.stopEditMode();
+                dragSortGridView.invalidateViews();
+                mAdapter.notifyDataSetChanged();
+//                if (fromPosition != toPosition) {
+//                    final Device device = mDashboardDevices.remove(fromPosition);
+//                    mDashboardDevices.add(toPosition, device);
+
+//                int position = positions.remove(from);
+//                positions.add(to, position);
+
+//                    mAdapter.notifyDataSetChanged();
+//                }
+            }
+        });
+
+        dragSortGridView.setOnDragListener(new DynamicGridView.OnDragListener() {
+            @Override
+            public void onDragStarted(int position) {
+                Log.d("EDIT_MODE", "drag started at position " + position);
+            }
+
+            @Override
+            public void onDragPositionsChanged(int oldPosition, int newPosition) {
+                Log.d("EDIT_MODE", String.format("drag item position changed from %d to %d", oldPosition, newPosition));
+            }
+        });
+
+        dragSortGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                dragSortGridView.startEditMode(position);
+                return true;
+            }
+        });
+
+
+//        dragSortGridView.setOnReorderingListener(this);
         dragSortGridView.setAdapter(mAdapter);
     }
 
@@ -109,19 +156,11 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
 
     @Override
     public void onRearrangeStarted(View item, int position) {
-        item.startDrag(null, new View.DragShadowBuilder(item), position, 0);
+        dragSortGridView.startEditMode(position);
     }
 
     @Override
     public void onReordering(int fromPosition, int toPosition) {
-            if (fromPosition != toPosition) {
-                final Device device = mDashboardDevices.remove(fromPosition);
-                mDashboardDevices.add(toPosition, device);
 
-//                int position = positions.remove(from);
-//                positions.add(to, position);
-
-                mAdapter.notifyDataSetChanged();
-            }
     }
 }

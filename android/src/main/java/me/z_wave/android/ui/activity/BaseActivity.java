@@ -28,6 +28,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 
+import com.crittercism.app.Crittercism;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -54,6 +55,7 @@ public class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crittercism.initialize(getApplicationContext(), "53ef3abdd478bc401300000a");
         ((ZWayApplication) getApplication()).inject(this);
     }
 

@@ -58,7 +58,7 @@ public class DashboardFragment extends BaseFragment implements
         DevicesGridAdapter.DeviceStateUpdatedListener {
 
     @InjectView(R.id.dashboard_widgets)
-    SwipeGridView widgetsGridView;
+    GridView widgetsGridView;
 
     @InjectView(R.id.dashboard_msg_empty)
     View emptyListMsg;
@@ -167,27 +167,27 @@ public class DashboardFragment extends BaseFragment implements
         showToast("rgb clicked");
     }
 
-    @Override
-    public void onAddRemoveClicked(Device updatedDevice) {
-        final Profile profile = dataContext.getActiveProfile();
-        if(profile != null){
-            widgetsGridView.closeOpenedItems();
-            mAdapter.remove(updatedDevice);
-            profile.positions.remove(updatedDevice.id);
-            mAdapter.notifyDataSetChanged();
-            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-                @Override
-                public void onSuccess(List<Profile> result) {
-
-                }
-
-                @Override
-                public void onFailure(String request, boolean isNetworkError) {
-
-                }
-            });
-        }
-    }
+//    @Override
+//    public void onAddRemoveClicked(Device updatedDevice) {
+//        final Profile profile = dataContext.getActiveProfile();
+//        if(profile != null){
+//            widgetsGridView.closeOpenedItems();
+//            mAdapter.remove(updatedDevice);
+//            profile.positions.remove(updatedDevice.id);
+//            mAdapter.notifyDataSetChanged();
+//            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+//                @Override
+//                public void onSuccess(List<Profile> result) {
+//
+//                }
+//
+//                @Override
+//                public void onFailure(String request, boolean isNetworkError) {
+//
+//                }
+//            });
+//        }
+//    }
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){

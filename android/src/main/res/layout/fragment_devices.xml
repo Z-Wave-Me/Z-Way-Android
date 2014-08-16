@@ -23,7 +23,6 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,16 +34,12 @@
         android:gravity="center"
         android:text="@string/devices_empty_msg" />
 
-    <me.z_wave.android.ui.views.SwipeGridView
+    <GridView
         android:id="@+id/devices_widgets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:horizontalSpacing="8dp"
         android:numColumns="@integer/devices_list_columns_count"
-        android:scrollbars="vertical"
-        swipe:swipeBackView="@+id/back_view"
-        swipe:swipeFrontView="@+id/front_view"
-        swipe:swipeMode="left"
-        swipe:swipeOffsetLeft="@dimen/grid_item_back_view_width" />
+        android:scrollbars="vertical"/>
 
 </RelativeLayout>

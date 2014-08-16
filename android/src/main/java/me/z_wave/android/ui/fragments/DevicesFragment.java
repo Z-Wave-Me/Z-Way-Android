@@ -51,7 +51,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     public static final String FILTER_NAME_KEY = "filter_name_key";
 
     @InjectView(R.id.devices_widgets)
-    SwipeGridView widgetsGridView;
+    GridView widgetsGridView;
 
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
@@ -153,32 +153,32 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
         showToast("rgb clicked");
     }
 
-    @Override
-    public void onAddRemoveClicked(Device updatedDevice) {
-        final Profile profile = dataContext.getActiveProfile();
-        if(profile != null){
-            if(profile.positions == null)
-                profile.positions = new ArrayList<String>();
-
-            widgetsGridView.closeOpenedItems();
-            if(profile.positions.contains(updatedDevice.id)){
-                profile.positions.remove(updatedDevice.id);
-            } else {
-                profile.positions.add(updatedDevice.id);
-            }
-            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-                @Override
-                public void onSuccess(List<Profile> result) {
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onFailure(String request, boolean isNetworkError) {
-
-                }
-            });
-        }
-    }
+//    @Override
+//    public void onAddRemoveClicked(Device updatedDevice) {
+//        final Profile profile = dataContext.getActiveProfile();
+//        if(profile != null){
+//            if(profile.positions == null)
+//                profile.positions = new ArrayList<String>();
+//
+//            widgetsGridView.closeOpenedItems();
+//            if(profile.positions.contains(updatedDevice.id)){
+//                profile.positions.remove(updatedDevice.id);
+//            } else {
+//                profile.positions.add(updatedDevice.id);
+//            }
+//            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+//                @Override
+//                public void onSuccess(List<Profile> result) {
+//                    mAdapter.notifyDataSetChanged();
+//                }
+//
+//                @Override
+//                public void onFailure(String request, boolean isNetworkError) {
+//
+//                }
+//            });
+//        }
+//    }
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
