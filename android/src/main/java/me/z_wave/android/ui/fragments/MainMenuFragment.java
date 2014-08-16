@@ -226,7 +226,7 @@ public class MainMenuFragment extends BaseFragment {
         if(!tags.isEmpty()) {
             tagsGroupMenuView.removeAllViews();
             for(String room : tags) {
-                final View item = inflateMenuItem(tagsGroupMenuView, Filter.LOCATION, room);
+                final View item = inflateMenuItem(tagsGroupMenuView, Filter.TAG, room);
                 tagsGroupMenuView.addView(item);
             }
         }
