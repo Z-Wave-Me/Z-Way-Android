@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 25.05.14 19:38.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="app_name">Z-Way</string>
+    <string name="hello_world">Test fragment</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="dashboard">Dashboard</string>
+    <string name="widgets">Widgets</string>
+    <string name="notifications">Notifications</string>
+    <string name="profiles">Profiles</string>
+    <string name="done">Done</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+
+    <string name="msg_empty_dashboard">
+        The dashboard is empty now.\n
+        You can fill it with frequently used widgets\n
+        by swiping them left.
+    </string>
+    <string name="dashboadr_remove">Remove</string>
+    <string name="dashboard_to_dashboard">To dashboard</string>
+    <string name="dashboard_done">Done</string>
+
+    <string name="request_server_problem_msg">Something wrong with server!</string>
+    <string name="request_network_problem">Something wrong with network connection!</string>
+
+    <string name="filters_rooms">Rooms</string>
+    <string name="filters_types">Types</string>
+    <string name="filters_tags">Tags</string>
+
+    <string name="devices_empty_msg">Nothing found</string>
+    
+    <string name="notification_everything_ok">Everything OK</string>
+    <string name="notification_count">You have %d notifications</string>
+    
+    <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
+    <string name="profile_auto_switch_location">Switch automatically</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_indoor_server">Indoor server</string>
+    <string name="profile_url">url</string>
+    <string name="profile_http">http://</string>
+    <string name="profile_http_hint">Should look like http://192.168.0.1:50</string>
+    <string name="profile_credentials">Remote access credentials</string>
+    <string name="profile_login">Login</string>
+    <string name="profile_password">Password</string>
+    <string name="profile_credentials_hint">You can get yours at find.zwave.me</string>
+    <string name="profile_location">Location</string>
+    <string name="profile_connecting">Connecting…</string>
+    <string name="profile_delete">Delete Profile</string>
+    <string name="profile_connection_established">Connection established</string>
+    <string name="profile_connection_authorized">Authorised</string>
+    <string name="profile_connection_filed">Can\'t connect to this URL</string>
+    <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
+    <string name="profile_changes_are_saved">Changes are saved.</string>
+
+    <string name="loading">Loading…</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="attention">Attention!</string>
+    <string name="ok">Ok</string>
+
+    <string name="choose_location_error_msg">You should select any location first.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="all_devices">All Widgets</string>
+
+</resources>
