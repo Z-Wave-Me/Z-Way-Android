@@ -49,6 +49,7 @@ import butterknife.OnClick;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.DatabaseDataProvider;
@@ -197,12 +198,13 @@ public class MainMenuFragment extends BaseFragment {
     }
 
     private void prepareRoomsList(){
-        final List<String> rooms = dataContext.getLocations();
+        final List<Location> rooms = dataContext.getLocations();
         roomsGroupView.setVisibility(rooms.isEmpty() ? View.GONE : View.VISIBLE);
         if(!rooms.isEmpty()) {
             roomsGroupMenuView.removeAllViews();
-            for(String room : rooms) {
-                final View item = inflateMenuItem(roomsGroupMenuView, Filter.LOCATION, room);
+            for(Location room : rooms) {
+                final TextView item = inflateMenuItem(roomsGroupMenuView, Filter.LOCATION, Integer.toString(room.id));
+                item.setText(room.title);
                 roomsGroupMenuView.addView(item);
             }
         }
@@ -225,14 +227,14 @@ public class MainMenuFragment extends BaseFragment {
         tagsGroupView.setVisibility(tags.isEmpty() ? View.GONE : View.VISIBLE);
         if(!tags.isEmpty()) {
             tagsGroupMenuView.removeAllViews();
-            for(String room : tags) {
-                final View item = inflateMenuItem(tagsGroupMenuView, Filter.TAG, room);
+            for(String tag : tags) {
+                final View item = inflateMenuItem(tagsGroupMenuView, Filter.TAG, tag);
                 tagsGroupMenuView.addView(item);
             }
         }
     }
 
-    private View inflateMenuItem(ViewGroup parent, final Filter filter, final String filterValue){
+    private TextView inflateMenuItem(ViewGroup parent, final Filter filter, final String filterValue){
         final TextView menuItem = (TextView) LayoutInflater.from(getActivity()).
                 inflate(R.layout.layout_menu_item, parent, false);
         menuItem.setText(filterValue);

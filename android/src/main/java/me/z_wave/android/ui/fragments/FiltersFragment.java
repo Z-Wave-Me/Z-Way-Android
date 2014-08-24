@@ -99,7 +99,7 @@ public class FiltersFragment extends BaseFragment
         final List<String> result = new ArrayList<String>();
         result.add(Filter.DEFAULT_FILTER);
         if(mSelectedFilter == Filter.LOCATION){
-            result.addAll(dataContext.getLocations());
+            result.addAll(dataContext.getLocationsNames());
         } else if(mSelectedFilter == Filter.TYPE) {
             result.addAll(dataContext.getDeviceTypes());
         } else {

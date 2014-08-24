@@ -107,7 +107,7 @@ public class DatabaseDataProvider {
     public LocalProfile getActiveLocalProfile() {
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
         final Cursor cursor = database.query(ProfileTable.TABLE_NAME, null,
-                ProfileTable.P_ACTIVE + "=1", null, null, null, "1");
+                ProfileTable.P_ACTIVE + "='1'", null, null, null, null,"1");
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();

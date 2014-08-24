@@ -111,7 +111,7 @@ public class DataContext {
         return result;
     }
 
-    public List<String> getLocations() {
+    public List<String> getLocationsNames() {
         final List<String> result = new ArrayList<String>();
         if(mLocation != null){
             for (Location location : mLocation) {
@@ -121,6 +121,11 @@ public class DataContext {
         }
         return result;
     }
+
+    public List<Location> getLocations() {
+        return mLocation == null ? new ArrayList<Location>() : mLocation;
+    }
+
 
     public List<Notification> getNotifications(){
         if(mNotifications == null)
