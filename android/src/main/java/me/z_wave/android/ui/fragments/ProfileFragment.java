@@ -163,7 +163,7 @@ public class ProfileFragment extends BaseFragment {
         saveEnteredData();
         if (item.getItemId() == R.id.action_done) {
             if (TextUtils.isEmpty(profile.name)) {
-
+                showToast("Profile name can't be empty");
             } else {
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {

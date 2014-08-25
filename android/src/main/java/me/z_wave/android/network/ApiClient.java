@@ -33,6 +33,9 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
@@ -436,7 +439,7 @@ public class ApiClient {
                 }
             };
 
-            HttpClient client = new DefaultHttpClient();
+            HttpClient client = createDefaultHttpClient();
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{x509TrustManager}, null);
             SSLSocketFactory sslSocketFactory = new ExSSLSocketFactory(sslContext);
@@ -451,6 +454,13 @@ public class ApiClient {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    private HttpClient createDefaultHttpClient(){
+        final HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+        HttpConnectionParams.setSoTimeout(httpParameters, 5000);
+       return new DefaultHttpClient(httpParameters);
     }
 
     private RequestInterceptor createCookiesInterceptor() {
