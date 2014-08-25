@@ -46,11 +46,12 @@ public class DatabaseDataProvider {
         mDatabaseHelper = new DatabaseHelper(context);
     }
 
-    public void addLocalProfile(LocalProfile localProfile) {
+    public long addLocalProfile(LocalProfile localProfile) {
         final ContentValues initialValues = ProfileTable.createContentValues(localProfile);
         final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        database.insert(ProfileTable.TABLE_NAME, null, initialValues);
+        long profileId = database.insert(ProfileTable.TABLE_NAME, null, initialValues);
         database.close();
+        return profileId;
     }
 
     public void removeLocalProfile(LocalProfile localProfile) {

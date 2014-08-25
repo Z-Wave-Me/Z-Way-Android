@@ -165,10 +165,13 @@ public class ProfileFragment extends BaseFragment {
             if (TextUtils.isEmpty(profile.name)) {
                 showToast("Profile name can't be empty");
             } else {
+                //TODO should be refactored
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
                     if (mIsCreateMode) {
                         bus.post(new ProgressEvent(true, false));
+                        long profileId = provider.addLocalProfile(profile);
+                        profile.id = (int) profileId;
                         apiClient.init(profile);
                         apiClient.auth(new ApiClient.OnAuthCompleteListener() {
                             @Override
@@ -180,7 +183,7 @@ public class ProfileFragment extends BaseFragment {
                                 }
 
                                 profile.active = true;
-                                provider.addLocalProfile(profile);
+                                provider.updateLocalProfile(profile);
 
                                 dataContext.clear();
                                 bus.post(new AccountChangedEvent());
@@ -189,8 +192,11 @@ public class ProfileFragment extends BaseFragment {
 
                             @Override
                             public void onAuthFiled() {
+                                apiClient.init(provider.getActiveLocalProfile());
                                 bus.post(new ProgressEvent(true, false));
-                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+//                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+                                bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+                                goBack();
                             }
                         });
                     } else {
@@ -200,6 +206,8 @@ public class ProfileFragment extends BaseFragment {
                     }
                 } else {
                     bus.post(new ProgressEvent(true, false));
+                    long profileId = provider.addLocalProfile(profile);
+                    profile.id = (int) profileId;
                     apiClient.init(profile);
                     apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
                         @Override
@@ -211,7 +219,7 @@ public class ProfileFragment extends BaseFragment {
                             }
 
                             profile.active = true;
-                            provider.addLocalProfile(profile);
+                            provider.updateLocalProfile(profile);
 
                             dataContext.clear();
                             bus.post(new AccountChangedEvent());
@@ -220,8 +228,11 @@ public class ProfileFragment extends BaseFragment {
 
                         @Override
                         public void onFailure(boolean isNetworkError) {
+                            apiClient.init(provider.getActiveLocalProfile());
                             bus.post(new ProgressEvent(true, false));
-                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+//                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+                            bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+                            goBack();
                         }
                     });
                 }

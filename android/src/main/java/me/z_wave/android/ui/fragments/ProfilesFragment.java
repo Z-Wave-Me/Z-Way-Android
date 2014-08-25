@@ -96,24 +96,12 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         final LocalProfile selectedProfile = mAdapter.getItem(position);
         if(!selectedProfile.active) {
             bus.post(new ProgressEvent(true, false));
-            selectedProfile.active = true;
-            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-            final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-            unselectedProfile.active = false;
-            provider.updateLocalProfile(selectedProfile);
-            provider.updateLocalProfile(unselectedProfile);
-            dataContext.clear();
-
-            mAdapter.clear();
-            mAdapter.addAll(provider.getLocalProfiles());
-            mAdapter.notifyDataSetChanged();
-
             apiClient.init(selectedProfile);
             if(!TextUtils.isEmpty(selectedProfile.login)
                     || !TextUtils.isEmpty(selectedProfile.password)) {
-                authenticate();
+                authenticate(selectedProfile);
             } else {
-                checkServerState();
+                checkServerState(selectedProfile);
             }
         }
     }
@@ -130,32 +118,60 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         return View.inflate(getActivity(), R.layout.layout_profile_footer, null);
     }
 
-    private void authenticate() {
+    private void authenticate(final LocalProfile selectedProfile) {
         apiClient.auth(new ApiClient.OnAuthCompleteListener() {
             @Override
             public void onAuthComplete() {
+                bus.post(new ProgressEvent(false, false));
+                selectedProfile.active = true;
+                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                unselectedProfile.active = false;
+                provider.updateLocalProfile(selectedProfile);
+                provider.updateLocalProfile(unselectedProfile);
                 dataContext.clear();
+
+                mAdapter.clear();
+                mAdapter.addAll(provider.getLocalProfiles());
+                mAdapter.notifyDataSetChanged();
                 bus.post(new AccountChangedEvent());
             }
 
             @Override
             public void onAuthFiled() {
-                bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
+                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                apiClient.init(provider.getActiveLocalProfile());
+                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowAttentionDialogEvent("Can't connect!"));
             }
         });
     }
 
-    private void checkServerState(){
+    private void checkServerState(final LocalProfile selectedProfile){
         apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
             @Override
             public void onSuccess(ServerStatus response) {
+                bus.post(new ProgressEvent(false, false));
+                selectedProfile.active = true;
+                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                unselectedProfile.active = false;
+                provider.updateLocalProfile(selectedProfile);
+                provider.updateLocalProfile(unselectedProfile);
                 dataContext.clear();
+
+                mAdapter.clear();
+                mAdapter.addAll(provider.getLocalProfiles());
+                mAdapter.notifyDataSetChanged();
                 bus.post(new AccountChangedEvent());
             }
 
             @Override
             public void onFailure(boolean isNetworkError) {
-                bus.post(new ShowAttentionDialogEvent("Authentication filed!"));
+                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                apiClient.init(provider.getActiveLocalProfile());
+                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowAttentionDialogEvent("Can't connect!"));
             }
         });
     }
