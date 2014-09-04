@@ -36,6 +36,7 @@ import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.dialogs.AlertDialog;
 import me.z_wave.android.ui.dialogs.BaseDialogFragment;
 import me.z_wave.android.ui.dialogs.ProgressDialog;
+import me.z_wave.android.ui.dialogs.ReconnectionProgressDialog;
 import me.z_wave.android.ui.fragments.*;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
@@ -61,7 +62,8 @@ import javax.inject.Singleton;
                 ProgressDialog.class,
                 AlertDialog.class,
                 ChooseLocationFragment.class,
-                MainMenuFragment.class
+                MainMenuFragment.class,
+                ReconnectionProgressDialog.class
 
         },
         library = true,

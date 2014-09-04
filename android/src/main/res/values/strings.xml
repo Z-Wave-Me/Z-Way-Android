@@ -88,4 +88,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="all_devices">All Widgets</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="connecting_to">Connecting to %s…</string>
+
 </resources>

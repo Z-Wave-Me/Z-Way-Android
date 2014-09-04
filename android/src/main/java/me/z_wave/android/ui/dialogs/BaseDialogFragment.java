@@ -35,6 +35,7 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
+import me.z_wave.android.app.ZWayApplication;
 
 public class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
 
@@ -61,6 +62,12 @@ public class BaseDialogFragment extends DialogFragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().setContentView(initBaseDialogView(inflater));
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((ZWayApplication) getActivity().getApplication()).inject(this);
     }
 
     @Override

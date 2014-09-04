@@ -46,6 +46,7 @@ import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
 public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener{
@@ -95,7 +96,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final LocalProfile selectedProfile = mAdapter.getItem(position);
         if(!selectedProfile.active) {
-            bus.post(new ProgressEvent(true, false));
+            bus.post(new ShowReconnectionProgressEvent(true, false, selectedProfile.name));
             apiClient.init(selectedProfile);
             if(!TextUtils.isEmpty(selectedProfile.login)
                     || !TextUtils.isEmpty(selectedProfile.password)) {
@@ -122,7 +123,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         apiClient.auth(new ApiClient.OnAuthCompleteListener() {
             @Override
             public void onAuthComplete() {
-                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 selectedProfile.active = true;
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
@@ -141,7 +142,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             public void onAuthFiled() {
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 apiClient.init(provider.getActiveLocalProfile());
-                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 bus.post(new ShowAttentionDialogEvent("Can't connect!"));
             }
         });
@@ -151,7 +152,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
             @Override
             public void onSuccess(ServerStatus response) {
-                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 selectedProfile.active = true;
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
@@ -170,7 +171,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             public void onFailure(boolean isNetworkError) {
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 apiClient.init(provider.getActiveLocalProfile());
-                bus.post(new ProgressEvent(false, false));
+                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 bus.post(new ShowAttentionDialogEvent("Can't connect!"));
             }
         });

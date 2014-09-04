@@ -32,6 +32,7 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.fragments.SplashFragment;
 
 /**
@@ -75,6 +76,11 @@ public class StartActivity extends BaseActivity {
     @Subscribe
     public void onShowHideProgress(ProgressEvent event){
         super.onShowHideProgress(event);
+    }
+
+    @Subscribe
+    public void onShowHideReconnectionProgressEvent(ShowReconnectionProgressEvent event) {
+        super.onShowHideReconnectionProgress(event);
     }
 
 

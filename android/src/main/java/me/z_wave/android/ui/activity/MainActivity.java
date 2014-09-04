@@ -38,6 +38,7 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
@@ -113,6 +114,11 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
     @Subscribe
     public void onShowHideProgress(ProgressEvent event){
         super.onShowHideProgress(event);
+    }
+
+    @Subscribe
+    public void onShowHideReconnectionProgressEvent(ShowReconnectionProgressEvent event) {
+        super.onShowHideReconnectionProgress(event);
     }
 
     private void setupActionBar() {

@@ -37,9 +37,11 @@ import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.dialogs.AlertDialog;
 import me.z_wave.android.ui.dialogs.BaseDialogFragment;
 import me.z_wave.android.ui.dialogs.ProgressDialog;
+import me.z_wave.android.ui.dialogs.ReconnectionProgressDialog;
 import me.z_wave.android.utils.FragmentUtils;
 
 import javax.inject.Inject;
@@ -50,6 +52,7 @@ public class BaseActivity extends Activity {
     Bus bus;
 
     private ProgressDialog mProgressDialog;
+    private ReconnectionProgressDialog mReconnectionProgressDialog;
     private boolean mIsDialogVisible = false;
 
     @Override
@@ -116,6 +119,16 @@ public class BaseActivity extends Activity {
         } else if(!event.show && mProgressDialog != null) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
+        }
+    }
+
+    public void onShowHideReconnectionProgress(ShowReconnectionProgressEvent event){
+        if(event.show && mReconnectionProgressDialog == null){
+            mReconnectionProgressDialog = ReconnectionProgressDialog.newInstance(event.profileName);
+            mReconnectionProgressDialog.show(getFragmentManager(), ProgressDialog.class.getSimpleName());
+        } else if(!event.show && mReconnectionProgressDialog != null) {
+            mReconnectionProgressDialog.dismiss();
+            mReconnectionProgressDialog = null;
         }
     }
 

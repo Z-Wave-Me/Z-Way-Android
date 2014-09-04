@@ -53,6 +53,7 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProfileUpdatedEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -169,13 +170,14 @@ public class ProfileFragment extends BaseFragment {
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
                     if (mIsCreateMode) {
-                        bus.post(new ProgressEvent(true, false));
+                        bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
                         long profileId = provider.addLocalProfile(profile);
                         profile.id = (int) profileId;
                         apiClient.init(profile);
                         apiClient.auth(new ApiClient.OnAuthCompleteListener() {
                             @Override
                             public void onAuthComplete() {
+                                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                                 if (unselectedProfile != null) {
                                     unselectedProfile.active = false;
@@ -193,7 +195,7 @@ public class ProfileFragment extends BaseFragment {
                             @Override
                             public void onAuthFiled() {
                                 apiClient.init(provider.getActiveLocalProfile());
-                                bus.post(new ProgressEvent(true, false));
+                                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
 //                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
                                 bus.post(new ShowAttentionDialogEvent("New profile was saved."));
                                 goBack();
@@ -205,13 +207,14 @@ public class ProfileFragment extends BaseFragment {
                         bus.post(new ProfileUpdatedEvent());
                     }
                 } else {
-                    bus.post(new ProgressEvent(true, false));
+                    bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
                     long profileId = provider.addLocalProfile(profile);
                     profile.id = (int) profileId;
                     apiClient.init(profile);
                     apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
                         @Override
                         public void onSuccess(ServerStatus response) {
+                            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                             final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                             if (unselectedProfile != null) {
                                 unselectedProfile.active = false;
@@ -229,7 +232,7 @@ public class ProfileFragment extends BaseFragment {
                         @Override
                         public void onFailure(boolean isNetworkError) {
                             apiClient.init(provider.getActiveLocalProfile());
-                            bus.post(new ProgressEvent(true, false));
+                            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
 //                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
                             bus.post(new ShowAttentionDialogEvent("New profile was saved."));
                             goBack();

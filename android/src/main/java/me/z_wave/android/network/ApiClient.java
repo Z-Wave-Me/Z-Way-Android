@@ -64,6 +64,7 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.MainThreadExecutor;
 import retrofit.client.ApacheClient;
 import retrofit.client.Response;
 import timber.log.Timber;
@@ -72,6 +73,8 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -108,6 +111,8 @@ public class ApiClient {
     private DefaultHttpClient mClient;
     private RestAdapter mAdaptor;
     private Cookie mCookie;
+    private ExecutorService mExecutorService;
+
 
     private boolean mAuthInProgress;
     private int mAuthTriesCounter;
@@ -118,10 +123,12 @@ public class ApiClient {
         final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
                 ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
         mClient = getHttpsClient();
+        mExecutorService = Executors.newCachedThreadPool();
         mAdaptor = new RestAdapter.Builder()
                 .setEndpoint(url)
                 .setLogLevel(Constants.API_LOG_LEVEL)
                 .setClient(new ApacheClient(mClient))
+                .setExecutors(mExecutorService, new MainThreadExecutor())
                 .setRequestInterceptor(createCookiesInterceptor())
                 .build();
     }
@@ -313,6 +320,10 @@ public class ApiClient {
                     }
                 }
         );
+    }
+
+    public void cancelConnection(){
+        mExecutorService.shutdownNow();
     }
 
     private void onAuthResult(OnAuthCompleteListener listener) {
