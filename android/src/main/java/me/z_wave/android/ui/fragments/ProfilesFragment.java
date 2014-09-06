@@ -97,12 +97,10 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         final LocalProfile selectedProfile = mAdapter.getItem(position);
         if(!selectedProfile.active) {
             bus.post(new ShowReconnectionProgressEvent(true, false, selectedProfile.name));
-            apiClient.init(selectedProfile);
-            if(!TextUtils.isEmpty(selectedProfile.login)
-                    || !TextUtils.isEmpty(selectedProfile.password)) {
-                authenticate(selectedProfile);
-            } else {
+            if(!TextUtils.isEmpty(selectedProfile.indoorServer)) {
                 checkServerState(selectedProfile);
+            } else {
+                authenticate(selectedProfile);
             }
         }
     }
@@ -120,6 +118,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void authenticate(final LocalProfile selectedProfile) {
+        apiClient.init(selectedProfile, true);
         apiClient.auth(new ApiClient.OnAuthCompleteListener() {
             @Override
             public void onAuthComplete() {
@@ -151,6 +150,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void checkServerState(final LocalProfile selectedProfile){
+        apiClient.init(selectedProfile);
         apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
             @Override
             public void onSuccess(ServerStatus response) {
@@ -173,10 +173,16 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
             @Override
             public void onFailure(boolean isNetworkError) {
-                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-                apiClient.init(provider.getActiveLocalProfile());
-                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-                bus.post(new ShowAttentionDialogEvent("Can't connect!"));
+                if(!TextUtils.isEmpty(selectedProfile.login)
+                        || !TextUtils.isEmpty(selectedProfile.password)) {
+                    authenticate(selectedProfile);
+                } else {
+                    final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                    apiClient.init(provider.getActiveLocalProfile());
+                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+                    bus.post(new ShowAttentionDialogEvent("Can't connect!"));
+                }
+
             }
         });
     }

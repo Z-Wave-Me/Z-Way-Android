@@ -116,11 +116,20 @@ public class ApiClient {
     private int mAuthTriesCounter;
 
     public void init(LocalProfile localProfile) {
+        init(localProfile, false);
+    }
+
+    public void init(LocalProfile localProfile, boolean useDefaultUrl) {
         if(localProfile != null) {
             Timber.v("init ApiClient for " + localProfile.toString());
             mLocalProfile = localProfile;
-            final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
-                    ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
+            String url;
+            if(useDefaultUrl) {
+                url = Constants.DEFAULT_URL;
+            } else {
+                url = TextUtils.isEmpty(mLocalProfile.indoorServer)
+                        ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
+            }
             mClient = getHttpsClient();
             mAdaptor = new RestAdapter.Builder()
                     .setEndpoint(url)

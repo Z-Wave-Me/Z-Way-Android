@@ -160,89 +160,101 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        //TODO IVAN_PL refactor this!!!
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
         final LocalProfile profile = profileContext.getProfile();
         saveEnteredData();
         if (item.getItemId() == R.id.action_done) {
-            if (TextUtils.isEmpty(profile.name)) {
-                showToast("Profile name can't be empty");
-            } else {
-                //TODO should be refactored
-                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-                if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
-                    if (mIsCreateMode) {
-                        bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
-                        long profileId = provider.addLocalProfile(profile);
-                        profile.id = (int) profileId;
-                        apiClient.init(profile);
-                        apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-                            @Override
-                            public void onAuthComplete() {
-                                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-                                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                                if (unselectedProfile != null) {
-                                    unselectedProfile.active = false;
-                                    provider.updateLocalProfile(unselectedProfile);
-                                }
-
-                                profile.active = true;
-                                provider.updateLocalProfile(profile);
-
-                                dataContext.clear();
-                                bus.post(new AccountChangedEvent());
-                                goBack();
-                            }
-
-                            @Override
-                            public void onAuthFiled() {
-                                apiClient.init(provider.getActiveLocalProfile());
-                                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-//                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
-                                bus.post(new ShowAttentionDialogEvent("New profile was saved."));
-                                goBack();
-                            }
-                        });
-                    } else {
-                        provider.updateLocalProfile(profile);
-                        showToast(R.string.profile_changes_are_saved);
-                        bus.post(new ProfileUpdatedEvent());
-                    }
+            if(mIsCreateMode) {
+                if (TextUtils.isEmpty(profile.name)) {
+                    showToast("Profile name can't be empty");
                 } else {
                     bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
                     long profileId = provider.addLocalProfile(profile);
                     profile.id = (int) profileId;
-                    apiClient.init(profile);
-                    apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
-                        @Override
-                        public void onSuccess(ServerStatus response) {
-                            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-                            final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                            if (unselectedProfile != null) {
-                                unselectedProfile.active = false;
-                                provider.updateLocalProfile(unselectedProfile);
-                            }
-
-                            profile.active = true;
-                            provider.updateLocalProfile(profile);
-
-                            dataContext.clear();
-                            bus.post(new AccountChangedEvent());
-                            goBack();
-                        }
-
-                        @Override
-                        public void onFailure(boolean isNetworkError) {
-                            apiClient.init(provider.getActiveLocalProfile());
-                            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-//                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
-                            bus.post(new ShowAttentionDialogEvent("New profile was saved."));
-                            goBack();
-                        }
-                    });
+                    if(!TextUtils.isEmpty(profile.indoorServer)) {
+                        connectToOutdorService(profile);
+                    } else {
+                        loginWithUserCredentials(profile);
+                    }
                 }
+            } else {
+                provider.updateLocalProfile(profile);
+                showToast(R.string.profile_changes_are_saved);
+                bus.post(new ProfileUpdatedEvent());
             }
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void connectToOutdorService(final LocalProfile profile) {
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        apiClient.init(profile);
+        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
+            @Override
+            public void onSuccess(ServerStatus response) {
+                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                if (unselectedProfile != null) {
+                    unselectedProfile.active = false;
+                    provider.updateLocalProfile(unselectedProfile);
+                }
+
+                profile.active = true;
+                provider.updateLocalProfile(profile);
+
+                dataContext.clear();
+                bus.post(new AccountChangedEvent());
+                goBack();
+            }
+
+            @Override
+            public void onFailure(boolean isNetworkError) {
+                if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
+                    loginWithUserCredentials(profile);
+                } else {
+                    apiClient.init(provider.getActiveLocalProfile());
+                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+//                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+                    bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+                    goBack();
+                }
+            }
+        });
+    }
+
+    private void loginWithUserCredentials(final LocalProfile profile) {
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            apiClient.init(profile, true);
+            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
+                @Override
+                public void onAuthComplete() {
+                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+                    final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+                    if (unselectedProfile != null) {
+                        unselectedProfile.active = false;
+                        provider.updateLocalProfile(unselectedProfile);
+                    }
+
+                    profile.active = true;
+                    provider.updateLocalProfile(profile);
+
+                    dataContext.clear();
+                    bus.post(new AccountChangedEvent());
+                    goBack();
+                }
+
+                @Override
+                public void onAuthFiled() {
+                    apiClient.init(provider.getActiveLocalProfile());
+                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+//                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
+                    bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+                    goBack();
+                }
+            });
     }
 
     @Override
