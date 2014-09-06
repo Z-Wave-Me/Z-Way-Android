@@ -22,6 +22,7 @@
 
 package me.z_wave.android.network;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.apache.http.client.HttpClient;
@@ -64,7 +65,6 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.android.MainThreadExecutor;
 import retrofit.client.ApacheClient;
 import retrofit.client.Response;
 import timber.log.Timber;
@@ -73,8 +73,6 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -111,26 +109,26 @@ public class ApiClient {
     private DefaultHttpClient mClient;
     private RestAdapter mAdaptor;
     private Cookie mCookie;
-    private ExecutorService mExecutorService;
+    private boolean mIgnoreRequestResults = false;
 
 
     private boolean mAuthInProgress;
     private int mAuthTriesCounter;
 
     public void init(LocalProfile localProfile) {
-        Timber.v("init ApiClient for " + localProfile.toString());
-        mLocalProfile = localProfile;
-        final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
-                ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
-        mClient = getHttpsClient();
-        mExecutorService = Executors.newCachedThreadPool();
-        mAdaptor = new RestAdapter.Builder()
-                .setEndpoint(url)
-                .setLogLevel(Constants.API_LOG_LEVEL)
-                .setClient(new ApacheClient(mClient))
-                .setExecutors(mExecutorService, new MainThreadExecutor())
-                .setRequestInterceptor(createCookiesInterceptor())
-                .build();
+        if(localProfile != null) {
+            Timber.v("init ApiClient for " + localProfile.toString());
+            mLocalProfile = localProfile;
+            final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
+                    ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
+            mClient = getHttpsClient();
+            mAdaptor = new RestAdapter.Builder()
+                    .setEndpoint(url)
+                    .setLogLevel(Constants.API_LOG_LEVEL)
+                    .setClient(new ApacheClient(mClient))
+                    .setRequestInterceptor(createCookiesInterceptor())
+                    .build();
+        }
     }
 
     public void getServerState() {
@@ -309,37 +307,51 @@ public class ApiClient {
                 new Callback<ServerStatus>() {
                     @Override
                     public void success(ServerStatus profileResponse, Response response) {
-                        Timber.v(profileResponse.toString());
-                        callback.onSuccess(profileResponse);
+                        if(mIgnoreRequestResults) {
+                            mIgnoreRequestResults = false;
+                        } else {
+                            Timber.v(profileResponse.toString());
+                            callback.onSuccess(profileResponse);
+                        }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        boolean networkUnreachable = isNetworkUnreachableError(error);
-                        callback.onFailure(networkUnreachable);
+                        if(mIgnoreRequestResults) {
+                            mIgnoreRequestResults = false;
+                        } else {
+                            boolean networkUnreachable = isNetworkUnreachableError(error);
+                            callback.onFailure(networkUnreachable);
+                        }
                     }
                 }
         );
     }
 
     public void cancelConnection(){
-        mExecutorService.shutdownNow();
+        mIgnoreRequestResults = true;
     }
 
     private void onAuthResult(OnAuthCompleteListener listener) {
-        mAuthTriesCounter++;
-        if (mClient.getCookieStore() == null || mClient.getCookieStore().getCookies().size() == 0 ||
-                TextUtils.isEmpty(mClient.getCookieStore().getCookies().get(0).getValue())) {
-            if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
-                mAuthTriesCounter = 0;
-                listener.onAuthFiled();
-            } else {
-                auth(listener);
-            }
-        } else {
-            mCookie = mClient.getCookieStore().getCookies().get(0);
-            listener.onAuthComplete();
+        if(mIgnoreRequestResults) {
+            mAuthTriesCounter = 0;
             mAuthInProgress = false;
+            mIgnoreRequestResults = false;
+        } else {
+            mAuthTriesCounter++;
+            if (mClient.getCookieStore() == null || mClient.getCookieStore().getCookies().size() == 0 ||
+                    TextUtils.isEmpty(mClient.getCookieStore().getCookies().get(0).getValue())) {
+                if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
+                    mAuthTriesCounter = 0;
+                    listener.onAuthFiled();
+                } else {
+                    auth(listener);
+                }
+            } else {
+                mCookie = mClient.getCookieStore().getCookies().get(0);
+                listener.onAuthComplete();
+                mAuthInProgress = false;
+            }
         }
     }
 

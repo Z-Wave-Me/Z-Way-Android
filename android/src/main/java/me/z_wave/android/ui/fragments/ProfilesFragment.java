@@ -127,9 +127,11 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 selectedProfile.active = true;
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                unselectedProfile.active = false;
                 provider.updateLocalProfile(selectedProfile);
-                provider.updateLocalProfile(unselectedProfile);
+                if(unselectedProfile != null) {
+                    unselectedProfile.active = false;
+                    provider.updateLocalProfile(unselectedProfile);
+                }
                 dataContext.clear();
 
                 mAdapter.clear();
@@ -156,9 +158,11 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 selectedProfile.active = true;
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                unselectedProfile.active = false;
                 provider.updateLocalProfile(selectedProfile);
-                provider.updateLocalProfile(unselectedProfile);
+                if(unselectedProfile != null) {
+                    unselectedProfile.active = false;
+                    provider.updateLocalProfile(unselectedProfile);
+                }
                 dataContext.clear();
 
                 mAdapter.clear();

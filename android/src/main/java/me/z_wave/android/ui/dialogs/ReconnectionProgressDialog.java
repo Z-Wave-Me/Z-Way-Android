@@ -27,10 +27,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
 /**
  * Created by Ivan PL on 04.09.2014.
@@ -41,6 +44,9 @@ public class ReconnectionProgressDialog extends BaseDialogFragment {
 
     @Inject
     ApiClient apiClient;
+
+    @Inject
+    public Bus bus;
 
     public static ReconnectionProgressDialog newInstance(String profileName) {
         final ReconnectionProgressDialog dialog = new ReconnectionProgressDialog();
@@ -63,7 +69,7 @@ public class ReconnectionProgressDialog extends BaseDialogFragment {
     public void onClick(View view) {
         if(view.getId() == R.id.cancel_connection) {
             apiClient.cancelConnection();
-            dismiss();
+            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
         } else {
             super.onClick(view);
         }
