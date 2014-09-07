@@ -186,9 +186,12 @@ public class DataContext {
         final List<Device> result = new ArrayList<Device>();
 
         if(profile != null && profile.positions != null && mDevices != null){
-            for(Device device : mDevices){
-                if(profile.positions.contains(device.id)){
-                    result.add(device);
+            for(String position : profile.positions) {
+                for(Device device : mDevices){
+                    if(device.id.equals(position)){
+                        result.add(device);
+                        break;
+                    }
                 }
             }
         }

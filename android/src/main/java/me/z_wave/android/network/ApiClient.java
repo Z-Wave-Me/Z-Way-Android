@@ -428,7 +428,7 @@ public class ApiClient {
         return mAdaptor.create(ProfilesRequest.class).getProfiles();
     }
 
-    public void updateProfiles(Profile profile, final ApiCallback<List<Profile>, String> callback) {
+    public void updateProfile(Profile profile, final ApiCallback<List<Profile>, String> callback) {
         mAdaptor.create(UpdateProfileRequest.class).updateProfile(profile.id, profile,
                 new Callback<ProfilesResponse>() {
                     @Override
@@ -490,8 +490,8 @@ public class ApiClient {
 
     private HttpClient createDefaultHttpClient(){
         final HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-        HttpConnectionParams.setSoTimeout(httpParameters, 5000);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+        HttpConnectionParams.setSoTimeout(httpParameters, 10000);
        return new DefaultHttpClient(httpParameters);
     }
 

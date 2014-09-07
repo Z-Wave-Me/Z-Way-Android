@@ -169,7 +169,7 @@ public class DashboardFragment extends BaseFragment implements
 //            mAdapter.remove(updatedDevice);
 //            profile.positions.remove(updatedDevice.id);
 //            mAdapter.notifyDataSetChanged();
-//            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+//            apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
 //                @Override
 //                public void onSuccess(List<Profile> result) {
 //

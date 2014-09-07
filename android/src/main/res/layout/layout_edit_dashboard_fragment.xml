@@ -22,54 +22,29 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:gravity="center_vertical">
-
-    <RelativeLayout android:id="@+id/back_view"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/grid_item_height">
-
-        <TextView android:id="@+id/device_grid_item_add_remove"
-            android:layout_height="match_parent"
-            android:layout_width="@dimen/grid_item_back_view_width"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:background="@color/red"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="@string/dashboadr_remove"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout android:id="@+id/front_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:orientation="vertical"
         android:background="@color/white">
 
-        <ImageView android:id="@+id/edit_device_grid_item_rearrange"
+        <ImageView android:id="@id/drag_handle"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_rearrange"
-            android:scaleType="center"
-            android:background="@null"/>
+            android:scaleType="center"/>
 
-        <ImageButton android:id="@+id/edit_device_grid_item_remove"
+        <ImageView android:id="@id/click_remove"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_remove"
-            android:scaleType="center"
-            android:background="@null"/>
+            android:scaleType="center"/>
 
         <ImageView android:id="@+id/edit_device_grid_item_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/edit_device_grid_item_remove"
+            android:layout_toRightOf="@id/click_remove"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
             android:scaleType="fitCenter"
@@ -85,9 +60,7 @@
             android:singleLine="true"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/edit_device_grid_item_icon"
-            android:layout_toLeftOf="@id/edit_device_grid_item_rearrange"
+            android:layout_toLeftOf="@id/drag_handle"
             android:text="sdfsdfsdfsdfsdfsdfsdfsdf"/>
 
         </RelativeLayout>
-
-</RelativeLayout>

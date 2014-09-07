@@ -164,7 +164,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 //            } else {
 //                profile.positions.add(updatedDevice.id);
 //            }
-//            apiClient.updateProfiles(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+//            apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
 //                @Override
 //                public void onSuccess(List<Profile> result) {
 //                    mAdapter.notifyDataSetChanged();

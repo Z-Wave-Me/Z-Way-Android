@@ -23,38 +23,43 @@
 package me.z_wave.android.ui.fragments.dashboard;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
-import com.squareup.otto.Subscribe;
+import com.mobeta.android.dslv.DragSortController;
+import com.mobeta.android.dslv.DragSortListView;
 
-import org.askerov.dynamicgrid.DynamicGridView;
-
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.ui.adapters.EditDashboardGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
-import me.z_wave.android.ui.views.DragSortGridView;
-import timber.log.Timber;
 
-public class EditDashboardFragment extends BaseFragment implements EditDashboardGridAdapter.EditDashboardListener, DragSortGridView.OnReorderingListener {
+public class EditDashboardFragment extends BaseFragment implements
+        DragSortListView.DropListener, DragSortListView.RemoveListener {
 
     @InjectView(R.id.edit_dashboard_widgets)
-    DynamicGridView dragSortGridView;
+    DragSortListView dragSortGridView;
+
+    @Inject
+    ApiClient apiClient;
 
     private EditDashboardGridAdapter mAdapter;
-    private List<Device> mDashboardDevices;
+    private List<String> mDevicesIds;
+    private DragSortController mController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,8 +71,16 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDashboardDevices = dataContext.getDashboardDevices();
+        mDevicesIds = new ArrayList<String>(dataContext.getActiveProfile().positions);
         prepareDevicesView();
+
+        dragSortGridView.setDropListener(this);
+        dragSortGridView.setRemoveListener(this);
+
+        mController = buildController(dragSortGridView);
+        dragSortGridView.setFloatViewManager(mController);
+        dragSortGridView.setOnTouchListener(mController);
+        dragSortGridView.setDragEnabled(true);
     }
 
     @Override
@@ -78,89 +91,66 @@ public class EditDashboardFragment extends BaseFragment implements EditDashboard
     }
 
     @Override
+    public void drop(int from, int to) {
+        if (from != to) {
+            Device item = mAdapter.getItem(from);
+            mAdapter.remove(item);
+            mAdapter.insert(item, to);
+
+            final String position = mDevicesIds.get(from);
+            mDevicesIds.remove(position);
+            mDevicesIds.add(to, position);
+        }
+    }
+
+    @Override
+    public void remove(int which) {
+        mAdapter.remove(mAdapter.getItem(which));
+        mDevicesIds.remove(which);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.edit_dashboard_done:
-                //TODO save changes
-                goBack();
+                final Profile profile = dataContext.getActiveProfile();
+                profile.positions = mDevicesIds;
+
+                bus.post(new ProgressEvent(true, false));
+                apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+                    @Override
+                    public void onSuccess(List<Profile> result) {
+                        bus.post(new ProgressEvent(false, false));
+                        dataContext.setProfiles(result);
+                        goBack();
+                    }
+
+                    @Override
+                    public void onFailure(String request, boolean isNetworkError) {
+                        bus.post(new ProgressEvent(false, false));
+                        //TODO IVAN_PL error show
+                        goBack();
+                    }
+                });
+
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Subscribe
-    public void onDataUpdated(OnDataUpdatedEvent event) {
-        Timber.v("Dashboard list updated!");
-        if(mDashboardDevices.isEmpty()){
-            mDashboardDevices.addAll(dataContext.getDashboardDevices());
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
     private void prepareDevicesView() {
-        mAdapter = new EditDashboardGridAdapter(getActivity(), mDashboardDevices,
-                getResources().getInteger(R.integer.devices_list_columns_count), dataContext.getActiveProfile(), this);
-        dragSortGridView.setWobbleInEditMode(false);
-
-        //        add callback to stop edit mode if needed
-        dragSortGridView.setOnDropListener(new DynamicGridView.OnDropListener()
-        {
-            @Override
-            public void onActionDrop(){
-                dragSortGridView.stopEditMode();
-                dragSortGridView.invalidateViews();
-                mAdapter.notifyDataSetChanged();
-//                if (fromPosition != toPosition) {
-//                    final Device device = mDashboardDevices.remove(fromPosition);
-//                    mDashboardDevices.add(toPosition, device);
-
-//                int position = positions.remove(from);
-//                positions.add(to, position);
-
-//                    mAdapter.notifyDataSetChanged();
-//                }
-            }
-        });
-
-        dragSortGridView.setOnDragListener(new DynamicGridView.OnDragListener() {
-            @Override
-            public void onDragStarted(int position) {
-                Log.d("EDIT_MODE", "drag started at position " + position);
-            }
-
-            @Override
-            public void onDragPositionsChanged(int oldPosition, int newPosition) {
-                Log.d("EDIT_MODE", String.format("drag item position changed from %d to %d", oldPosition, newPosition));
-            }
-        });
-
-        dragSortGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                dragSortGridView.startEditMode(position);
-                return true;
-            }
-        });
-
-
-//        dragSortGridView.setOnReorderingListener(this);
+        mAdapter = new EditDashboardGridAdapter(getActivity(), dataContext.getDashboardDevices());
         dragSortGridView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onDeleteDevice(Device device) {
-        mAdapter.remove(device);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRearrangeStarted(View item, int position) {
-        dragSortGridView.startEditMode(position);
-    }
-
-    @Override
-    public void onReordering(int fromPosition, int toPosition) {
-
+    public DragSortController buildController(DragSortListView dslv) {
+        DragSortController controller = new DragSortController(dslv);
+        controller.setDragHandleId(R.id.drag_handle);
+        controller.setClickRemoveId(R.id.click_remove);
+        controller.setRemoveEnabled(true);
+        controller.setSortEnabled(true);
+        controller.setDragInitMode(DragSortController.ON_DOWN);
+        controller.setRemoveMode(DragSortController.CLICK_REMOVE);
+        return controller;
     }
 }
