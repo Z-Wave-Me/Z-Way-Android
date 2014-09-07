@@ -90,7 +90,7 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
     }
 
     private void prepareListView(){
-        mAdapter = new NotificationsListAdapter(getActivity(), createNotList());//dataContext.getNotifications());
+        mAdapter = new NotificationsListAdapter(getActivity(), dataContext.getNotifications());
         notificationList.setAdapter(mAdapter);
         notificationList.setRemoveListener(this);
     }
@@ -116,17 +116,5 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
 
             }
         });
-    }
-
-
-    private List<Notification> createNotList() {
-        List<Notification> list = new ArrayList<Notification>();
-        for(int i = 0; i < 5; i++) {
-            Notification n = new Notification();
-            n.id = "" + i;
-            n.message = "message " + i;
-            list.add(n);
-        }
-        return list;
     }
 }
