@@ -31,10 +31,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import me.z_wave.android.R;
 
-public class SwipeGridView extends GridView {
+public class SwipeListView extends ListView {
 
 
     public final static int SWIPE_ACTION_REVEAL = 0;
@@ -64,19 +65,19 @@ public class SwipeGridView extends GridView {
     int swipeBackView = 0;
     private SwipeGridViewTouchHandler touchListener;
 
-    public SwipeGridView(Context context, int swipeBackView, int swipeFrontView) {
+    public SwipeListView(Context context, int swipeBackView, int swipeFrontView) {
         super(context);
         this.swipeFrontView = swipeFrontView;
         this.swipeBackView = swipeBackView;
         init(null);
     }
 
-    public SwipeGridView(Context context, AttributeSet attrs) {
+    public SwipeListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public SwipeGridView(Context context, AttributeSet attrs, int defStyle) {
+    public SwipeListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs);
     }

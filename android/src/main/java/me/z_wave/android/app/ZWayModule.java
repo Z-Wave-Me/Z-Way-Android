@@ -63,7 +63,8 @@ import javax.inject.Singleton;
                 AlertDialog.class,
                 ChooseLocationFragment.class,
                 MainMenuFragment.class,
-                ReconnectionProgressDialog.class
+                ReconnectionProgressDialog.class,
+                EditDevicesFragment.class
 
         },
         library = true,

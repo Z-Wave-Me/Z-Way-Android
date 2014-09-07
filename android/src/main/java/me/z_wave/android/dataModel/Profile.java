@@ -30,6 +30,7 @@ public class Profile {
     public String name;
     public String description;
     public List<String> positions;
+    //TODO IVAN_PL active should be deleted
     public boolean active;
 
 

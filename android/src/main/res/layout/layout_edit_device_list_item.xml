@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 07.09.14 21:46.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout android:id="@+id/back_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_height">
+
+        <TextView android:id="@+id/device_list_item_add_remove"
+            android:layout_height="match_parent"
+            android:layout_width="@dimen/grid_item_back_view_width"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@string/dashboadr_remove"/>
+
+    </RelativeLayout>
+
+    <LinearLayout android:id="@+id/front_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_item_height">
+
+            <ImageView android:id="@+id/device_list_item_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_sensor"/>
+
+            <TextView android:id="@+id/device_list_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:layout_toRightOf="@+id/device_list_item_icon"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:singleLine="true"
+                android:text="sdfsdfsdfsdfsdfsdfsdfsdf"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="22dp"
+                android:layout_toRightOf="@+id/device_list_item_icon"
+                android:id="@+id/relativeLayout">
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_color"/>
+
+</RelativeLayout>

@@ -81,7 +81,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         prepareSeekBar(holder, device);
         prepareRgbView(holder, device);
         prepareToggle(holder, device);
-//        prepareAddRemoveView(holder, device);
+        prepareAddRemoveView(holder, device);
 
 
 
@@ -108,24 +108,24 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         }
     }
 
-//    private void prepareAddRemoveView(ViewHolder holder, final Device device) {
-//        final boolean isOnDashboard = mProfile != null && mProfile.positions != null
-//                && mProfile.positions.contains(device.id);
-//        final int addRemoveTextResId = isOnDashboard ? R.string.dashboadr_remove
-//                : R.string.dashboard_to_dashboard;
-//        final int addRemoveBgColorResId = isOnDashboard ? R.color.red
-//                : R.color.dark_gray;
-//
-//        holder.addRemove.setText(addRemoveTextResId);
-//        holder.addRemove.setBackgroundColor(
-//                getContext().getResources().getColor(addRemoveBgColorResId));
-//        holder.addRemove.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+    private void prepareAddRemoveView(ViewHolder holder, final Device device) {
+        final boolean isOnDashboard = mProfile != null && mProfile.positions != null
+                && mProfile.positions.contains(device.id);
+        final int addRemoveTextResId = isOnDashboard ? R.string.dashboadr_remove
+                : R.string.dashboard_to_dashboard;
+        final int addRemoveBgColorResId = isOnDashboard ? R.color.red
+                : R.color.dark_gray;
+
+        holder.addRemove.setText(addRemoveTextResId);
+        holder.addRemove.setBackgroundColor(
+                getContext().getResources().getColor(addRemoveBgColorResId));
+        holder.addRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                mListener.onAddRemoveClicked(device);
-//            }
-//        });
-//    }
+            }
+        });
+    }
 
     private void prepareValueView(ViewHolder holder, Device device){
         final DeviceType deviceType = device.deviceType;

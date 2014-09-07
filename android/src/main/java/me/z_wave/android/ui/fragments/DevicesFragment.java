@@ -24,6 +24,9 @@ package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -34,8 +37,10 @@ import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
+import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
 import timber.log.Timber;
 
 import java.util.ArrayList;
@@ -59,6 +64,8 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
+    private Filter mFilter;
+    private String mFilterValue;
 
     public static DevicesFragment newInstance(Filter filter, String filterValue){
         final DevicesFragment devicesFragment = new DevicesFragment();
@@ -81,6 +88,22 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
         super.onActivityCreated(savedInstanceState);
         prepareDevicesView();
         changeEmptyMsgVisibility();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_devices, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.devices_edit:
+                bus.post(new CommitFragmentEvent(EditDevicesFragment.newInstance(mFilter, mFilterValue), true));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -202,15 +225,15 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
     }
 
     private List<Device> getFilteredDeviceList(){
-        final Filter filter = Filter.values()[getArguments().getInt(FILTER_KEY, 0)];
-        final String filterValue = getArguments().getString(FILTER_NAME_KEY, Filter.DEFAULT_FILTER);
-        switch (filter){
+        mFilter = Filter.values()[getArguments().getInt(FILTER_KEY, 0)];
+        mFilterValue = getArguments().getString(FILTER_NAME_KEY, Filter.DEFAULT_FILTER);
+        switch (mFilter){
             case LOCATION:
-                return dataContext.getDevicesForLocation(filterValue);
+                return dataContext.getDevicesForLocation(mFilterValue);
             case TYPE:
-                return dataContext.getDevicesWithType(filterValue);
+                return dataContext.getDevicesWithType(mFilterValue);
             case TAG:
-                return dataContext.getDevicesWithTag(filterValue);
+                return dataContext.getDevicesWithTag(mFilterValue);
         }
         return new ArrayList<Device>();
     }

@@ -112,7 +112,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         style="@style/NavDrawerItem"
-                        android:text="you have 10008 notifications"
+                        android:text="@string/notification_everything_ok"
                         android:clickable="true"/>
 
                 </LinearLayout>

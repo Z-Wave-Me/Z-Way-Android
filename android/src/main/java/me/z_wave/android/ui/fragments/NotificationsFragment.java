@@ -75,17 +75,18 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
         changeEmptyDashboardMsgVisibility();
     }
 
-    @Subscribe
-    public void onGetNotification(OnGetNotificationEvent event){
-        mAdapter.notifyDataSetChanged();
-        changeEmptyDashboardMsgVisibility();
-    }
-
     @Override
     public void remove(int which) {
         final Notification deletedNotification = mAdapter.getItem(which);
         markNotificationAsRedeemed(deletedNotification);
         mAdapter.remove(deletedNotification);
+        changeEmptyDashboardMsgVisibility();
+    }
+
+    @Subscribe
+    public void onGetNotification(OnGetNotificationEvent event){
+        mAdapter.clear();
+        mAdapter.addAll(dataContext.getNotifications());
         changeEmptyDashboardMsgVisibility();
     }
 

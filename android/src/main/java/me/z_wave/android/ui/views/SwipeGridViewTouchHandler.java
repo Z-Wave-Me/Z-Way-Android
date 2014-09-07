@@ -68,7 +68,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
     private int swipeDrawableChecked = 0;
     private int swipeDrawableUnchecked = 0;
 
-    private SwipeGridView swipeListView;
+    private SwipeListView swipeListView;
     private int viewWidth = 1;
     private List<PendingDismissData> pendingDismisses = new ArrayList<PendingDismissData>();
     private int dismissAnimationRefCount = 0;
@@ -83,10 +83,10 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
     private View backView;
     private boolean paused;
 
-    private int swipeCurrentAction = SwipeGridView.SWIPE_ACTION_NONE;
+    private int swipeCurrentAction = SwipeListView.SWIPE_ACTION_NONE;
 
-    private int swipeActionLeft = SwipeGridView.SWIPE_ACTION_REVEAL;
-    private int swipeActionRight = SwipeGridView.SWIPE_ACTION_REVEAL;
+    private int swipeActionLeft = SwipeListView.SWIPE_ACTION_REVEAL;
+    private int swipeActionRight = SwipeListView.SWIPE_ACTION_REVEAL;
 
     private List<Boolean> opened = new ArrayList<Boolean>();
     private List<Boolean> openedRight = new ArrayList<Boolean>();
@@ -94,7 +94,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
     private int oldSwipeActionRight;
     private int oldSwipeActionLeft;
 
-    public SwipeGridViewTouchHandler(SwipeGridView swipeListView, int swipeFrontView, int swipeBackView) {
+    public SwipeGridViewTouchHandler(SwipeListView swipeListView, int swipeFrontView, int swipeBackView) {
         this.swipeFrontView = swipeFrontView;
         this.swipeBackView = swipeBackView;
         ViewConfiguration vc = ViewConfiguration.get(swipeListView.getContext());
@@ -185,7 +185,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
         int count = lastChecked ? lastCount - 1 : lastCount + 1;
         if (lastCount == 0 && count == 1) {
             closeOpenedItems();
-            setActionsTo(SwipeGridView.SWIPE_ACTION_CHOICE);
+            setActionsTo(SwipeListView.SWIPE_ACTION_CHOICE);
         }
         if (lastCount == 1 && count == 0) {
             returnOldActions();
@@ -251,13 +251,13 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
     }
 
     private void generateAnimate(final View view, final boolean swap, final boolean swapRight, final int position) {
-        if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_REVEAL) {
+        if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_REVEAL) {
             generateRevealAnimate(view, swap, swapRight, position);
         }
-        if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_DISMISS) {
+        if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_DISMISS) {
             generateDismissAnimate(parentView, swap, swapRight, position);
         }
-        if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+        if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
             generateChoiceAnimate(view, position);
         }
     }
@@ -343,7 +343,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
 
     private void resetCell() {
         if (downPosition != ListView.INVALID_POSITION) {
-            if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+            if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
                 backView.setVisibility(View.VISIBLE);
             }
             frontView.setClickable(opened.get(downPosition));
@@ -438,7 +438,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
                 if (paused && downPosition != ListView.INVALID_POSITION) {
                     return false;
                 }
-                swipeCurrentAction = SwipeGridView.SWIPE_ACTION_NONE;
+                swipeCurrentAction = SwipeListView.SWIPE_ACTION_NONE;
 
                 int childCount = swipeListView.getChildCount();
                 int[] listViewCoords = new int[2];
@@ -509,7 +509,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
                     swapRight = deltaX > 0;
                 }
                 generateAnimate(frontView, swap, swapRight, downPosition);
-                if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+                if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
                     swapChoiceState(downPosition);
                 }
 
@@ -541,22 +541,22 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
                     } else if (deltaX > 0) {
                             deltaMode = 0;
                     }
-                if (deltaMode > slop && swipeCurrentAction == SwipeGridView.SWIPE_ACTION_NONE && velocityY < velocityX) {
+                if (deltaMode > slop && swipeCurrentAction == SwipeListView.SWIPE_ACTION_NONE && velocityY < velocityX) {
                     swiping = true;
                     swipingRight = (deltaX > 0);
                     if (opened.get(downPosition)) {
-                        swipeCurrentAction = SwipeGridView.SWIPE_ACTION_REVEAL;
+                        swipeCurrentAction = SwipeListView.SWIPE_ACTION_REVEAL;
                     } else {
-                        if (swipingRight && swipeActionRight == SwipeGridView.SWIPE_ACTION_DISMISS) {
-                            swipeCurrentAction = SwipeGridView.SWIPE_ACTION_DISMISS;
-                        } else if (!swipingRight && swipeActionLeft == SwipeGridView.SWIPE_ACTION_DISMISS) {
-                            swipeCurrentAction = SwipeGridView.SWIPE_ACTION_DISMISS;
-                        } else if (swipingRight && swipeActionRight == SwipeGridView.SWIPE_ACTION_CHOICE) {
-                            swipeCurrentAction = SwipeGridView.SWIPE_ACTION_CHOICE;
-                        } else if (!swipingRight && swipeActionLeft == SwipeGridView.SWIPE_ACTION_CHOICE) {
-                            swipeCurrentAction = SwipeGridView.SWIPE_ACTION_CHOICE;
+                        if (swipingRight && swipeActionRight == SwipeListView.SWIPE_ACTION_DISMISS) {
+                            swipeCurrentAction = SwipeListView.SWIPE_ACTION_DISMISS;
+                        } else if (!swipingRight && swipeActionLeft == SwipeListView.SWIPE_ACTION_DISMISS) {
+                            swipeCurrentAction = SwipeListView.SWIPE_ACTION_DISMISS;
+                        } else if (swipingRight && swipeActionRight == SwipeListView.SWIPE_ACTION_CHOICE) {
+                            swipeCurrentAction = SwipeListView.SWIPE_ACTION_CHOICE;
+                        } else if (!swipingRight && swipeActionLeft == SwipeListView.SWIPE_ACTION_CHOICE) {
+                            swipeCurrentAction = SwipeListView.SWIPE_ACTION_CHOICE;
                         } else {
-                            swipeCurrentAction = SwipeGridView.SWIPE_ACTION_REVEAL;
+                            swipeCurrentAction = SwipeListView.SWIPE_ACTION_REVEAL;
                         }
                     }
                     swipeListView.requestDisallowInterceptTouchEvent(true);
@@ -564,7 +564,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
                             (motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                     swipeListView.onTouchEvent(cancelEvent);
-                    if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+                    if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
                         backView.setVisibility(View.GONE);
                     }
                 }
@@ -602,7 +602,7 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
         if (posX > 0 && !swipingRight) {
             swipingRight = !swipingRight;
             swipeCurrentAction = swipeActionRight;
-            if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+            if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
                 backView.setVisibility(View.GONE);
             } else {
                 backView.setVisibility(View.VISIBLE);
@@ -611,17 +611,17 @@ public class SwipeGridViewTouchHandler implements View.OnTouchListener {
         if (posX < 0 && swipingRight) {
             swipingRight = !swipingRight;
             swipeCurrentAction = swipeActionLeft;
-            if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+            if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
                 backView.setVisibility(View.GONE);
             } else {
                 backView.setVisibility(View.VISIBLE);
             }
         }
-        if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_DISMISS) {
+        if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_DISMISS) {
             setTranslationX(parentView, deltaX);
             setAlpha(parentView, Math.max(0f, Math.min(1f,
                     1f - 2f * Math.abs(deltaX) / viewWidth)));
-        } else if (swipeCurrentAction == SwipeGridView.SWIPE_ACTION_CHOICE) {
+        } else if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
             if ((swipingRight && deltaX > 0 && posX < DISPLACE_CHOICE)
                     || (!swipingRight && deltaX < 0 && posX > -DISPLACE_CHOICE)
                     || (swipingRight && deltaX < DISPLACE_CHOICE)

@@ -471,6 +471,8 @@ public class ApiClient {
                 }
             };
 
+            //TODO set default port to 8083
+
             HttpClient client = createDefaultHttpClient();
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{x509TrustManager}, null);
