@@ -63,7 +63,7 @@
     <string name="profile_indoor_server">Indoor server</string>
     <string name="profile_url">url</string>
     <string name="profile_http">http://</string>
-    <string name="profile_http_hint">Should look like http://192.168.0.1:50</string>
+    <string name="profile_http_hint">Should look like 192.168.0.1:8083</string>
     <string name="profile_credentials">Remote access credentials</string>
     <string name="profile_login">Login</string>
     <string name="profile_password">Password</string>
