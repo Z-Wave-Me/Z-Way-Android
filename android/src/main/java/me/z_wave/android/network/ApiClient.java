@@ -248,7 +248,7 @@ public class ApiClient {
         );
     }
 
-    public void updateTogle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public void updateToggle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         mAdaptor.create(UpdateDeviceRequest.class).updateTogle(updatedDevice.id, new Callback<Device>() {
                     @Override
                     public void success(Device objects, Response response) {

@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,17 +40,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
-import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
-import me.z_wave.android.ui.fragments.EditProfilesFragment;
-import me.z_wave.android.ui.fragments.ProfileFragment;
-import me.z_wave.android.ui.views.SwipeGridView;
 import timber.log.Timber;
 
 public class DashboardFragment extends BaseFragment implements
@@ -143,7 +137,7 @@ public class DashboardFragment extends BaseFragment implements
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        apiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateToggle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
@@ -151,8 +145,8 @@ public class DashboardFragment extends BaseFragment implements
 
             @Override
             public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
+                if (isAdded()) {
+                    if (isNetworkError) {
                         showToast(R.string.request_network_problem);
                     } else {
                         showToast(R.string.request_server_problem_msg);

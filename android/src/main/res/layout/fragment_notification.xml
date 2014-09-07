@@ -23,24 +23,34 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:dslv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:id="@+id/notification_msg_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="18sp"
-            android:textColor="@color/main_text_color"
-            android:text="@string/notification_everything_ok"
-            android:drawableTop="@drawable/img_ok"
-            android:drawablePadding="18dp"/>
+    <TextView
+        android:id="@+id/notification_msg_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="18dp"
+        android:drawableTop="@drawable/img_ok"
+        android:text="@string/notification_everything_ok"
+        android:textColor="@color/main_text_color"
+        android:textSize="18sp" />
 
-    <ListView android:id="@+id/notification_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/filter_list_divider_color"
-            android:dividerHeight="1dp"/>
+    <com.mobeta.android.dslv.DragSortListView
+        android:id="@+id/notification_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/filter_list_divider_color"
+        android:dividerHeight="1dp"
+        dslv:drag_start_mode="onMove"
+        dslv:float_background_color="@android:color/transparent"
+        dslv:remove_enabled="true"
+        dslv:remove_mode="flingRemove"
+        dslv:sort_enabled="false"
+        dslv:track_drag_sort="false"
+        dslv:use_default_controller="true" />
 
 </RelativeLayout>

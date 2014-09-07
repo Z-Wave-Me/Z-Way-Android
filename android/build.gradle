@@ -45,4 +45,5 @@ dependencies {
     compile 'com.squareup:otto:1.3.4'
     compile 'com.crittercism:crittercism-android-agent:+'
     compile project(':dynamicgrid')
+    compile project(':dragsortlistview')
 }

@@ -30,7 +30,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import com.mobeta.android.dslv.DragSortController;
+import com.mobeta.android.dslv.DragSortListView;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,12 +46,12 @@ import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.adapters.NotificationsListAdapter;
 
-public class NotificationsFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class NotificationsFragment extends BaseFragment implements DragSortListView.RemoveListener {
 
     //TODO replace BaseFragment to BaseListFragment!
 
     @InjectView(R.id.notification_list)
-    ListView notificationList;
+    DragSortListView notificationList;
 
     @InjectView(R.id.notification_msg_ok)
     View everythingOkMsg;
@@ -67,7 +73,6 @@ public class NotificationsFragment extends BaseFragment implements AdapterView.O
         super.onActivityCreated(savedInstanceState);
         prepareListView();
         changeEmptyDashboardMsgVisibility();
-        notificationList.setOnItemClickListener(this);
     }
 
     @Subscribe
@@ -77,8 +82,27 @@ public class NotificationsFragment extends BaseFragment implements AdapterView.O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Notification notification = mAdapter.getItem(position);
+    public void remove(int which) {
+        final Notification deletedNotification = mAdapter.getItem(which);
+        markNotificationAsRedeemed(deletedNotification);
+        mAdapter.remove(deletedNotification);
+        changeEmptyDashboardMsgVisibility();
+    }
+
+    private void prepareListView(){
+        mAdapter = new NotificationsListAdapter(getActivity(), createNotList());//dataContext.getNotifications());
+        notificationList.setAdapter(mAdapter);
+        notificationList.setRemoveListener(this);
+    }
+
+    private void changeEmptyDashboardMsgVisibility(){
+        final int msgVisibility = mAdapter != null && mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE;
+        if(everythingOkMsg.getVisibility() != msgVisibility){
+            everythingOkMsg.setVisibility(msgVisibility);
+        }
+    }
+
+    private void markNotificationAsRedeemed(final Notification notification) {
         notification.redeemed = true;
         apiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
             @Override
@@ -92,19 +116,17 @@ public class NotificationsFragment extends BaseFragment implements AdapterView.O
 
             }
         });
-
-
     }
 
-    private void prepareListView(){
-        mAdapter = new NotificationsListAdapter(getActivity(), dataContext.getNotifications());
-        notificationList.setAdapter(mAdapter);
-    }
 
-    private void changeEmptyDashboardMsgVisibility(){
-        final int msgVisibility = mAdapter != null && mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE;
-        if(everythingOkMsg.getVisibility() != msgVisibility){
-            everythingOkMsg.setVisibility(msgVisibility);
+    private List<Notification> createNotList() {
+        List<Notification> list = new ArrayList<Notification>();
+        for(int i = 0; i < 5; i++) {
+            Notification n = new Notification();
+            n.id = "" + i;
+            n.message = "message " + i;
+            list.add(n);
         }
+        return list;
     }
 }

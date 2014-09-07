@@ -33,11 +33,9 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
-import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
-import me.z_wave.android.ui.views.SwipeGridView;
 import timber.log.Timber;
 
 import java.util.ArrayList;
@@ -129,7 +127,7 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        apiClient.updateTogle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
+        apiClient.updateToggle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
             @Override
             public void onSuccess() {
                 showToast("Toggle clicked");
