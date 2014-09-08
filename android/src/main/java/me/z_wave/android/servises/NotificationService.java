@@ -33,6 +33,7 @@ import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
+import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import timber.log.Timber;
@@ -46,7 +47,7 @@ public class NotificationService extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     @Inject
-    Bus bus;
+    MainThreadBus bus;
 
     @Inject
     ApiClient apiClient;

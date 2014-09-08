@@ -123,4 +123,30 @@ public class DatabaseDataProvider {
         return null;
     }
 
+    public LocalProfile getNearestLocalProfile(double userLat, double userLng) {
+        final List<LocalProfile> localProfiles = getLocalProfiles();
+        LocalProfile nearestProfile = null;
+        double nearestDist = 1000000;
+        for(LocalProfile localProfile : localProfiles) {
+            double latDistance = Math.toRadians(userLat - localProfile.latitude);
+            double lngDistance = Math.toRadians(userLng - localProfile.longitude);
+            double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
+                    (Math.cos(Math.toRadians(userLat))) *
+                            (Math.cos(Math.toRadians(localProfile.latitude))) *
+                            (Math.sin(lngDistance / 2)) *
+                            (Math.sin(lngDistance / 2));
+
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            double dist = 6371 * c;
+            if (dist <= 2) {
+                if(dist < nearestDist) {
+                    nearestProfile = localProfile;
+                    nearestDist = dist;
+                }
+            }
+        }
+        return nearestProfile;
+    }
+
 }

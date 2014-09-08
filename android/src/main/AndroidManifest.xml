@@ -70,6 +70,10 @@
         <service
                 android:name=".servises.NotificationService"
                 android:exported="false"/>
+
+        <service
+            android:name=".servises.LocationService"
+            android:exported="false"/>
     </application>
 
 </manifest>

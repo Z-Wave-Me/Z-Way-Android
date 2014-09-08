@@ -36,6 +36,7 @@ import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.devices.DevicesStateResponse;
+import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
@@ -52,7 +53,7 @@ public class DataUpdateService extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     @Inject
-    Bus bus;
+    MainThreadBus bus;
 
     @Inject
     ApiClient apiClient;

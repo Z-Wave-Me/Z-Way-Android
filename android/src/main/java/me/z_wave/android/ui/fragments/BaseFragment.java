@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.squareup.otto.Bus;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
+import me.z_wave.android.otto.MainThreadBus;
 
 import javax.inject.Inject;
 
@@ -40,7 +41,7 @@ public class BaseFragment extends Fragment{
     public DataContext dataContext;
 
     @Inject
-    public Bus bus;
+    public MainThreadBus bus;
 
     @Override
     public void onAttach(Activity activity) {

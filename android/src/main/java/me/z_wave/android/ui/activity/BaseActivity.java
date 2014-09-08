@@ -34,6 +34,7 @@ import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
+import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
@@ -49,7 +50,7 @@ import javax.inject.Inject;
 public class BaseActivity extends Activity {
 
     @Inject
-    Bus bus;
+    MainThreadBus bus;
 
     private ProgressDialog mProgressDialog;
     private ReconnectionProgressDialog mReconnectionProgressDialog;

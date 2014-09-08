@@ -42,6 +42,7 @@ import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
+import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.fragments.MainMenuFragment;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
     protected void onStart() {
         super.onStart();
         startNotificationListening();
+        startLocationListening();
         mBindHelper.onBind(this);
     }
 
@@ -131,6 +133,12 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
         final Intent i = new Intent(this, NotificationService.class);
         startService(i);
     }
+
+    private void startLocationListening(){
+        final Intent i = new Intent(this, LocationService.class);
+        startService(i);
+    }
+
     private void setupNavigationDrawerFragment() {
         mMainMenu = (MainMenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mMainMenu.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));

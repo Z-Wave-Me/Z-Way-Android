@@ -30,6 +30,7 @@ import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
+import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
@@ -64,7 +65,8 @@ import javax.inject.Singleton;
                 ChooseLocationFragment.class,
                 MainMenuFragment.class,
                 ReconnectionProgressDialog.class,
-                EditDevicesFragment.class
+                EditDevicesFragment.class,
+                LocationService.class
 
         },
         library = true,
@@ -81,7 +83,7 @@ public class ZWayModule {
 
     @Provides
     @Singleton
-    Bus provideBus() {
+    MainThreadBus provideBus() {
         return new MainThreadBus(new Bus());
     }
 

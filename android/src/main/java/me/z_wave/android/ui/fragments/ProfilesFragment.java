@@ -31,7 +31,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import javax.inject.Inject;
 
@@ -49,7 +51,7 @@ import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
-public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener{
+public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
     @InjectView(R.id.profiles_list)
     ListView profilesList;
@@ -114,7 +116,10 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private View createListFooter(){
-        return View.inflate(getActivity(), R.layout.layout_profile_footer, null);
+        final View footerView = View.inflate(getActivity(), R.layout.layout_profile_footer, null);
+        final Switch switcher = (Switch) footerView.findViewById(R.id.profile_auto_switch_location);
+        switcher.setOnCheckedChangeListener(this);
+        return footerView;
     }
 
     private void authenticate(final LocalProfile selectedProfile) {
@@ -185,5 +190,10 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
             }
         });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
     }
 }
