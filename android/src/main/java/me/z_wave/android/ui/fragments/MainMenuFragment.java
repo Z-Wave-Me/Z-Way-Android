@@ -216,7 +216,8 @@ public class MainMenuFragment extends BaseFragment {
         if(!types.isEmpty()) {
             typesGroupMenuView.removeAllViews();
             for(String type : types) {
-                final View item = inflateMenuItem(typesGroupMenuView, Filter.TYPE, type);
+                final TextView item = inflateMenuItem(typesGroupMenuView, Filter.TYPE, type);
+                item.setText(getDeviceTypeName(type));
                 typesGroupMenuView.addView(item);
             }
         }
@@ -338,6 +339,42 @@ public class MainMenuFragment extends BaseFragment {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
+    }
+
+    private String getDeviceTypeName(String deviceType){
+        if(!TextUtils.isEmpty(deviceType)) {
+            if(deviceType.equalsIgnoreCase("switchBinary")) {
+                return getString(R.string.switch_binary);
+            } else if(deviceType.equalsIgnoreCase("switchMultilevel")) {
+                return getString(R.string.switch_multilevel);
+            } else if(deviceType.equalsIgnoreCase("sensorMultilevel")) {
+                return getString(R.string.sensor_multilevel);
+            } else if(deviceType.equalsIgnoreCase("sensorBinary")) {
+                return getString(R.string.sensor_binary);
+            } else if(deviceType.equalsIgnoreCase("camera")) {
+                return getString(R.string.camera);
+            } else if(deviceType.equalsIgnoreCase("battery")) {
+                return getString(R.string.battery);
+            } else if(deviceType.equalsIgnoreCase("switchControl")) {
+                return getString(R.string.switch_control);
+            } else if(deviceType.equalsIgnoreCase("toggleButton")) {
+                return getString(R.string.toggle_button);
+            } else if(deviceType.equalsIgnoreCase("switchRGBW")) {
+                return getString(R.string.switch_rgbw);
+            } else if(deviceType.equalsIgnoreCase("doorlock")) {
+                return getString(R.string.doorlock);
+            } else {
+                return deviceType;
+            }
+        }
+        return "";
+
+
+
+
+
+
+
     }
 
 }

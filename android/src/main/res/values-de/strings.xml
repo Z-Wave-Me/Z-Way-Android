@@ -52,18 +52,16 @@
     <string name="filters_tags">Tags</string>
 
     <string name="devices_empty_msg">Nothing found</string>
-    
+
     <string name="notification_everything_ok">Everything OK</string>
     <string name="notification_count">You have %d notifications</string>
-    
+
     <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
     <string name="profile_auto_switch_location">Switch automatically</string>
 
     <string name="profile_name">Name</string>
     <string name="profile_indoor_server">Indoor server</string>
-    <string name="profile_url">url</string>
-    <string name="profile_http">http://</string>
-    <string name="profile_http_hint">Should look like http://192.168.0.1:50</string>
+    <string name="profile_http_hint">Should look like 192.168.0.1:8083</string>
     <string name="profile_credentials">Remote access credentials</string>
     <string name="profile_login">Login</string>
     <string name="profile_password">Password</string>
@@ -74,7 +72,6 @@
     <string name="profile_connection_established">Connection established</string>
     <string name="profile_connection_authorized">Authorised</string>
     <string name="profile_connection_filed">Can\'t connect to this URL</string>
-    <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
     <string name="profile_changes_are_saved">Changes are saved.</string>
 
     <string name="loading">Loading…</string>
@@ -82,10 +79,25 @@
     <string name="attention">Attention!</string>
     <string name="ok">Ok</string>
 
-    <string name="choose_location_error_msg">You should select any location first.</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="all_devices">All Widgets</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="connecting_to">Connecting to %s…</string>
+
+    <string name="profile_changed">Active profile changed</string>
+    <string name="profile_changed_to_desc">Active profile was changed to %s</string>
+
+    <string name="switch_binary">Switch Binary</string>
+    <string name="switch_multilevel">Switch Multilevel</string>
+    <string name="sensor_multilevel">Sensor Multilevel</string>
+    <string name="sensor_binary">Sensor Binary</string>
+    <string name="camera">Camera</string>
+    <string name="battery">Battery</string>
+    <string name="switch_control">Switch Control</string>
+    <string name="toggle_button">Toggle Button</string>
+    <string name="switch_rgbw">Switch rgbw</string>
+    <string name="doorlock">Doorlock</string>
 
 </resources>

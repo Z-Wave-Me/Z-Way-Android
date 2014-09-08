@@ -81,8 +81,6 @@
     <string name="attention">Attention!</string>
     <string name="ok">Ok</string>
 
-    <string name="choose_location_error_msg">You should select any location first.</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="all_devices">All Widgets</string>
@@ -92,5 +90,16 @@
     
     <string name="profile_changed">Active profile changed</string>
     <string name="profile_changed_to_desc">Active profile was changed to %s</string>
+    
+    <string name="switch_binary">Switch Binary</string>
+    <string name="switch_multilevel">Switch Multilevel</string>
+    <string name="sensor_multilevel">Sensor Multilevel</string>
+    <string name="sensor_binary">Sensor Binary</string>
+    <string name="camera">Camera</string>
+    <string name="battery">Battery</string>
+    <string name="switch_control">Switch Control</string>
+    <string name="toggle_button">Toggle Button</string>
+    <string name="switch_rgbw">Switch rgbw</string>
+    <string name="doorlock">Doorlock</string>
 
 </resources>
