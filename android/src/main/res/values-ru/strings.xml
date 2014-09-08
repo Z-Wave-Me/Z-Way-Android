@@ -61,8 +61,6 @@
 
     <string name="profile_name">Имя</string>
     <string name="profile_indoor_server">Сервер</string>
-    <string name="profile_url">url</string>
-    <string name="profile_http">http://</string>
     <string name="profile_http_hint">Должно выглядеть как 192.168.0.1:8083</string>
     <string name="profile_credentials">Реквизиты для удалённого доступа</string>
     <string name="profile_login">Логин</string>
@@ -74,7 +72,6 @@
     <string name="profile_connection_established">Соединение установлено</string>
     <string name="profile_connection_authorized">Авторизация пройдена</string>
     <string name="profile_connection_filed">Не могу подключиться по указанному адресу</string>
-    <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
     <string name="profile_changes_are_saved">Изменения сохранены.</string>
 
     <string name="loading">Загружается…</string>

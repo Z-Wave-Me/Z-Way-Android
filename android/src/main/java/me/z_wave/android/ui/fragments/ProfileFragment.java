@@ -23,8 +23,10 @@
 package me.z_wave.android.ui.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +37,10 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.inject.Inject;
 
@@ -58,6 +64,7 @@ import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 public class ProfileFragment extends BaseFragment {
 
     private static final int DEFAULT_PROFILE_ID = -1;
+    private static final int DEFAULT_PORT = 8083;
     public static final String PROFILE_ID_KEY = "profile_id";
 
     @InjectView(R.id.profile_name)
@@ -291,7 +298,7 @@ public class ProfileFragment extends BaseFragment {
                     url = "http://" + url;
                 }
             }
-            return url;
+            return setDefaultUriPort(url);
         }
         return null;
     }
@@ -313,6 +320,22 @@ public class ProfileFragment extends BaseFragment {
         final int profileId = getArguments().getInt(PROFILE_ID_KEY, DEFAULT_PROFILE_ID);
         final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
         return provider.getLocalProfileWithId(profileId);
+    }
+
+    public String setDefaultUriPort(String uri){
+        try {
+            URI oldUri = new URI(uri);
+            if(oldUri.getPort() == -1) {
+                URI newUri = new URI(oldUri.getScheme(), oldUri.getUserInfo(),
+                        oldUri.getHost(), DEFAULT_PORT, oldUri.getPath(),
+                        oldUri.getQuery(), oldUri.getFragment());
+                return newUri.toString();
+            }
+            return uri;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

@@ -74,7 +74,6 @@
     <string name="profile_connection_established">Connection established</string>
     <string name="profile_connection_authorized">Authorised</string>
     <string name="profile_connection_filed">Can\'t connect to this URL</string>
-    <string name="profile_authorization_filed">Can\'t authorise with these credentials</string>
     <string name="profile_changes_are_saved">Changes are saved.</string>
 
     <string name="loading">Loading…</string>
@@ -90,5 +89,7 @@
 
     <string name="cancel">Cancel</string>
     <string name="connecting_to">Connecting to %s…</string>
+
+
 
 </resources>
