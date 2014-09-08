@@ -22,20 +22,29 @@
 
 package me.z_wave.android.servises;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
+import me.z_wave.android.ui.activity.MainActivity;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -116,6 +125,8 @@ public class NotificationService extends Service {
                         if (result.notifications != null && !result.notifications.isEmpty()) {
                             Timber.v("Notification updated! notifications count " + result.notifications.size());
                             dataContext.addNotifications(result.notifications);
+                            //TODO IVAN_PL should be refactored
+                            showNotification(result.notifications.get(result.notifications.size()-1));
                             bus.post(new OnGetNotificationEvent());
                         }
                     }
@@ -135,6 +146,23 @@ public class NotificationService extends Service {
 
 
     public class LocalBinder extends Binder {
+    }
+
+    private void showNotification(me.z_wave.android.dataModel.Notification notification){
+        int notificationId = 001;
+        Intent viewIntent = new Intent(this, MainActivity.class);
+        PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_attention)
+                        .setContentTitle(getString(R.string.attention))
+                        .setContentText(notification.message)
+                        .setContentIntent(viewPendingIntent);
+
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
 }

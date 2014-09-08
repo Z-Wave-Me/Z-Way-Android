@@ -22,6 +22,8 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -49,6 +51,7 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
+import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
 public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
@@ -118,6 +121,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     private View createListFooter(){
         final View footerView = View.inflate(getActivity(), R.layout.layout_profile_footer, null);
         final Switch switcher = (Switch) footerView.findViewById(R.id.profile_auto_switch_location);
+        switcher.setChecked(isChangeProfileByLocationEnable());
         switcher.setOnCheckedChangeListener(this);
         return footerView;
     }
@@ -194,6 +198,16 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final SharedPreferences prefs = getActivity().getSharedPreferences(
+                getActivity().getPackageName(), Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(LocationService.CHANGE_PROFILE_BY_LOCATION, isChecked);
+        editor.commit();
+    }
 
+    private boolean isChangeProfileByLocationEnable(){
+        final SharedPreferences prefs = getActivity().getSharedPreferences(
+                getActivity().getPackageName(), Context.MODE_PRIVATE);
+        return prefs.getBoolean(LocationService.CHANGE_PROFILE_BY_LOCATION, false);
     }
 }

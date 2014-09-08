@@ -28,6 +28,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -59,6 +60,8 @@ public class LocationService extends Service {
     private static final String TAG = LocationService.class.getSimpleName();
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
+
+    public static final String CHANGE_PROFILE_BY_LOCATION = "change_profile_by_location";
 
     public LocationManager locationManager;
     public MyLocationListener listener;
@@ -150,17 +153,19 @@ public class LocationService extends Service {
         public void onLocationChanged(final Location loc) {
             if (isBetterLocation(loc, previousBestLocation)) {
                 Log.v(TAG, "onLocationChanged: " + loc.getLatitude() + " " + loc.getLongitude());
-                final LocalProfile profile = databaseDataProvider.getNearestLocalProfile(
-                        loc.getLatitude(), loc.getLongitude());
-                if(profile != null && !profile.active) {
-                    //TODO IVAN_PL auth methods should be refactored and extracted in AuthHelper class!
-                    if(!TextUtils.isEmpty(profile.indoorServer)) {
-                        connectToOutdoorService(profile);
-                    } else {
-                        loginWithUserCredentials(profile);
+                if(isChangeProfileByLocationEnable()) {
+                    final LocalProfile profile = databaseDataProvider.getNearestLocalProfile(
+                            loc.getLatitude(), loc.getLongitude());
+                    if(profile != null && !profile.active) {
+                        //TODO IVAN_PL auth methods should be refactored and extracted in AuthHelper class!
+                        if(!TextUtils.isEmpty(profile.indoorServer)) {
+                            connectToOutdoorService(profile);
+                        } else {
+                            loginWithUserCredentials(profile);
+                        }
                     }
+                    previousBestLocation = loc;
                 }
-                previousBestLocation = loc;
             }
         }
 
@@ -239,8 +244,8 @@ public class LocationService extends Service {
         Intent viewIntent = new Intent(this, MainActivity.class);
         PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
 
-        Notification.Builder notificationBuilder =
-                new Notification.Builder(this)
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_home)
                         .setContentTitle(getString(R.string.profile_changed))
                         .setContentText(
@@ -251,5 +256,10 @@ public class LocationService extends Service {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
         notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
+    private boolean isChangeProfileByLocationEnable(){
+        SharedPreferences prefs = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        return prefs.getBoolean(CHANGE_PROFILE_BY_LOCATION, false);
     }
 }
