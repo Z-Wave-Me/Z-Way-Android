@@ -89,6 +89,9 @@
 
     <string name="cancel">Cancel</string>
     <string name="connecting_to">Connecting to %s…</string>
+    
+    <string name="profile_changed">Active profile changed</string>
+    <string name="profile_changed_to_desc">Active profile was changed to %s</string>
 
 
 

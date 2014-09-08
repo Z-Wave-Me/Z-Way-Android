@@ -83,4 +83,7 @@
     <string name="navigation_drawer_close">Закрыть меню навигации</string>
     <string name="all_devices">Все устройства</string>
 
+    <string name="profile_changed">Активный профиль изменен</string>
+    <string name="profile_changed_to_desc">Активный профиль был изменен на %s</string>
+
 </resources>
