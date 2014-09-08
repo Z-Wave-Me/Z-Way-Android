@@ -89,15 +89,15 @@
     <string name="cancel">Отмена</string>
     <string name="connecting_to">Подключение к %s…</string>
 
-    <string name="switch_binary">Switch Binary</string>
-    <string name="switch_multilevel">Switch Multilevel</string>
-    <string name="sensor_multilevel">Sensor Multilevel</string>
-    <string name="sensor_binary">Sensor Binary</string>
-    <string name="camera">Камера</string>
-    <string name="battery">Аккамулятор</string>
-    <string name="switch_control">Switch Control</string>
-    <string name="toggle_button">Toggle Button</string>
-    <string name="switch_rgbw">Switch rgbw</string>
-    <string name="doorlock">Замок</string>
+    <string name="switch_binary">Бинарные выключатели</string>
+    <string name="switch_multilevel">Многопозиционные выключатели</string>
+    <string name="sensor_multilevel">Многоуровневые датчики</string>
+    <string name="sensor_binary">Бинарные датчики</string>
+    <string name="camera">Камеры</string>
+    <string name="battery">Заряд батареек</string>
+    <string name="switch_control">Элементы управления</string>
+    <string name="toggle_button">Сцены</string>
+    <string name="switch_rgbw">Управление цветом</string>
+    <string name="doorlock">Замки</string>
 
 </resources>
