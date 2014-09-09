@@ -22,7 +22,9 @@
 
 package me.z_wave.android.dataModel;
 
-public class Metrics {
+import java.io.Serializable;
+
+public class Metrics implements Serializable {
 
     public String probeTitle;
     public String scaleTitle;
@@ -32,5 +34,16 @@ public class Metrics {
     public String icon;
     public String mode;
     public DeviceRgbColor color;
+
+    //Camera metrics
+    public String url;
+    public Boolean hasZoomIn;
+    public Boolean hasZoomOut;
+    public Boolean hasLeft;
+    public Boolean hasRight;
+    public Boolean hasUp;
+    public Boolean hasDown;
+//    public int hasOpen;
+//    public int hasClose;
 
 }

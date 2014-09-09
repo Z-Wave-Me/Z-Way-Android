@@ -22,6 +22,7 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,7 @@ import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
 import timber.log.Timber;
@@ -171,7 +173,15 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onColorViewClicked(Device updatedDevice) {
-        showToast("rgb clicked");
+        showToast("Coming soon");
+    }
+
+    @Override
+    public void onOpenCameraView(Device updatedDevice) {
+        showToast("Coming soon");
+//        final Intent intent = new Intent(getActivity(), CameraActivity.class);
+//        intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
+//        startActivity(intent);
     }
 
 //    @Override

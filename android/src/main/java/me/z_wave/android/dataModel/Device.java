@@ -27,9 +27,10 @@ import android.webkit.URLUtil;
 
 import me.z_wave.android.R;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Device {
+public class Device implements Serializable{
 
     public String id;
     public Metrics metrics;

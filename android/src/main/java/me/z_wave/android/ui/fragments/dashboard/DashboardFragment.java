@@ -22,6 +22,7 @@
 
 package me.z_wave.android.ui.fragments.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +45,7 @@ import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
 import timber.log.Timber;
@@ -159,6 +161,13 @@ public class DashboardFragment extends BaseFragment implements
     @Override
     public void onColorViewClicked(Device updatedDevice) {
         showToast("rgb clicked");
+    }
+
+    @Override
+    public void onOpenCameraView(Device updatedDevice) {
+        final Intent intent = new Intent(getActivity(), CameraActivity.class);
+        intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
+        startActivity(intent);
     }
 
 //    @Override

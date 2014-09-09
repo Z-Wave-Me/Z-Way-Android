@@ -32,6 +32,7 @@ import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.servises.NotificationService;
+import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.dialogs.AlertDialog;
@@ -66,7 +67,8 @@ import javax.inject.Singleton;
                 MainMenuFragment.class,
                 ReconnectionProgressDialog.class,
                 EditDevicesFragment.class,
-                LocationService.class
+                LocationService.class,
+                CameraActivity.class
 
         },
         library = true,

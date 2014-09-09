@@ -190,6 +190,7 @@ public class ProfileFragment extends BaseFragment {
                 provider.updateLocalProfile(profile);
                 showToast(R.string.profile_changes_are_saved);
                 bus.post(new ProfileUpdatedEvent());
+                goBack();
             }
             return true;
         }

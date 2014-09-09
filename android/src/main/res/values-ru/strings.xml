@@ -100,4 +100,7 @@
     <string name="switch_rgbw">Switch rgbw</string>
     <string name="doorlock">Замок</string>
 
+    <string name="profile_url">url</string>
+    <string name="profile_http">http://</string>
+
 </resources>

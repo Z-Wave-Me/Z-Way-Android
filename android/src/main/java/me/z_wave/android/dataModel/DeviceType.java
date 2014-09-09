@@ -24,7 +24,9 @@ package me.z_wave.android.dataModel;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum DeviceType {
+import java.io.Serializable;
+
+public enum DeviceType implements Serializable{
 
     @SerializedName("battery")
     BATTERY,

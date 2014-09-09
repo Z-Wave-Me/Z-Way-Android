@@ -45,6 +45,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         void onSeekBarStateChanged(Device updatedDevice);
         void onToggleClicked(Device updatedDevice);
         void onColorViewClicked(Device updatedDevice);
+        void onOpenCameraView(Device updatedDevice);
 //        void onAddRemoveClicked(Device updatedDevice);
     }
 
@@ -82,16 +83,17 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         prepareRgbView(holder, device);
         prepareToggle(holder, device);
         prepareAddRemoveView(holder, device);
+        prepareCameraView(holder,device);
 
 
 
-        final DeviceType deviceType = device.deviceType;
-        if(deviceType == DeviceType.FAN ||
-                deviceType == DeviceType.THERMOSTAT){
-            //TODO unknown device
-        }  else if(deviceType == DeviceType.TOGGLE_BUTTON){
-            //TODO unknown device
-        }
+//        final DeviceType deviceType = device.deviceType;
+//        if(deviceType == DeviceType.FAN ||
+//                deviceType == DeviceType.THERMOSTAT){
+//            //TODO unknown device
+//        }  else if(deviceType == DeviceType.TOGGLE_BUTTON){
+//            //TODO unknown device
+//        }
 
         return convertView;
     }
@@ -248,6 +250,19 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         }
     }
 
+    private void prepareCameraView(ViewHolder holder, final Device device){
+        holder.parent.setOnClickListener(null);
+        if(device.deviceType == DeviceType.CAMERA){
+            holder.parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onOpenCameraView(device);
+                }
+            });
+
+        }
+    }
+
     private void changeViewVisibility(View view, boolean isVisible){
         final int visibility = isVisible ? View.VISIBLE : View.GONE;
         view.setVisibility(visibility);
@@ -260,6 +275,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
     //свичg rgb - вкл/выкл + колорпиккер
 
     private class ViewHolder{
+        public View parent;
         public ImageView icon;
         public TextView name;
         public TextView value;
@@ -271,6 +287,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         public TextView addRemove;
 
         private ViewHolder(View parent) {
+            this.parent = parent;
             icon = (ImageView) parent.findViewById(R.id.device_grid_item_icon);
             name = (TextView) parent.findViewById(R.id.device_grid_item_name);
             value = (TextView) parent.findViewById(R.id.device_grid_item_value);

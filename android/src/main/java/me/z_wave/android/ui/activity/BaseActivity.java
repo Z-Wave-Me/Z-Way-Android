@@ -87,8 +87,8 @@ public class BaseActivity extends Activity {
     }
 
     public void onShowAlertDialog(ShowAlertDialogEvent event){
-        final AlertDialog alertDialog = new AlertDialog.AlertDialogBuilder(this).build(event);
-        alertDialog.show(getFragmentManager(), AlertDialog.class.getSimpleName());
+//        final AlertDialog alertDialog = new AlertDialog.AlertDialogBuilder(this).build(event);
+//        alertDialog.show(getFragmentManager(), AlertDialog.class.getSimpleName());
     }
 
     public void showAttentionDialog(ShowAttentionDialogEvent event){

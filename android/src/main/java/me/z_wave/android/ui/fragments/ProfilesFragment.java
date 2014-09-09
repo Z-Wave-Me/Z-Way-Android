@@ -37,6 +37,8 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
+import com.squareup.otto.Subscribe;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -110,6 +112,14 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         }
     }
 
+    @Subscribe
+    public void onAccountChanged(AccountChangedEvent event) {
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        mAdapter.clear();
+        mAdapter.addAll(provider.getLocalProfiles());
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void prepareProfilesList(){
         final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
         mAdapter = new ProfilesListAdapter(getActivity(), provider.getLocalProfiles(), false);
@@ -142,9 +152,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 }
                 dataContext.clear();
 
-                mAdapter.clear();
-                mAdapter.addAll(provider.getLocalProfiles());
-                mAdapter.notifyDataSetChanged();
+
                 bus.post(new AccountChangedEvent());
             }
 
@@ -173,10 +181,6 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                     provider.updateLocalProfile(unselectedProfile);
                 }
                 dataContext.clear();
-
-                mAdapter.clear();
-                mAdapter.addAll(provider.getLocalProfiles());
-                mAdapter.notifyDataSetChanged();
                 bus.post(new AccountChangedEvent());
             }
 

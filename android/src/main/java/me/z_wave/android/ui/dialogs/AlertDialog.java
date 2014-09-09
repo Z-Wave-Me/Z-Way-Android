@@ -105,7 +105,7 @@ public class AlertDialog extends BaseDialogFragment{
         }
 
         public AlertDialog build(){
-            return new AlertDialog(this);
+            return new AlertDialog();
         }
 
         public AlertDialog build(ShowAlertDialogEvent event){
@@ -118,13 +118,13 @@ public class AlertDialog extends BaseDialogFragment{
             if(event.isNegativeButtonEnabled()){
                 setNegativeButton(event.getNegativeBtnTitle(), event.getNegativeButtonOnClickListener());
             }
-            return new AlertDialog(this);
+            return new AlertDialog();
         }
     }
 
-    public AlertDialog(AlertDialogBuilder builder){
-        mBuilder = builder;
-    }
+//    public AlertDialog(AlertDialogBuilder builder){
+//        mBuilder = builder;
+//    }
 
     public AlertDialog(){
 

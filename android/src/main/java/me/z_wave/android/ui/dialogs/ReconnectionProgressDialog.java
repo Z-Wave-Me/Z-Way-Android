@@ -33,6 +33,7 @@ import javax.inject.Inject;
 
 import me.z_wave.android.R;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
 /**
@@ -46,7 +47,7 @@ public class ReconnectionProgressDialog extends BaseDialogFragment {
     ApiClient apiClient;
 
     @Inject
-    public Bus bus;
+    public MainThreadBus bus;
 
     public static ReconnectionProgressDialog newInstance(String profileName) {
         final ReconnectionProgressDialog dialog = new ReconnectionProgressDialog();
