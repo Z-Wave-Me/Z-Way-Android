@@ -39,6 +39,17 @@ public class Device implements Serializable{
     public DeviceType deviceType;
 
 
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id='" + id + '\'' +
+                ", metrics=" + metrics +
+                ", tags=" + tags +
+                ", location='" + location + '\'' +
+                ", deviceType=" + deviceType +
+                '}';
+    }
+
     public boolean isIconLink(){
         return URLUtil.isValidUrl(metrics.icon);
     }

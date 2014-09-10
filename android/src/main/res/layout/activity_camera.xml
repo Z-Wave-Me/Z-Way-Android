@@ -25,10 +25,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <VideoView
-        android:id="@+id/myVideo"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true" />
+
+    <me.z_wave.android.ui.views.mjpegView.MjpegView
+        android:id="@+id/video_mjpeg_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button android:id="@+id/video_btn_left"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:text="L"/>
+
+    <Button android:id="@+id/video_btn_down"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/video_btn_left"
+        android:text="D"/>
+
+    <Button android:id="@+id/video_btn_right"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/video_btn_down"
+        android:text="R"/>
+
+    <Button android:id="@+id/video_btn_up"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignLeft="@id/video_btn_down"
+        android:layout_above="@id/video_btn_down"
+        android:text="U"/>
+
+
+    <Button android:id="@+id/video_btn_zoom_in"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="+"/>
+
+    <Button android:id="@+id/video_btn_zoom_out"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/video_btn_zoom_in"
+        android:text="-"/>
+
+    <Button android:id="@+id/video_btn_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="C"/>
+
+    <Button android:id="@+id/video_btn_open"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_toLeftOf="@id/video_btn_close"
+        android:layout_alignParentBottom="true"
+        android:text="O"/>
 
 </RelativeLayout>

@@ -22,51 +22,110 @@
 
 package me.z_wave.android.ui.activity;
 
-import android.app.ActionBar;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.VideoView;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.ui.views.mjpegView.MjpegView;
 
 /**
  * Created by Ivan PL on 09.09.2014.
  */
-public class CameraActivity extends BaseActivity {
+public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCallback<Device> {
+
+    public static final String TAG = CameraActivity.class.getSimpleName();
 
     public static final String KEY_DEVICE = "device";
 
-    private VideoView mVideoView;
+    @InjectView(R.id.video_mjpeg_view) MjpegView mjpegView;
     private Device mDevice;
+
+    @Inject
+    ApiClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         setContentView(R.layout.activity_camera);
-        mVideoView = (VideoView)findViewById(R.id.myVideo);
+        ButterKnife.inject(this);
         mDevice = (Device) getIntent().getSerializableExtra(KEY_DEVICE);
-        mVideoView.setVideoURI(Uri.parse("http://webcam.st-malo.com/axis-cgi/mjpg/video.cgi?resolution=352x288"));//mDevice.metrics.url));
+
+        mjpegView.setDisplayMode(MjpegView.SIZE_BEST_FIT);
+        mjpegView.showFps(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mjpegView.setSource(mDevice.metrics.url);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mjpegView.stopPlayback();
+    }
+
+    @Override
+    public void onSuccess() {
 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(mDevice.metrics.title);
-        return true;
+    public void onFailure(Device request, boolean isNetworkError) {
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @OnClick(R.id.video_btn_up)
+    public void moveCameraUp() {
+        apiClient.moveCameraUp(mDevice, this);
     }
+
+    @OnClick(R.id.video_btn_down)
+    public void moveCameraDown() {
+        apiClient.moveCameraDown(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_left)
+    public void moveCameraLeft() {
+        apiClient.moveCameraLeft(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_right)
+    public void moveCameraRight() {
+        apiClient.moveCameraRight(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_zoom_in)
+    public void zoomIn() {
+        apiClient.camerazoomIn(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_zoom_out)
+    public void zoomOut() {
+        apiClient.cameraZoomOut(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_open)
+    public void cameraOpen() {
+        apiClient.openCamera(mDevice, this);
+    }
+
+    @OnClick(R.id.video_btn_close)
+    public void cameraClose() {
+        apiClient.closeCamera(mDevice, this);
+    }
+
 }

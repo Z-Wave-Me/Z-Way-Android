@@ -22,7 +22,6 @@
 
 package me.z_wave.android.network;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import org.apache.http.client.HttpClient;
@@ -48,6 +47,7 @@ import me.z_wave.android.dataModel.Notification;
 import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.network.auth.AuthRequest;
+import me.z_wave.android.network.camera.UpdateCameraStateRequest;
 import me.z_wave.android.network.devices.DevicesStateRequest;
 import me.z_wave.android.network.devices.DevicesStateResponse;
 import me.z_wave.android.network.devices.UpdateDeviceRequest;
@@ -250,6 +250,181 @@ public class ApiClient {
 
     public void updateToggle(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         mAdaptor.create(UpdateDeviceRequest.class).updateTogle(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void moveCameraRight(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).moveRight(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void moveCameraLeft(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).moveLeft(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void moveCameraUp(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).moveUp(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+    public void moveCameraDown(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).moveDown(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void camerazoomIn(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).zoomIn(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void cameraZoomOut(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).zoomOut(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void openCamera(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).openCamera(updatedDevice.id, new Callback<Device>() {
+                    @Override
+                    public void success(Device objects, Response response) {
+                        Timber.v(objects.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        if (!networkUnreachable && !mAuthInProgress) {
+                            updateDevicesState(updatedDevice, callback);
+                        } else {
+                            callback.onFailure(updatedDevice, networkUnreachable);
+                        }
+
+                    }
+                }
+        );
+    }
+
+    public void closeCamera(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+        mAdaptor.create(UpdateCameraStateRequest.class).closeCamera(updatedDevice.id, new Callback<Device>() {
                     @Override
                     public void success(Device objects, Response response) {
                         Timber.v(objects.toString());

@@ -77,10 +77,12 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
 
     @Override
     public void remove(int which) {
-        final Notification deletedNotification = mAdapter.getItem(which);
-        markNotificationAsRedeemed(deletedNotification);
-        mAdapter.remove(deletedNotification);
-        changeEmptyDashboardMsgVisibility();
+        if(which < mAdapter.getCount()) {
+            final Notification deletedNotification = mAdapter.getItem(which);
+            markNotificationAsRedeemed(deletedNotification);
+            mAdapter.remove(deletedNotification);
+            changeEmptyDashboardMsgVisibility();
+        }
     }
 
     @Subscribe
