@@ -46,15 +46,7 @@ import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.adapters.NotificationsListAdapter;
 
-public class NotificationsFragment extends BaseFragment implements DragSortListView.RemoveListener {
-
-    //TODO replace BaseFragment to BaseListFragment!
-
-    @InjectView(R.id.notification_list)
-    DragSortListView notificationList;
-
-    @InjectView(R.id.notification_msg_ok)
-    View everythingOkMsg;
+public class NotificationsFragment extends BaseListFragment implements DragSortListView.RemoveListener {
 
     @Inject
     ApiClient apiClient;
@@ -72,7 +64,6 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         prepareListView();
-        changeEmptyDashboardMsgVisibility();
     }
 
     @Override
@@ -81,7 +72,6 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
             final Notification deletedNotification = mAdapter.getItem(which);
             markNotificationAsRedeemed(deletedNotification);
             mAdapter.remove(deletedNotification);
-            changeEmptyDashboardMsgVisibility();
         }
     }
 
@@ -89,20 +79,12 @@ public class NotificationsFragment extends BaseFragment implements DragSortListV
     public void onGetNotification(OnGetNotificationEvent event){
         mAdapter.clear();
         mAdapter.addAll(dataContext.getNotifications());
-        changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareListView(){
         mAdapter = new NotificationsListAdapter(getActivity(), dataContext.getNotifications());
-        notificationList.setAdapter(mAdapter);
-        notificationList.setRemoveListener(this);
-    }
-
-    private void changeEmptyDashboardMsgVisibility(){
-        final int msgVisibility = mAdapter != null && mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE;
-        if(everythingOkMsg.getVisibility() != msgVisibility){
-            everythingOkMsg.setVisibility(msgVisibility);
-        }
+        ((DragSortListView)getListView()).setRemoveListener(this);
+        setListAdapter(mAdapter);
     }
 
     private void markNotificationAsRedeemed(final Notification notification) {

@@ -22,25 +22,14 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dslv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/notification_msg_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawablePadding="18dp"
-        android:drawableTop="@drawable/img_ok"
-        android:text="@string/notification_everything_ok"
-        android:textColor="@color/main_text_color"
-        android:textSize="18sp" />
-
     <com.mobeta.android.dslv.DragSortListView
-        android:id="@+id/notification_list"
+        android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/filter_list_divider_color"
@@ -53,4 +42,27 @@
         dslv:track_drag_sort="false"
         dslv:use_default_controller="true" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@id/android:empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="18dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/img_ok" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notification_everything_ok"
+            android:textColor="@color/main_text_color"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
