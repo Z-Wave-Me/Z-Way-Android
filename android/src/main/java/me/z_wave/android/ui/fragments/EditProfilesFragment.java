@@ -24,6 +24,9 @@ package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -61,14 +64,28 @@ public class EditProfilesFragment extends BaseFragment implements AdapterView.On
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_edit_profiles, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_done) {
+            goBack();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final LocalProfile profile = mAdapter.getItem(position);
         bus.post(new CommitFragmentEvent(ProfileFragment.newInstance(profile.id), true));
     }
 
     private void prepareProfilesList(){
-        //TODO remove hardcode
-        DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
         mAdapter = new ProfilesListAdapter(getActivity(),provider.getLocalProfiles(), true);
         profilesList.setOnItemClickListener(this);
         profilesList.setAdapter(mAdapter);
