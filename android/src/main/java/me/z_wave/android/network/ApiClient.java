@@ -357,7 +357,7 @@ public class ApiClient {
         );
     }
 
-    public void camerazoomIn(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
+    public void cameraZoomIn(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
         mAdaptor.create(UpdateCameraStateRequest.class).zoomIn(updatedDevice.id, new Callback<Device>() {
                     @Override
                     public void success(Device objects, Response response) {

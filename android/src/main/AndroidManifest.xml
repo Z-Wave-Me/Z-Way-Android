@@ -31,10 +31,6 @@
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true"/>
-
     <application
         android:name="me.z_wave.android.app.ZWayApplication"
         android:allowBackup="true"
@@ -44,8 +40,9 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w"/>
-            <!--android:value="AIzaSyCgp_nefkPdcMFhBcO_7NsLSRjF7_LdVnI"/> //pl debug-->
+        android:value="AIzaSyCgp_nefkPdcMFhBcO_7NsLSRjF7_LdVnI"/> //pl debug
+            <!--android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w"/>-->
+
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -77,12 +74,16 @@
             android:exported="false" />
 
         <service
-                android:name=".servises.NotificationService"
-                android:exported="false"/>
+            android:name=".servises.NotificationService"
+            android:exported="false"/>
 
         <service
             android:name=".servises.LocationService"
             android:exported="false"/>
     </application>
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
 </manifest>

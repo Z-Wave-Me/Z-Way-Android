@@ -40,6 +40,7 @@ import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
@@ -178,38 +179,10 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
-        showToast("Coming soon");
-//        final Intent intent = new Intent(getActivity(), CameraActivity.class);
-//        intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
-//        startActivity(intent);
+        final Intent intent = new Intent(getActivity(), CameraActivity.class);
+        intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
+        bus.post(new StartActivityEvent(intent));
     }
-
-//    @Override
-//    public void onAddRemoveClicked(Device updatedDevice) {
-//        final Profile profile = dataContext.getActiveProfile();
-//        if(profile != null){
-//            if(profile.positions == null)
-//                profile.positions = new ArrayList<String>();
-//
-//            widgetsGridView.closeOpenedItems();
-//            if(profile.positions.contains(updatedDevice.id)){
-//                profile.positions.remove(updatedDevice.id);
-//            } else {
-//                profile.positions.add(updatedDevice.id);
-//            }
-//            apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-//                @Override
-//                public void onSuccess(List<Profile> result) {
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//
-//                @Override
-//                public void onFailure(String request, boolean isNetworkError) {
-//
-//                }
-//            });
-//        }
-//    }
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){

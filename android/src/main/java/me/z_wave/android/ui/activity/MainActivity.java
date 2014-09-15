@@ -100,7 +100,6 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
     @Subscribe
     public void onStartActivity(StartActivityEvent event){
         startActivity(event.intent);
-        finish();
     }
 
     @Subscribe

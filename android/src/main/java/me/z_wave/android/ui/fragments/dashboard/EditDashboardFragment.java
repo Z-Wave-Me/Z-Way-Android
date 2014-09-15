@@ -71,8 +71,10 @@ public class EditDashboardFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDevicesIds = new ArrayList<String>(dataContext.getActiveProfile().positions);
-        prepareDevicesView();
+        if(dataContext.getActiveProfile() != null) {
+            mDevicesIds = new ArrayList<String>(dataContext.getActiveProfile().positions);
+            prepareDevicesView();
+        }
 
         dragSortGridView.setDropListener(this);
         dragSortGridView.setRemoveListener(this);

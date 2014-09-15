@@ -25,7 +25,6 @@ package me.z_wave.android.ui.activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.VideoView;
 
 import javax.inject.Inject;
 
@@ -110,7 +109,7 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
 
     @OnClick(R.id.video_btn_zoom_in)
     public void zoomIn() {
-        apiClient.camerazoomIn(mDevice, this);
+        apiClient.cameraZoomIn(mDevice, this);
     }
 
     @OnClick(R.id.video_btn_zoom_out)

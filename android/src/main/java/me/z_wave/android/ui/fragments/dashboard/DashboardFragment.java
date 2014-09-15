@@ -45,6 +45,7 @@ import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.BaseFragment;
@@ -167,30 +168,8 @@ public class DashboardFragment extends BaseFragment implements
     public void onOpenCameraView(Device updatedDevice) {
         final Intent intent = new Intent(getActivity(), CameraActivity.class);
         intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
-        startActivity(intent);
+        bus.post(new StartActivityEvent(intent));
     }
-
-//    @Override
-//    public void onAddRemoveClicked(Device updatedDevice) {
-//        final Profile profile = dataContext.getActiveProfile();
-//        if(profile != null){
-//            widgetsGridView.closeOpenedItems();
-//            mAdapter.remove(updatedDevice);
-//            profile.positions.remove(updatedDevice.id);
-//            mAdapter.notifyDataSetChanged();
-//            apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-//                @Override
-//                public void onSuccess(List<Profile> result) {
-//
-//                }
-//
-//                @Override
-//                public void onFailure(String request, boolean isNetworkError) {
-//
-//                }
-//            });
-//        }
-//    }
 
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){

@@ -48,8 +48,12 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 public class SplashFragment extends BaseFragment {
 
     private static final long SPLASH_DISPLAY_LENGTH = 3000;
+
     @Inject
     ApiClient apiClient;
+    private LocalProfile mLocalProfile;
+
+    private boolean mIsAuthFiled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,24 +65,17 @@ public class SplashFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        mLocalProfile = provider.getActiveLocalProfile();
+    }
 
-        DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-        LocalProfile localProfile = provider.getActiveLocalProfile();
-        if(localProfile == null){
-            new Handler().postDelayed(new Runnable(){
-                @Override
-                public void run() {
-                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
-                }
-            }, SPLASH_DISPLAY_LENGTH);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mIsAuthFiled) {
+            bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
         } else {
-            apiClient.init(localProfile);
-            if(!TextUtils.isEmpty(localProfile.login)
-                    || !TextUtils.isEmpty(localProfile.password)) {
-                authenticate();
-            } else {
-                checkServerState();
-            }
+            tryConnectToTheServer();
         }
     }
 
@@ -86,6 +83,24 @@ public class SplashFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         getActionBar().hide();
+    }
+
+    private void tryConnectToTheServer() {
+        if(mLocalProfile == null){
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                }
+            }, SPLASH_DISPLAY_LENGTH);
+        } else {
+            apiClient.init(mLocalProfile);
+            if(!TextUtils.isEmpty(mLocalProfile.indoorServer)) {
+                checkServerState();
+            } else {
+                authenticate();
+            }
+        }
     }
 
     private void authenticate() {
@@ -97,6 +112,7 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAuthFiled() {
+                mIsAuthFiled = true;
                 bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
             }
         });
@@ -111,7 +127,14 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onFailure(boolean isNetworkError) {
-                bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                if(isAdded()) {
+                    if(!TextUtils.isEmpty(mLocalProfile.login) || !TextUtils.isEmpty(mLocalProfile.password)) {
+                        authenticate();
+                    } else {
+                        mIsAuthFiled = true;
+                        bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                    }
+                }
             }
         });
     }

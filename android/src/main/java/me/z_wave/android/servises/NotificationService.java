@@ -22,7 +22,6 @@
 
 package me.z_wave.android.servises;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -32,13 +31,11 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
-import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
 import me.z_wave.android.otto.MainThreadBus;
