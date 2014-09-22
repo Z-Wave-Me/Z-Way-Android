@@ -115,7 +115,7 @@ public class BaseDeviceListFragment extends BaseFragment
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
-        if(TextUtils.isEmpty(updatedDevice.metrics.url)
+        if(!TextUtils.isEmpty(updatedDevice.metrics.url)
                 && URLUtil.isValidUrl(updatedDevice.metrics.url)) {
             final Intent intent = new Intent(getActivity(), CameraActivity.class);
             intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);

@@ -84,17 +84,6 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         prepareToggle(holder, device);
         prepareAddRemoveView(holder, device);
         prepareCameraView(holder,device);
-
-
-
-//        final DeviceType deviceType = device.deviceType;
-//        if(deviceType == DeviceType.FAN ||
-//                deviceType == DeviceType.THERMOSTAT){
-//            //TODO unknown device
-//        }  else if(deviceType == DeviceType.TOGGLE_BUTTON){
-//            //TODO unknown device
-//        }
-
         return convertView;
     }
 
@@ -145,8 +134,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final boolean isSwitcherVisible = deviceType == DeviceType.SWITCH_CONTROLL //свич контрол выглядит как две кнопки, ап и даун. свитчер при этом не показывается
                 || deviceType == DeviceType.SWITCH_BINARY
                 || deviceType == DeviceType.DOORLOCK
-                || deviceType == DeviceType.SWITCH_RGBW
-                || deviceType == DeviceType.SWITCH_MULTILEVEL;
+                || deviceType == DeviceType.SWITCH_RGBW;
 
         holder.switcher.setOnClickListener(null);
         changeViewVisibility(holder.switcher, isSwitcherVisible);

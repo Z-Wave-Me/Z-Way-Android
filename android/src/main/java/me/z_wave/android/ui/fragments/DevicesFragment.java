@@ -36,7 +36,6 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
-import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
@@ -45,7 +44,6 @@ import timber.log.Timber;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
 
 public class DevicesFragment extends BaseDeviceListFragment {
 

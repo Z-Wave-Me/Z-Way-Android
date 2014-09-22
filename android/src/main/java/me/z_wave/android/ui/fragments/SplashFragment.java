@@ -112,8 +112,7 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAuthFiled() {
-                mIsAuthFiled = true;
-                bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                onCantConnect();
             }
         });
     }
@@ -131,11 +130,25 @@ public class SplashFragment extends BaseFragment {
                     if(!TextUtils.isEmpty(mLocalProfile.login) || !TextUtils.isEmpty(mLocalProfile.password)) {
                         authenticate();
                     } else {
-                        mIsAuthFiled = true;
-                        bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                        onCantConnect();
                     }
                 }
             }
         });
+    }
+
+    private void onCantConnect() {
+        mIsAuthFiled = true;
+        unselectActiveProfile();
+        bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+    }
+
+    private void unselectActiveProfile() {
+        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
+        if(unselectedProfile != null) {
+            unselectedProfile.active = false;
+            provider.updateLocalProfile(unselectedProfile);
+        }
     }
 }

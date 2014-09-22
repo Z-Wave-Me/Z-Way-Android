@@ -102,14 +102,14 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final LocalProfile selectedProfile = mAdapter.getItem(position);
-        if(!selectedProfile.active) {
+//        if(!selectedProfile.active) {
             bus.post(new ShowReconnectionProgressEvent(true, false, selectedProfile.name));
             if(!TextUtils.isEmpty(selectedProfile.indoorServer)) {
                 checkServerState(selectedProfile);
             } else {
                 authenticate(selectedProfile);
             }
-        }
+//        }
     }
 
     @Subscribe
@@ -146,7 +146,8 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
-                if(unselectedProfile != null) {
+                if(unselectedProfile != null
+                        && unselectedProfile.serverId != selectedProfile.serverId) {
                     unselectedProfile.active = false;
                     provider.updateLocalProfile(unselectedProfile);
                 }
@@ -176,7 +177,8 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
-                if(unselectedProfile != null) {
+                if(unselectedProfile != null
+                        && unselectedProfile.serverId != selectedProfile.serverId) {
                     unselectedProfile.active = false;
                     provider.updateLocalProfile(unselectedProfile);
                 }

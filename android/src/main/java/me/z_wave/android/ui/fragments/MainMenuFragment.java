@@ -258,11 +258,13 @@ public class MainMenuFragment extends BaseFragment {
 
     private void prepareProfileInfo() {
         final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
-        LocalProfile activeProfile = provider.getActiveLocalProfile();
-        profileLocation.setVisibility(
-                TextUtils.isEmpty(activeProfile.address) ? View.GONE : View.VISIBLE);
-        profileLocation.setText(activeProfile.address);
-        profileName.setText(activeProfile.name);
+        final LocalProfile activeProfile = provider.getActiveLocalProfile();
+        if(activeProfile != null) {
+            profileLocation.setVisibility(
+                    TextUtils.isEmpty(activeProfile.address) ? View.GONE : View.VISIBLE);
+            profileLocation.setText(activeProfile.address);
+            profileName.setText(activeProfile.name);
+        }
     }
 
     public void setNavigationMenuEnabled(boolean enabled){
@@ -368,12 +370,6 @@ public class MainMenuFragment extends BaseFragment {
             }
         }
         return "";
-
-
-
-
-
-
 
     }
 
