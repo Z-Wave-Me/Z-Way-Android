@@ -40,7 +40,6 @@
         You can fill it with frequently used widgets\n
         by swiping them left.
     </string>
-    <string name="dashboadr_remove">Remove</string>
     <string name="dashboard_to_dashboard">To dashboard</string>
     <string name="dashboard_done">Done</string>
 
@@ -103,4 +102,7 @@
 
     <string name="profile_url">url</string>
     <string name="profile_http">http://</string>
+
+    <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
+    <string name="dashboadr_remove">Remove from dashboard</string>
 </resources>
