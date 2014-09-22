@@ -26,8 +26,11 @@ import retrofit.RestAdapter;
 
 public class Constants {
 
+    public static final boolean DEBUG_MODE = false;
+    public static final RestAdapter.LogLevel API_LOG_LEVEL = DEBUG_MODE ?
+            RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
+
     public static final String BASE_API_URL = "/ZAutomation/api/v1";
-    public static final RestAdapter.LogLevel API_LOG_LEVEL = RestAdapter.LogLevel.FULL;
 
     public static final int AUTH_TRIES_COUNT = 3;
 

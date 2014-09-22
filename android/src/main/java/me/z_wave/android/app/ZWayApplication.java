@@ -24,7 +24,6 @@ package me.z_wave.android.app;
 
 import android.app.Application;
 import dagger.ObjectGraph;
-import me.z_wave.android.BuildConfig;
 import timber.log.Timber;
 
 public class ZWayApplication extends Application {
@@ -34,7 +33,7 @@ public class ZWayApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.DEBUG) {
+        if (Constants.DEBUG_MODE) {
             Timber.plant(new Timber.DebugTree());
         }
 

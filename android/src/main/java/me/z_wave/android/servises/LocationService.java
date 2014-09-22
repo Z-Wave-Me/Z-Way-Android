@@ -52,6 +52,7 @@ import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.ui.activity.MainActivity;
+import timber.log.Timber;
 
 /**
  * Created by Ivan PL on 08.09.2014.
@@ -79,12 +80,12 @@ public class LocationService extends Service {
     public void onCreate() {
         super.onCreate();
         ((ZWayApplication)getApplication()).inject(this);
-        Log.v(TAG, "onCreate");
+        Timber.v("onCreate");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(TAG, "onStartCommand");
+        Timber.v("onStartCommand");
         databaseDataProvider = new DatabaseDataProvider(getApplicationContext());
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
@@ -144,7 +145,7 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        Timber.v("onDestroy");
         locationManager.removeUpdates(listener);
     }
 
@@ -152,7 +153,7 @@ public class LocationService extends Service {
 
         public void onLocationChanged(final Location loc) {
             if (isBetterLocation(loc, previousBestLocation)) {
-                Log.v(TAG, "onLocationChanged: " + loc.getLatitude() + " " + loc.getLongitude());
+                Timber.v("onLocationChanged: %s %s", loc.getLatitude(), loc.getLongitude());
                 if(isChangeProfileByLocationEnable()) {
                     final LocalProfile profile = databaseDataProvider.getNearestLocalProfile(
                             loc.getLatitude(), loc.getLongitude());
@@ -170,17 +171,17 @@ public class LocationService extends Service {
         }
 
         public void onProviderDisabled(String provider) {
-            Log.v(TAG, provider + " onProviderDisabled");
+            Timber.v("onProviderDisabled");
         }
 
 
         public void onProviderEnabled(String provider) {
-            Log.v(TAG, provider + " onProviderEnabled");
+            Timber.v("onProviderEnabled");
         }
 
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.v(TAG, "onStatusChanged " + provider + " " + status);
+            Timber.v("onStatusChanged " + provider + " " + status);
         }
 
     }
