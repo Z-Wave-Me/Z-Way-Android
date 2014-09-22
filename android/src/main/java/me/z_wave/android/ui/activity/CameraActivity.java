@@ -43,8 +43,6 @@ import me.z_wave.android.ui.views.mjpegView.MjpegView;
  */
 public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCallback<Device> {
 
-    public static final String TAG = CameraActivity.class.getSimpleName();
-
     public static final String KEY_DEVICE = "device";
 
     @InjectView(R.id.video_mjpeg_view) MjpegView mjpegView;

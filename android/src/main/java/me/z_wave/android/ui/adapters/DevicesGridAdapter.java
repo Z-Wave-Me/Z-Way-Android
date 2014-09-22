@@ -145,7 +145,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final boolean isSwitcherVisible = deviceType == DeviceType.SWITCH_CONTROLL //свич контрол выглядит как две кнопки, ап и даун. свитчер при этом не показывается
                 || deviceType == DeviceType.SWITCH_BINARY
                 || deviceType == DeviceType.DOORLOCK
-                || deviceType == DeviceType.SWITCH_RGBW;
+                || deviceType == DeviceType.SWITCH_RGBW
+                || deviceType == DeviceType.SWITCH_MULTILEVEL;
 
         holder.switcher.setOnClickListener(null);
         changeViewVisibility(holder.switcher, isSwitcherVisible);
@@ -194,7 +195,11 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         holder.seekBar.setOnSeekBarChangeListener(null);
         changeViewVisibility(holder.seekBar, isSeekBarVisible);
         if(isSeekBarVisible){
-            holder.seekBar.setProgress(Integer.valueOf(device.metrics.level));
+            try {
+                holder.seekBar.setProgress(Integer.valueOf(device.metrics.level));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

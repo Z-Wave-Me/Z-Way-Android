@@ -68,7 +68,8 @@ import javax.inject.Singleton;
                 ReconnectionProgressDialog.class,
                 EditDevicesFragment.class,
                 LocationService.class,
-                CameraActivity.class
+                CameraActivity.class,
+                BaseDeviceListFragment.class
 
         },
         library = true,

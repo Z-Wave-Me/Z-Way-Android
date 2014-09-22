@@ -22,7 +22,6 @@
 
 package me.z_wave.android.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,10 +39,7 @@ import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
-import me.z_wave.android.otto.events.StartActivityEvent;
-import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
-import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
 import timber.log.Timber;
 
 import java.util.ArrayList;
@@ -51,7 +47,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.DeviceStateUpdatedListener {
+public class DevicesFragment extends BaseDeviceListFragment {
 
     public static final String FILTER_KEY = "filter_key";
     public static final String FILTER_NAME_KEY = "filter_name_key";
@@ -61,9 +57,6 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
 
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
-
-    @Inject
-    ApiClient apiClient;
 
     private List<Device> mDevices;
     private DevicesGridAdapter mAdapter;
@@ -107,81 +100,6 @@ public class DevicesFragment extends BaseFragment implements DevicesGridAdapter.
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSwitchStateChanged(Device updatedDevice) {
-        apiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Device state changed!");
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onSeekBarStateChanged(final Device updatedDevice) {
-        apiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Seek changed " + updatedDevice.metrics.level);
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onToggleClicked(Device updatedDevice) {
-        apiClient.updateToggle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Toggle clicked");
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if (isAdded()) {
-                    if (isNetworkError) {
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onColorViewClicked(Device updatedDevice) {
-        showToast("Coming soon");
-    }
-
-    @Override
-    public void onOpenCameraView(Device updatedDevice) {
-        final Intent intent = new Intent(getActivity(), CameraActivity.class);
-        intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
-        bus.post(new StartActivityEvent(intent));
     }
 
     @Subscribe

@@ -101,5 +101,7 @@
     <string name="toggle_button">Toggle Button</string>
     <string name="switch_rgbw">Switch rgbw</string>
     <string name="doorlock">Doorlock</string>
+    
+    <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
 
 </resources>
