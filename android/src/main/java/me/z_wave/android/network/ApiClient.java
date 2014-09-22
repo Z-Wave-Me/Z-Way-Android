@@ -24,6 +24,9 @@ package me.z_wave.android.network;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -61,12 +64,14 @@ import me.z_wave.android.network.profiles.ProfilesRequest;
 import me.z_wave.android.network.profiles.ProfilesResponse;
 import me.z_wave.android.network.profiles.UpdateProfileRequest;
 import me.z_wave.android.network.server.ServerStatusRequest;
+import me.z_wave.android.utils.BooleanTypeAdapter;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.ApacheClient;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 import timber.log.Timber;
 
 import java.net.CookieHandler;
@@ -123,21 +128,32 @@ public class ApiClient {
         if(localProfile != null) {
             Timber.v("init ApiClient for " + localProfile.toString());
             mLocalProfile = localProfile;
-            String url;
-            if(useDefaultUrl) {
-                url = Constants.DEFAULT_URL;
-            } else {
-                url = TextUtils.isEmpty(mLocalProfile.indoorServer)
-                        ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
-            }
             mClient = getHttpsClient();
+
+            final String url = getServerUrl(useDefaultUrl);
+            final Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Boolean.class, new BooleanTypeAdapter())
+                    .create();
+
             mAdaptor = new RestAdapter.Builder()
                     .setEndpoint(url)
                     .setLogLevel(Constants.API_LOG_LEVEL)
                     .setClient(new ApacheClient(mClient))
+                    .setConverter(new GsonConverter(gson))
                     .setRequestInterceptor(createCookiesInterceptor())
                     .build();
         }
+    }
+
+    private String getServerUrl(boolean useDefaultUrl) {
+        String url;
+        if(useDefaultUrl) {
+            url = Constants.DEFAULT_URL;
+        } else {
+            url = TextUtils.isEmpty(mLocalProfile.indoorServer)
+                    ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
+        }
+        return url;
     }
 
     public void getServerState() {

@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -33,6 +34,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Metrics;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.ui.views.mjpegView.MjpegView;
 
@@ -63,6 +65,16 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
 
         mjpegView.setDisplayMode(MjpegView.SIZE_BEST_FIT);
         mjpegView.showFps(true);
+
+        Metrics cameraMetrics = mDevice.metrics;
+        changeButtonVisibility(findViewById(R.id.video_btn_up), cameraMetrics.hasUp);
+        changeButtonVisibility(findViewById(R.id.video_btn_down), cameraMetrics.hasDown);
+        changeButtonVisibility(findViewById(R.id.video_btn_left), cameraMetrics.hasLeft);
+        changeButtonVisibility(findViewById(R.id.video_btn_right), cameraMetrics.hasRight);
+        changeButtonVisibility(findViewById(R.id.video_btn_zoom_in), cameraMetrics.hasZoomIn);
+        changeButtonVisibility(findViewById(R.id.video_btn_zoom_out), cameraMetrics.hasZoomOut);
+        changeButtonVisibility(findViewById(R.id.video_btn_open), cameraMetrics.hasOpen);
+        changeButtonVisibility(findViewById(R.id.video_btn_close), cameraMetrics.hasClose);
     }
 
     @Override
@@ -125,6 +137,10 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
     @OnClick(R.id.video_btn_close)
     public void cameraClose() {
         apiClient.closeCamera(mDevice, this);
+    }
+
+    private void changeButtonVisibility(View v, boolean isVisible) {
+        v.setVisibility(isVisible ? View.VISIBLE :View.INVISIBLE);
     }
 
 }

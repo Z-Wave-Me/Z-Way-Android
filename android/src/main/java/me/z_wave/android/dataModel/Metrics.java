@@ -43,7 +43,7 @@ public class Metrics implements Serializable {
     public Boolean hasRight;
     public Boolean hasUp;
     public Boolean hasDown;
-//    public int hasOpen;
-//    public int hasClose;
+    public Boolean hasOpen;
+    public Boolean hasClose;
 
 }
