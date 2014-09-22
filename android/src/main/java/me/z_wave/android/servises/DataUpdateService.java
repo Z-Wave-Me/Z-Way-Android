@@ -26,7 +26,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import com.squareup.otto.Bus;
+
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.app.ZWayApplication;
@@ -121,7 +121,8 @@ public class DataUpdateService extends Service {
                     dataContext.setLocations(locations);
                     dataContext.setDevices(devicesStateResponse.data.devices);
 
-                    bus.post(new OnDataUpdatedEvent());
+                    bus.post(new OnDataUpdatedEvent(profiles,
+                            locations, devicesStateResponse.data.devices));
                     startDevicesUpdates();
                     bus.post(new ProgressEvent(false, false));
 
@@ -152,7 +153,7 @@ public class DataUpdateService extends Service {
                 mLastUpdateTime = result.updateTime;
                 if (result.devices != null && !result.devices.isEmpty()) {
                     dataContext.addDevices(result.devices);
-                    bus.post(new OnDataUpdatedEvent());
+                    bus.post(new OnDataUpdatedEvent(null, null, result.devices));
                 }
             }
 

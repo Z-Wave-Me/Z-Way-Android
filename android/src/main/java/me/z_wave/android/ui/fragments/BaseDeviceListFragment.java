@@ -26,10 +26,13 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
@@ -44,6 +47,8 @@ public class BaseDeviceListFragment extends BaseFragment
 
     @Inject
     ApiClient apiClient;
+
+    protected List<Device> mDevices;
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
@@ -122,6 +127,22 @@ public class BaseDeviceListFragment extends BaseFragment
             bus.post(new StartActivityEvent(intent));
         } else {
             bus.post(new ShowAttentionDialogEvent(getString(R.string.invalid_camera_url)));
+        }
+    }
+
+    protected void updateDevicesList(List<Device> devices) {
+        for(Device device : devices) {
+            updateDevice(device);
+        }
+    }
+
+    protected void updateDevice(Device device) {
+        final int devicePosition = mDevices.indexOf(device);
+        if(devicePosition >= 0) {
+            mDevices.remove(device);
+            mDevices.add(devicePosition, device);
+        } else {
+            mDevices.add(device);
         }
     }
 

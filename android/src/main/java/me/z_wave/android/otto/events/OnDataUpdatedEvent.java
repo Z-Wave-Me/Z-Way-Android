@@ -22,6 +22,21 @@
 
 package me.z_wave.android.otto.events;
 
+import java.util.List;
+
+import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Profile;
+
 public class OnDataUpdatedEvent {
 
+    public final List<Profile> profiles;
+    public final List<Location> locations;
+    public final List<Device> devices;
+
+    public OnDataUpdatedEvent(List<Profile> profiles, List<Location> locations, List<Device> devices) {
+        this.profiles = profiles;
+        this.locations = locations;
+        this.devices = devices;
+    }
 }

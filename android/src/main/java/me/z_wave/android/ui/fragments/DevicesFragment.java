@@ -56,7 +56,7 @@ public class DevicesFragment extends BaseDeviceListFragment {
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
 
-    private List<Device> mDevices;
+
     private DevicesGridAdapter mAdapter;
     private Filter mFilter;
     private String mFilterValue;
@@ -100,11 +100,22 @@ public class DevicesFragment extends BaseDeviceListFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void updateDevicesList(List<Device> devices) {
+        for(Device device : devices) {
+            if(isAppropriateDevice(device)) {
+                updateDevice(device);
+            } else {
+                mDevices.remove(device);
+            }
+        }
+    }
+
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
         mAdapter.setProfile(dataContext.getActiveProfile());
-        mDevices = getFilteredDeviceList();
+        updateDevicesList(event.devices);
         mAdapter.notifyDataSetChanged();
         changeEmptyMsgVisibility();
     }
@@ -135,5 +146,20 @@ public class DevicesFragment extends BaseDeviceListFragment {
                 return dataContext.getDevicesWithTag(mFilterValue);
         }
         return new ArrayList<Device>();
+    }
+
+    private boolean isAppropriateDevice(Device device) {
+        if(mFilterValue.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+            return true;
+
+        switch (mFilter){
+            case LOCATION:
+                return device.location != null &&  device.location.equalsIgnoreCase(mFilterValue);
+            case TYPE:
+                return device.deviceType.toString().equalsIgnoreCase(mFilterValue);
+            case TAG:
+                return device.tags.contains(mFilterValue);
+        }
+        return true;
     }
 }

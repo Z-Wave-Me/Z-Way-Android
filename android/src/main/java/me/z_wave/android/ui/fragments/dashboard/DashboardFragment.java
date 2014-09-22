@@ -86,14 +86,14 @@ public class DashboardFragment extends BaseDeviceListFragment{
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Dashboard list updated!");
         mAdapter.setProfile(dataContext.getActiveProfile());
-        mAdapter.clear();
-        mAdapter.addAll(dataContext.getDashboardDevices());
+        updateDevicesList(event.devices);
         mAdapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView(){
-        mAdapter = new DevicesGridAdapter(getActivity(), dataContext.getDashboardDevices(),
+        mDevices = dataContext.getDashboardDevices();
+        mAdapter = new DevicesGridAdapter(getActivity(), mDevices,
                 dataContext.getActiveProfile(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
