@@ -146,8 +146,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
-                if(unselectedProfile != null
-                        && unselectedProfile.serverId != selectedProfile.serverId) {
+                if(unselectedProfile != null && unselectedProfile.id != selectedProfile.id) {
                     unselectedProfile.active = false;
                     provider.updateLocalProfile(unselectedProfile);
                 }
@@ -177,8 +176,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                 final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
-                if(unselectedProfile != null
-                        && unselectedProfile.serverId != selectedProfile.serverId) {
+                if(unselectedProfile != null && unselectedProfile.id != selectedProfile.id) {
                     unselectedProfile.active = false;
                     provider.updateLocalProfile(unselectedProfile);
                 }
