@@ -181,10 +181,17 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL;
 
         holder.seekBar.setOnSeekBarChangeListener(null);
+        int value = 0;
+        try {
+            value = Integer.valueOf(device.metrics.level);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
         changeViewVisibility(holder.seekBar, isSeekBarVisible);
         if(isSeekBarVisible){
             try {
-                holder.seekBar.setProgress(Integer.valueOf(device.metrics.level));
+                holder.seekBar.setProgress(value);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }

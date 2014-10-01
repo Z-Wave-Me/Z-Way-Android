@@ -86,7 +86,7 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.v("onStartCommand");
-        databaseDataProvider = new DatabaseDataProvider(getApplicationContext());
+        databaseDataProvider = DatabaseDataProvider.getInstance(getApplicationContext());
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 100, listener);

@@ -23,9 +23,11 @@
 package me.z_wave.android.ui.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.URLUtil;
 
 import javax.inject.Inject;
 
@@ -33,8 +35,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import me.z_wave.android.R;
+import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Metrics;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.ui.views.mjpegView.MjpegView;
 
@@ -78,7 +83,8 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
     @Override
     public void onResume() {
         super.onResume();
-        mjpegView.setSource(mDevice.metrics.url);
+        final String cameraUrl = getCameraUrl(mDevice.metrics.url);
+        mjpegView.setSource(cameraUrl);
     }
 
     @Override
@@ -139,6 +145,20 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
 
     private void changeButtonVisibility(View v, boolean isVisible) {
         v.setVisibility(isVisible ? View.VISIBLE :View.INVISIBLE);
+    }
+
+    private String getCameraUrl(String baseUrl) {
+        if(TextUtils.isEmpty(baseUrl))
+            return null;
+
+        if(URLUtil.isValidUrl(baseUrl))
+            return baseUrl;
+
+        final LocalProfile profile = DatabaseDataProvider.getInstance(this).getActiveLocalProfile();
+        final String serverUrl = TextUtils.isEmpty(profile.indoorServer) ? Constants.DEFAULT_URL
+                : profile.indoorServer;
+
+        return String.format("%s%s", serverUrl, baseUrl);
     }
 
 }

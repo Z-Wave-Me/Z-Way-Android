@@ -1,1 +1,1 @@
-include ':android', ':dynamicgrid', ':dragsortlistview'
+include ':android', ':dragsortlistview'

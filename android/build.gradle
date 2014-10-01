@@ -6,7 +6,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:0.12.2'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
@@ -18,8 +18,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 6
-        versionName 'dev'//'0.1.6'
+        versionCode 7
+        versionName 'dev'//'0.1.7'
     }
 
     productFlavors {
@@ -28,9 +28,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services:4.4.52'
-    compile 'com.squareup.retrofit:retrofit:1.6.0'
-    compile 'com.nineoldandroids:library:2.4.0+'
+    compile 'com.google.android.gms:play-services:5.2.08'
+    compile 'com.nineoldandroids:library:2.4.+'
     compile 'com.squareup.picasso:picasso:2.2.0'
     debugCompile 'com.squareup.retrofit:retrofit-mock:1.4.1'
     compile 'com.jakewharton:butterknife:4.0.1'
@@ -39,6 +38,5 @@ dependencies {
     provided 'com.squareup.dagger:dagger-compiler:1.2.1'
     compile 'com.squareup:otto:1.3.4'
     compile 'com.crittercism:crittercism-android-agent:+'
-    compile project(':dynamicgrid')
     compile project(':dragsortlistview')
 }

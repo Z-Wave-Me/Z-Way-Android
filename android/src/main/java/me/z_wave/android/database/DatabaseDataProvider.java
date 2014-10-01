@@ -40,9 +40,16 @@ import me.z_wave.android.database.tables.ProfileTable;
 public class DatabaseDataProvider {
 
     private DatabaseHelper mDatabaseHelper;
+    private static DatabaseDataProvider mInstanse;
 
+    public static DatabaseDataProvider getInstance(Context context) {
+        if(mInstanse == null) {
+            mInstanse = new DatabaseDataProvider(context);
+        }
+        return mInstanse;
+    }
 
-    public DatabaseDataProvider(Context context) {
+    private DatabaseDataProvider(Context context) {
         mDatabaseHelper = new DatabaseHelper(context);
     }
 

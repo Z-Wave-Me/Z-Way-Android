@@ -40,8 +40,8 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-        android:value="AIzaSyCgp_nefkPdcMFhBcO_7NsLSRjF7_LdVnI"/> //pl debug
-            <!--android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w"/>-->
+            android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w"/>
+        <!--android:value="AIzaSyCgp_nefkPdcMFhBcO_7NsLSRjF7_LdVnI"/> //pl debug-->
 
 
         <meta-data android:name="com.google.android.gms.version"

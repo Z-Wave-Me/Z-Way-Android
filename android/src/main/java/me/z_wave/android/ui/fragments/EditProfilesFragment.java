@@ -85,7 +85,7 @@ public class EditProfilesFragment extends BaseFragment implements AdapterView.On
     }
 
     private void prepareProfilesList(){
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         mAdapter = new ProfilesListAdapter(getActivity(),provider.getLocalProfiles(), true);
         profilesList.setOnItemClickListener(this);
         profilesList.setAdapter(mAdapter);

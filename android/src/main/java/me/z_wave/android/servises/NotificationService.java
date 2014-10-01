@@ -104,7 +104,8 @@ public class NotificationService extends Service {
     @Subscribe
     public void onAccountChanged(AccountChangedEvent event){
         mLastUpdateTime = 0;
-        mTimer.cancel();
+        if(mTimer != null)
+            mTimer.cancel();
         startNotificationListening();
     }
 

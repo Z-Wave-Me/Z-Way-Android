@@ -65,7 +65,7 @@ public class SplashFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         mLocalProfile = provider.getActiveLocalProfile();
     }
 
@@ -144,7 +144,7 @@ public class SplashFragment extends BaseFragment {
     }
 
     private void unselectActiveProfile() {
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
         if(unselectedProfile != null) {
             unselectedProfile.active = false;

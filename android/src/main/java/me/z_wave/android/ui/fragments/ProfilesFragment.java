@@ -114,14 +114,14 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
     @Subscribe
     public void onAccountChanged(AccountChangedEvent event) {
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         mAdapter.clear();
         mAdapter.addAll(provider.getLocalProfiles());
         mAdapter.notifyDataSetChanged();
     }
 
     private void prepareProfilesList(){
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         mAdapter = new ProfilesListAdapter(getActivity(), provider.getLocalProfiles(), false);
         profilesList.addFooterView(createListFooter(), null, false);
         profilesList.setOnItemClickListener(this);
@@ -143,7 +143,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             public void onAuthComplete() {
                 bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 selectedProfile.active = true;
-                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
                 if(unselectedProfile != null && unselectedProfile.id != selectedProfile.id) {
@@ -158,7 +158,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
             @Override
             public void onAuthFiled() {
-                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
                 apiClient.init(provider.getActiveLocalProfile());
                 bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 bus.post(new ShowAttentionDialogEvent("Can't connect!"));
@@ -173,7 +173,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
             public void onSuccess(ServerStatus response) {
                 bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                 selectedProfile.active = true;
-                final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
                 final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
                 provider.updateLocalProfile(selectedProfile);
                 if(unselectedProfile != null && unselectedProfile.id != selectedProfile.id) {
@@ -190,7 +190,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
                         || !TextUtils.isEmpty(selectedProfile.password)) {
                     authenticate(selectedProfile);
                 } else {
-                    final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+                    final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
                     apiClient.init(provider.getActiveLocalProfile());
                     bus.post(new ShowReconnectionProgressEvent(false, false, ""));
                     bus.post(new ShowAttentionDialogEvent("Can't connect!"));

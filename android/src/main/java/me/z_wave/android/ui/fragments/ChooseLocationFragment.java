@@ -22,9 +22,12 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Context;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -78,6 +81,8 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
 
         centerMapOnMyLocation();
         googleMap.setOnMapClickListener(this);
+//        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+//        locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
     }
 
     @Override

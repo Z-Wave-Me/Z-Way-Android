@@ -169,7 +169,7 @@ public class ProfileFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         //TODO IVAN_PL refactor this!!!
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile profile = profileContext.getProfile();
         saveEnteredData();
         if (item.getItemId() == R.id.action_done) {
@@ -198,7 +198,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void connectToOutdorService(final LocalProfile profile) {
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         apiClient.init(profile);
         apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
             @Override
@@ -234,7 +234,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void loginWithUserCredentials(final LocalProfile profile) {
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
             apiClient.init(profile, true);
             apiClient.auth(new ApiClient.OnAuthCompleteListener() {
                 @Override
@@ -274,7 +274,7 @@ public class ProfileFragment extends BaseFragment {
     void deleteProfile() {
         final LocalProfile profile = profileContext.getProfile();
         if (!profile.active) {
-            final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+            final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
             showToast("Profile " + profile.name + " deleted");
             provider.removeLocalProfile(profile);
             goBack();
@@ -319,7 +319,7 @@ public class ProfileFragment extends BaseFragment {
         }
 
         final int profileId = getArguments().getInt(PROFILE_ID_KEY, DEFAULT_PROFILE_ID);
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         return provider.getLocalProfileWithId(profileId);
     }
 

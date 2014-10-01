@@ -31,8 +31,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
+import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;

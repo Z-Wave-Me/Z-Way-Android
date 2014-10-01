@@ -24,7 +24,6 @@ package me.z_wave.android.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,13 +32,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.askerov.dynamicgrid.BaseDynamicGridAdapter;
-
 import java.util.List;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.dataModel.Profile;
 
 public class EditDashboardGridAdapter extends ArrayAdapter<Device> {
 

@@ -257,7 +257,7 @@ public class MainMenuFragment extends BaseFragment {
     }
 
     private void prepareProfileInfo() {
-        final DatabaseDataProvider provider = new DatabaseDataProvider(getActivity());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile activeProfile = provider.getActiveLocalProfile();
         if(activeProfile != null) {
             profileLocation.setVisibility(

@@ -22,11 +22,14 @@
 
 package me.z_wave.android.app;
 
+import android.content.Context;
+
 import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.data.NewProfileContext;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
@@ -101,4 +104,5 @@ public class ZWayModule {
     NewProfileContext provideNewProfileClient() {
         return new NewProfileContext();
     }
+
 }
