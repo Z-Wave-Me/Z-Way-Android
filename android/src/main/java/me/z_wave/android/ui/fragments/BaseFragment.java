@@ -32,6 +32,7 @@ import com.squareup.otto.Bus;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.otto.events.PopBackStackEvent;
 
 import javax.inject.Inject;
 
@@ -65,6 +66,12 @@ public class BaseFragment extends Fragment{
     public void onPause() {
         super.onPause();
         bus.unregister(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        super.onSaveInstanceState(outState);
     }
 
     @Override

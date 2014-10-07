@@ -29,6 +29,7 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.PopBackStackEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAlertDialogEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
