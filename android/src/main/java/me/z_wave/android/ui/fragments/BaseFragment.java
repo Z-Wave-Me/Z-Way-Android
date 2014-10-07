@@ -28,11 +28,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
-import com.squareup.otto.Bus;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
-import me.z_wave.android.otto.events.PopBackStackEvent;
 
 import javax.inject.Inject;
 

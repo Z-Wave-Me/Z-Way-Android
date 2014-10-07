@@ -90,9 +90,11 @@ public class DataContext {
         final List<String> result = new ArrayList<String>();
         if(mDevices != null){
             for (Device device : mDevices) {
-                final String deviceType = device.deviceType.toString();
-                if (!result.contains(deviceType))
-                    result.add(deviceType);
+                if(device != null && device.deviceType != null) {
+                    final String deviceType = device.deviceType.toString();
+                    if (!result.contains(deviceType))
+                        result.add(deviceType);
+                }
             }
         }
         return result;
