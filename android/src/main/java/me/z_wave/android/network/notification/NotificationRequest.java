@@ -31,4 +31,7 @@ public interface NotificationRequest {
     @GET("/ZAutomation/api/v1/notifications")
     void getNotifications(@Query("since") long updateTime, Callback<NotificationResponse> callback);
 
+    @GET("/ZAutomation/api/v1/notifications")
+    NotificationResponse getNotifications(@Query("since") long updateTime);
+
 }

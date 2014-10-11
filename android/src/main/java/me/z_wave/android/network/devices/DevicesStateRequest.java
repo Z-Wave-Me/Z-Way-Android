@@ -33,7 +33,7 @@ public interface DevicesStateRequest {
     void getDevices(@Query("since")long updateTime, Callback<DevicesStateResponse> callback);
 
     @GET("/ZAutomation/api/v1/devices")
-    DevicesStateResponse getDevices();
+    DevicesStateResponse getDevices(@Query("since")long updateTime);
 
     @GET("/ZAutomation/api/v1/devices/{id}")
     void getDevice(@Path("id")String deviceId, Callback callback);

@@ -147,18 +147,20 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
         try {
             final List<Address> addresses = geocoder.getFromLocation(position.latitude,
                     position.longitude, 1);
-            final Address address = addresses.get(0);
-            if(address != null){
-                final StringBuilder builder = new StringBuilder();
-                if(!TextUtils.isEmpty(address.getThoroughfare())){
-                    builder.append(address.getThoroughfare());
-                    if(!TextUtils.isEmpty(address.getSubThoroughfare()))
-                        builder.append(" " + address.getSubThoroughfare());
+            if(addresses.size() > 0) {
+                final Address address = addresses.get(0);
+                if(address != null){
+                    final StringBuilder builder = new StringBuilder();
+                    if(!TextUtils.isEmpty(address.getThoroughfare())){
+                        builder.append(address.getThoroughfare());
+                        if(!TextUtils.isEmpty(address.getSubThoroughfare()))
+                            builder.append(" " + address.getSubThoroughfare());
+                    }
+                    appendIfNotEmpty(builder, address.getLocality());
+                    appendIfNotEmpty(builder, address.getAdminArea());
+                    appendIfNotEmpty(builder, address.getCountryName());
+                    return builder.toString();
                 }
-                appendIfNotEmpty(builder, address.getLocality());
-                appendIfNotEmpty(builder, address.getAdminArea());
-                appendIfNotEmpty(builder, address.getCountryName());
-                return builder.toString();
             }
         } catch (IOException e) {
             e.printStackTrace();

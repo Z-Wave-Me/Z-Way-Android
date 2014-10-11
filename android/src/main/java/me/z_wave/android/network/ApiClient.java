@@ -156,14 +156,6 @@ public class ApiClient {
         return url;
     }
 
-    public void getServerState() {
-
-    }
-
-    public void getServerState(String login, String password) {
-
-    }
-
     public void getDevicesState(final long lastUpdateTime, final ApiCallback<DevicesStatus, Long> callback) {
         mAdaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime, new Callback<DevicesStateResponse>() {
             @Override
@@ -188,8 +180,8 @@ public class ApiClient {
         });
     }
 
-    public DevicesStateResponse getDevices() {
-        return mAdaptor.create(DevicesStateRequest.class).getDevices();
+    public DevicesStateResponse getDevices(long lastUpdateTime) {
+        return mAdaptor.create(DevicesStateRequest.class).getDevices(lastUpdateTime);
     }
 
     public void updateDevicesState(final Device updatedDevice, final EmptyApiCallback<Device> callback) {
@@ -578,6 +570,10 @@ public class ApiClient {
         );
     }
 
+    public NotificationResponse getNotifications(final long lastUpdateTime) {
+        return mAdaptor.create(NotificationRequest.class).getNotifications(lastUpdateTime);
+    }
+
     public void updateNotifications(final Notification notification,
                                     final EmptyApiCallback<String> callback) {
         mAdaptor.create(UpdateNotificationRequest.class).updateNotification(notification.id, notification
@@ -679,6 +675,10 @@ public class ApiClient {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public boolean isPrepared() {
+        return mAdaptor != null;
     }
 
     private HttpClient createDefaultHttpClient(){

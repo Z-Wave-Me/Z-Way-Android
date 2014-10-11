@@ -112,20 +112,21 @@ public class DataUpdateService extends Service {
             @Override
             public void run() {
                 try{
-                    List<Profile> profiles = apiClient.getProfiles().data;
-                    List<Location> locations = apiClient.getLocations().data;
-                    DevicesStateResponse devicesStateResponse = apiClient.getDevices();
-                    mLastUpdateTime = devicesStateResponse.data.updateTime;
+                    if(apiClient.isPrepared()) {
+                        List<Profile> profiles = apiClient.getProfiles().data;
+                        List<Location> locations = apiClient.getLocations().data;
+                        DevicesStateResponse devicesStateResponse = apiClient.getDevices(0);
+                        mLastUpdateTime = devicesStateResponse.data.updateTime;
 
-                    dataContext.setProfiles(profiles);
-                    dataContext.setLocations(locations);
-                    dataContext.setDevices(devicesStateResponse.data.devices);
+                        dataContext.setProfiles(profiles);
+                        dataContext.setLocations(locations);
+                        dataContext.setDevices(devicesStateResponse.data.devices);
 
-                    bus.post(new OnDataUpdatedEvent(profiles,
-                            locations, devicesStateResponse.data.devices));
-                    startDevicesUpdates();
-                    bus.post(new ProgressEvent(false, false));
-
+                        bus.post(new OnDataUpdatedEvent(profiles,
+                                locations, devicesStateResponse.data.devices));
+                        startDevicesUpdates();
+                        bus.post(new ProgressEvent(false, false));
+                    }
                 } catch (RetrofitError e){
                     e.printStackTrace();
                 }
@@ -145,27 +146,22 @@ public class DataUpdateService extends Service {
     }
 
     private void updateDevices() {
-        apiClient.getDevicesState(mLastUpdateTime, new ApiClient.ApiCallback<DevicesStatus, Long>() {
-
+        final Thread thread = new Thread(new Runnable() {
             @Override
-            public void onSuccess(DevicesStatus result) {
-                Timber.v("Device updated! Devices count " + result.devices.size());
-                mLastUpdateTime = result.updateTime;
-                if (result.devices != null && !result.devices.isEmpty()) {
-                    dataContext.addDevices(result.devices);
-                    bus.post(new OnDataUpdatedEvent(null, null, result.devices));
+            public void run() {
+                if(apiClient.isPrepared()) {
+                    final DevicesStateResponse response = apiClient.getDevices(mLastUpdateTime);
+                    if(response != null && response.data != null) {
+                        mLastUpdateTime = response.data.updateTime;
+                        if (response.data.devices != null && !response.data.devices.isEmpty()) {
+                            dataContext.addDevices(response.data.devices);
+                            bus.post(new OnDataUpdatedEvent(null, null, response.data.devices));
+                        }
+                    }
                 }
             }
-
-            @Override
-            public void onFailure(Long request, boolean isNetworkError) {
-                if (isNetworkError) {
-                    Timber.v("Device update filed! Something wrong with network connection.");
-                } else {
-                    Timber.v("Device update filed! Something wrong with server.");
-                }
-            }
-        });
+    });
+    thread.start();
     }
 
     public class LocalBinder extends Binder {
