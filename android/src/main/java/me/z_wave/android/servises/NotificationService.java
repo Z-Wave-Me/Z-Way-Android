@@ -38,10 +38,12 @@ import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.notification.NotificationDataWrapper;
+import me.z_wave.android.network.notification.NotificationResponse;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.activity.MainActivity;
+import retrofit.RetrofitError;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -49,104 +51,37 @@ import javax.inject.Inject;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class NotificationService extends Service {
-
-    private final IBinder mBinder = new LocalBinder();
-
-    @Inject
-    MainThreadBus bus;
-
-    @Inject
-    ApiClient apiClient;
-
-    @Inject
-    DataContext dataContext;
-
+public class NotificationService extends BaseUpdateDataService {
     private long mLastUpdateTime;
-    private Timer mTimer;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Timber.v("On start");
-        ((ZWayApplication) getApplication()).inject(this);
-        bus.register(this);
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.v("On start command");
-        if (mTimer == null)
-            startNotificationListening();
-        return Service.START_NOT_STICKY;
+        startDataUpdates();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        Timber.v("On bind");
-        return mBinder;
+    public void onUpdateData() {
+        try{
+            final NotificationResponse result =  apiClient.getNotifications(mLastUpdateTime);
+
+            mLastUpdateTime = result.data.updateTime;
+            if (result.data.notifications != null && !result.data.notifications.isEmpty()) {
+                Timber.v("Notification updated! notifications count " + result.data.notifications.size());
+                dataContext.addNotifications(result.data.notifications);
+                showNotification(result.data.notifications.get(result.data.notifications.size() - 1));
+                bus.post(new OnGetNotificationEvent());
+            }
+        } catch (RetrofitError e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        Timber.v("On unbind");
-        mTimer.cancel();
-        return super.onUnbind(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timber.v("On destroy");
-        mTimer.cancel();
-        bus.unregister(this);
-    }
-
     @Subscribe
     public void onAccountChanged(AccountChangedEvent event) {
         mLastUpdateTime = 0;
-        if (mTimer != null)
-            mTimer.cancel();
-        startNotificationListening();
-    }
-
-    private void startNotificationListening() {
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //TODO IVAN_PL should be refactored
-                if (apiClient.isPrepared()) {
-                    apiClient.getNotifications(mLastUpdateTime,
-                            new ApiClient.ApiCallback<NotificationDataWrapper, Long>() {
-
-                                @Override
-                                public void onSuccess(NotificationDataWrapper result) {
-                                    mLastUpdateTime = result.updateTime;
-                                    if (result.notifications != null && !result.notifications.isEmpty()) {
-                                        Timber.v("Notification updated! notifications count " + result.notifications.size());
-                                        dataContext.addNotifications(result.notifications);
-                                        showNotification(result.notifications.get(result.notifications.size() - 1));
-                                        bus.post(new OnGetNotificationEvent());
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Long request, boolean isNetworkError) {
-                                    if (isNetworkError) {
-                                        Timber.v("Notification update filed! Something wrong with network connection.");
-                                    } else {
-                                        Timber.v("Notification update filed! Something wrong with server.");
-                                    }
-                                }
-                            });
-                }
-            }
-        }, 0, 5000);
-    }
-
-
-    public class LocalBinder extends Binder {
+        onRestart();
     }
 
     private void showNotification(me.z_wave.android.dataModel.Notification notification) {

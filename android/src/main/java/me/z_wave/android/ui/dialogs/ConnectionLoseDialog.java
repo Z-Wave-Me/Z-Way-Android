@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 04.09.14 20:44.
+ * Created by Ivan Platonov on 10.07.14 14:44.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -33,28 +33,14 @@ import javax.inject.Inject;
 import me.z_wave.android.R;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.otto.events.CloseAppEvent;
+import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
-/**
- * Created by Ivan PL on 04.09.2014.
- */
-public class ReconnectionProgressDialog extends BaseDialogFragment implements View.OnClickListener {
-
-    public static final String KEY_PROFILE_NAME = "profile_name";
-
-    @Inject
-    ApiClient apiClient;
+public class ConnectionLoseDialog extends BaseDialogFragment implements View.OnClickListener {
 
     @Inject
     public MainThreadBus bus;
-
-    public static ReconnectionProgressDialog newInstance(String profileName) {
-        final ReconnectionProgressDialog dialog = new ReconnectionProgressDialog();
-        final Bundle args = new Bundle();
-        args.putString(KEY_PROFILE_NAME, profileName);
-        dialog.setArguments(args);
-        return dialog;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,24 +50,23 @@ public class ReconnectionProgressDialog extends BaseDialogFragment implements Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_reconnection_progress, container, false);
+        return inflater.inflate(R.layout.dialog_connection_lose, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final String profileName = getArguments().getString(KEY_PROFILE_NAME);
-        getView().findViewById(R.id.cancel_connection).setOnClickListener(this);
-        final TextView textView = (TextView) getView().findViewById(R.id.connecting_to);
-        textView.setText(String.format(getString(R.string.connecting_to), profileName));
+        getView().findViewById(R.id.connection_lose_close_app).setOnClickListener(this);
+        getView().findViewById(R.id.connection_lose_open_settings).setOnClickListener(this);
         setCancelable(false);
     }
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.cancel_connection) {
-            apiClient.cancelConnection();
-            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+        if(view.getId() == R.id.connection_lose_close_app) {
+            bus.post(new CloseAppEvent());
+        } else if(view.getId() == R.id.connection_lose_open_settings) {
+            bus.post(new ShowNetworkSettingsEvent());
         }
     }
 

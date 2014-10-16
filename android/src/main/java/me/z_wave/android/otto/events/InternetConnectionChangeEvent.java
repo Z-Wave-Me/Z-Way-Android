@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 28.05.14 18:05.
+ * Created by Ivan Platonov on 11.10.14 14:21.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,25 +20,16 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.app;
+package me.z_wave.android.otto.events;
 
-import retrofit.RestAdapter;
+/**
+ * Created by Ivan Pl on 11.10.2014.
+ */
+public class InternetConnectionChangeEvent {
 
-public class Constants {
+    public final boolean isOnline;
 
-    public static final boolean DEBUG_MODE = true;
-    public static final RestAdapter.LogLevel API_LOG_LEVEL = DEBUG_MODE ?
-            RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
-
-    public static final String BASE_API_URL = "/ZAutomation/api/v1";
-
-    public static final int AUTH_TRIES_COUNT = 3;
-
-    public static final String Z_WAY_PREFERENCES = "z_way_preferences";
-
-    //TODO remove stub
-    public static final String URL_KEY = "url_key";
-    public static final String DEFAULT_URL = "https://find.z-wave.me";//"http://mskoff.z-wave.me:10483";
-    public static final String DEFAULT_PORT = "8083";
-
+    public InternetConnectionChangeEvent(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
 }

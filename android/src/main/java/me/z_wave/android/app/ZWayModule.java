@@ -22,14 +22,12 @@
 
 package me.z_wave.android.app;
 
-import android.content.Context;
-
 import com.squareup.otto.Bus;
 import dagger.Module;
 import dagger.Provides;
+import me.z_wave.android.broadcastReceivers.NetworkStateChangeReceiver;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.data.NewProfileContext;
-import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.servises.DataUpdateService;
@@ -38,7 +36,8 @@ import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
-import me.z_wave.android.ui.dialogs.AlertDialog;
+import me.z_wave.android.ui.dialogs.AttentionDialogFragment;
+import me.z_wave.android.ui.dialogs.ConnectionLoseDialog;
 import me.z_wave.android.ui.dialogs.BaseDialogFragment;
 import me.z_wave.android.ui.dialogs.ProgressDialog;
 import me.z_wave.android.ui.dialogs.ReconnectionProgressDialog;
@@ -65,15 +64,16 @@ import javax.inject.Singleton;
                 SplashFragment.class,
                 BaseDialogFragment.class,
                 ProgressDialog.class,
-                AlertDialog.class,
+                ConnectionLoseDialog.class,
                 ChooseLocationFragment.class,
                 MainMenuFragment.class,
                 ReconnectionProgressDialog.class,
                 EditDevicesFragment.class,
                 LocationService.class,
                 CameraActivity.class,
-                BaseDeviceListFragment.class
-
+                BaseDeviceListFragment.class,
+                AttentionDialogFragment.class,
+                NetworkStateChangeReceiver.class
         },
         library = true,
         complete = false

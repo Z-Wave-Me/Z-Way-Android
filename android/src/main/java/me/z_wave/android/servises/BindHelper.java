@@ -34,6 +34,8 @@ import android.os.IBinder;
 import java.util.HashSet;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public class BindHelper {
 
     public static interface OnServiceConnectedListener {
@@ -80,7 +82,11 @@ public class BindHelper {
 
     public void onUnbind(Activity activity){
         for(BindInfo bindInfo : mPairs){
-            activity.unbindService(bindInfo.connection);
+            try {
+                activity.unbindService(bindInfo.connection);
+            } catch (IllegalArgumentException e) {
+                Timber.w(e, "service not registered!");
+            }
         }
     }
 

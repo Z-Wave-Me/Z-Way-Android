@@ -22,150 +22,38 @@
 
 package me.z_wave.android.servises;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-
 import com.squareup.otto.Subscribe;
 
-import me.z_wave.android.app.ZWayApplication;
-import me.z_wave.android.data.DataContext;
-import me.z_wave.android.dataModel.DevicesStatus;
-import me.z_wave.android.dataModel.Location;
-import me.z_wave.android.dataModel.Profile;
-import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.devices.DevicesStateResponse;
-import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
-import me.z_wave.android.otto.events.ProgressEvent;
 import retrofit.RetrofitError;
-import timber.log.Timber;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class DataUpdateService extends Service {
-
-    private final IBinder mBinder = new LocalBinder();
-
-    @Inject
-    MainThreadBus bus;
-
-    @Inject
-    ApiClient apiClient;
-
-    @Inject
-    DataContext dataContext;
+public class DataUpdateService extends BaseUpdateDataService {
 
     private long mLastUpdateTime;
-    private Timer mTimer;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        Timber.v("On start");
-        ((ZWayApplication)getApplication()).inject(this);
-        bus.register(this);
+    public void onUpdateData() {
+        try{
+            dataContext.setLocations(apiClient.getLocations().data);
+            dataContext.setProfiles(apiClient.getProfiles().data);
+
+            final DevicesStateResponse devicesStateResponse = apiClient.getDevices(mLastUpdateTime);
+            mLastUpdateTime = devicesStateResponse.data.updateTime;
+            dataContext.setDevices(devicesStateResponse.data.devices);
+
+            bus.post(new OnDataUpdatedEvent(devicesStateResponse.data.devices));
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.v("On start command");
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        Timber.v("On bind");
-        requestAppData();
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Timber.v("On unbind");
-        if(mTimer != null)
-            mTimer.cancel();
-        return super.onUnbind(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timber.v("On destroy");
-        bus.unregister(this);
-    }
-
     @Subscribe
-    public void onAccountChanged(AccountChangedEvent event){
+    public void onAccountChanged(AccountChangedEvent event) {
         mLastUpdateTime = 0;
-        mTimer.cancel();
-        requestAppData();
+        onRestart();
     }
-
-    private void requestAppData() {
-        final Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    if(apiClient.isPrepared()) {
-                        List<Profile> profiles = apiClient.getProfiles().data;
-                        List<Location> locations = apiClient.getLocations().data;
-                        DevicesStateResponse devicesStateResponse = apiClient.getDevices(0);
-                        mLastUpdateTime = devicesStateResponse.data.updateTime;
-
-                        dataContext.setProfiles(profiles);
-                        dataContext.setLocations(locations);
-                        dataContext.setDevices(devicesStateResponse.data.devices);
-
-                        bus.post(new OnDataUpdatedEvent(profiles,
-                                locations, devicesStateResponse.data.devices));
-                        startDevicesUpdates();
-                        bus.post(new ProgressEvent(false, false));
-                    }
-                } catch (RetrofitError e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-    }
-
-    private void startDevicesUpdates() {
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateDevices();
-            }
-        }, 0, 5000);
-    }
-
-    private void updateDevices() {
-        final Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(apiClient.isPrepared()) {
-                    final DevicesStateResponse response = apiClient.getDevices(mLastUpdateTime);
-                    if(response != null && response.data != null) {
-                        mLastUpdateTime = response.data.updateTime;
-                        if (response.data.devices != null && !response.data.devices.isEmpty()) {
-                            dataContext.addDevices(response.data.devices);
-                            bus.post(new OnDataUpdatedEvent(null, null, response.data.devices));
-                        }
-                    }
-                }
-            }
-    });
-    thread.start();
-    }
-
-    public class LocalBinder extends Binder {
-    }
-
 
 }

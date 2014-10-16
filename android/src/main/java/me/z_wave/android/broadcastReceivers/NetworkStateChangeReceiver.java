@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 10.07.14 14:44.
+ * Created by Ivan Platonov on 12.10.14 11:54.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,32 +20,28 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.ui.dialogs;
+package me.z_wave.android.broadcastReceivers;
 
-import android.app.DialogFragment;
-import android.os.Bundle;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 import javax.inject.Inject;
 
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.otto.events.InternetConnectionChangeEvent;
+import me.z_wave.android.utils.InternetConnectionUtils;
 
-public class BaseDialogFragment extends DialogFragment {
+public class NetworkStateChangeReceiver extends BroadcastReceiver {
 
     @Inject
     MainThreadBus bus;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ((ZWayApplication) getActivity().getApplication()).inject(this);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //workaround for http://code.google.com/p/android/issues/detail?id=19917
-        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+    public void onReceive(final Context context, final Intent intent) {
+        ((ZWayApplication) context.getApplicationContext()).inject(this);
+        bus.post(new InternetConnectionChangeEvent(InternetConnectionUtils.isOnline(context)));
     }
 
 }

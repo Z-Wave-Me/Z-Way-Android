@@ -29,14 +29,9 @@ import me.z_wave.android.dataModel.Location;
 import me.z_wave.android.dataModel.Profile;
 
 public class OnDataUpdatedEvent {
-
-    public final List<Profile> profiles;
-    public final List<Location> locations;
     public final List<Device> devices;
 
-    public OnDataUpdatedEvent(List<Profile> profiles, List<Location> locations, List<Device> devices) {
-        this.profiles = profiles;
-        this.locations = locations;
+    public OnDataUpdatedEvent(List<Device> devices) {
         this.devices = devices;
     }
 }

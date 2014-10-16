@@ -23,22 +23,29 @@
 package me.z_wave.android.ui.dialogs;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import me.z_wave.android.R;
 
 public class ProgressDialog extends BaseDialogFragment {
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setDialogBody(initAlertDialogBody());
-        showTitle(false);
-        setCancelable(false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, 0);
     }
 
-    private View initAlertDialogBody() {
-        return getActivity().getLayoutInflater().inflate(R.layout.layout_dialog_progress, null);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.layout_dialog_progress, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setCancelable(false);
     }
 
 }

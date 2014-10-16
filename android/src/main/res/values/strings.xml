@@ -103,6 +103,10 @@
     
     <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
     <string name="dashboadr_remove">Remove from dashboard</string>
+    
+    <string name="dialog_connection_lose_msg">No Internet connection!</string>
+    <string name="dialog_connection_lose_close_app">Close App</string>
+    <string name="dialog_connection_lose_settings">Settings</string>
 
 
 </resources>
