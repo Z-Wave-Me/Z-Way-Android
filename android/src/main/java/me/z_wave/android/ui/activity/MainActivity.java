@@ -53,6 +53,7 @@ import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.ui.dialogs.ConnectionLoseDialog;
 import me.z_wave.android.ui.fragments.MainMenuFragment;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
+import me.z_wave.android.utils.InternetConnectionUtils;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity  implements FragmentManager.OnBackStackChangedListener {
@@ -84,6 +85,13 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
         startNotificationListening();
         startLocationListening();
         mBindHelper.onBind(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final boolean isOnline = InternetConnectionUtils.isOnline(this);
+        showHideInternetConnectionLoseDialog(isOnline);
     }
 
     @Override
@@ -131,7 +139,11 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
 
     @Subscribe
     public void onInternetConnectionStateChanged(InternetConnectionChangeEvent event) {
-        if(!event.isOnline) {
+        showHideInternetConnectionLoseDialog(event.isOnline);
+    }
+
+    private void showHideInternetConnectionLoseDialog(boolean isOnline) {
+        if(!isOnline) {
             final ConnectionLoseDialog dialog = new ConnectionLoseDialog();
             dialog.show(getFragmentManager(), ConnectionLoseDialog.class.getSimpleName());
 //            stopService(new Intent(this, NotificationService.class));

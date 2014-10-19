@@ -34,6 +34,7 @@ import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.fragments.SplashFragment;
+import me.z_wave.android.utils.InternetConnectionUtils;
 
 /**
  * Created by Ivan PL on 08.07.2014.

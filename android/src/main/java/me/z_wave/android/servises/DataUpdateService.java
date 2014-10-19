@@ -36,14 +36,15 @@ public class DataUpdateService extends BaseUpdateDataService {
     @Override
     public void onUpdateData() {
         try{
-            dataContext.setLocations(apiClient.getLocations().data);
-            dataContext.setProfiles(apiClient.getProfiles().data);
+            //TODO remove profiles and locations request in another plase
+            dataContext.addProfiles(apiClient.getProfiles().data);
+            dataContext.addLocations(apiClient.getLocations().data);
 
             final DevicesStateResponse devicesStateResponse = apiClient.getDevices(mLastUpdateTime);
             mLastUpdateTime = devicesStateResponse.data.updateTime;
-            dataContext.setDevices(devicesStateResponse.data.devices);
-
-            bus.post(new OnDataUpdatedEvent(devicesStateResponse.data.devices));
+            dataContext.addDevices(devicesStateResponse.data.devices);
+            if(devicesStateResponse.data.devices.size() > 0)
+                bus.post(new OnDataUpdatedEvent(devicesStateResponse.data.devices));
         } catch (RetrofitError e){
             e.printStackTrace();
         }

@@ -67,6 +67,22 @@ public class DataContext {
         }
     }
 
+    public void addLocations(List<Location> locations) {
+        if(mLocation == null || mLocation.isEmpty()){
+            mLocation = locations;
+        } else {
+            for (Location location : locations) {
+                final int i = mLocation.indexOf(location);
+                if (i >= 0) {
+                    mLocation.remove(i);
+                    mLocation.add(i, location);
+                } else {
+                    mLocation.add(location);
+                }
+            }
+        }
+    }
+
     public void addDevices(List<Device> devices) {
         Timber.v("add " + devices.size() + " devices");
         if(mDevices == null || mDevices.isEmpty()){
@@ -234,10 +250,11 @@ public class DataContext {
 
     public Profile getActiveProfile(){
         if(mProfiles != null){
-            for(Profile profile : mProfiles){
-                if(profile.active)
-                    return profile;
-            }
+            return mProfiles.get(0);
+//            for(Profile profile : mProfiles){
+//                if(profile.active)
+//                    return profile;
+//            }
         }
         return null;
     }
