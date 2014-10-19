@@ -31,6 +31,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.otto.Subscribe;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -40,7 +42,11 @@ import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
+import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
+import me.z_wave.android.servises.AuthService;
 
 /**
  * Created by Ivan PL on 08.07.2014.
@@ -49,10 +55,7 @@ public class SplashFragment extends BaseFragment {
 
     private static final long SPLASH_DISPLAY_LENGTH = 3000;
 
-    @Inject
-    ApiClient apiClient;
     private LocalProfile mLocalProfile;
-
     private boolean mIsAuthFiled = false;
 
     @Override
@@ -72,7 +75,7 @@ public class SplashFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(mIsAuthFiled) {
+        if (mIsAuthFiled) {
             bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
         } else {
             tryConnectToTheServer();
@@ -85,56 +88,22 @@ public class SplashFragment extends BaseFragment {
         getActionBar().hide();
     }
 
+    @Subscribe
+    public void onAuthFail(AuthEvent.Fail event) {
+        onCantConnect();
+    }
+
     private void tryConnectToTheServer() {
-        if(mLocalProfile == null){
-            new Handler().postDelayed(new Runnable(){
+        if (mLocalProfile == null) {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
                 }
             }, SPLASH_DISPLAY_LENGTH);
         } else {
-            apiClient.init(mLocalProfile);
-            if(!TextUtils.isEmpty(mLocalProfile.indoorServer)) {
-                checkServerState();
-            } else {
-                authenticate();
-            }
+            AuthService.login(getActivity(), mLocalProfile);
         }
-    }
-
-    private void authenticate() {
-        apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-            @Override
-            public void onAuthComplete() {
-                bus.post(new AccountChangedEvent());
-            }
-
-            @Override
-            public void onAuthFiled() {
-                onCantConnect();
-            }
-        });
-    }
-
-    private void checkServerState(){
-        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
-            @Override
-            public void onSuccess(ServerStatus response) {
-                bus.post(new AccountChangedEvent());
-            }
-
-            @Override
-            public void onFailure(boolean isNetworkError) {
-                if(isAdded()) {
-                    if(!TextUtils.isEmpty(mLocalProfile.login) || !TextUtils.isEmpty(mLocalProfile.password)) {
-                        authenticate();
-                    } else {
-                        onCantConnect();
-                    }
-                }
-            }
-        });
     }
 
     private void onCantConnect() {
@@ -146,7 +115,7 @@ public class SplashFragment extends BaseFragment {
     private void unselectActiveProfile() {
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-        if(unselectedProfile != null) {
+        if (unselectedProfile != null) {
             unselectedProfile.active = false;
             provider.updateLocalProfile(unselectedProfile);
         }

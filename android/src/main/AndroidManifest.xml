@@ -85,9 +85,14 @@
             android:name=".broadcastReceivers.NetworkStateChangeReceiver"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".servises.AuthService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

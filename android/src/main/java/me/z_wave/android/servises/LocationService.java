@@ -22,7 +22,6 @@
 
 package me.z_wave.android.servises;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -35,22 +34,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
+import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
-import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.LocalProfile;
-import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
-import me.z_wave.android.network.ApiClient;
-import me.z_wave.android.otto.MainThreadBus;
-import me.z_wave.android.otto.events.AccountChangedEvent;
+import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -58,7 +49,6 @@ import timber.log.Timber;
  * Created by Ivan PL on 08.09.2014.
  */
 public class LocationService extends Service {
-    private static final String TAG = LocationService.class.getSimpleName();
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
@@ -69,17 +59,10 @@ public class LocationService extends Service {
     public Location previousBestLocation = null;
     public DatabaseDataProvider databaseDataProvider;
 
-    @Inject ApiClient apiClient;
-
-    @Inject DataContext dataContext;
-
-    @Inject
-    MainThreadBus bus;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        ((ZWayApplication)getApplication()).inject(this);
+        ((ZWayApplication) getApplication()).inject(this);
         Timber.v("onCreate");
     }
 
@@ -90,7 +73,7 @@ public class LocationService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 100, listener);
-        if(locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
+        if (locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 100, listener);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -149,21 +132,21 @@ public class LocationService extends Service {
         locationManager.removeUpdates(listener);
     }
 
+    @Subscribe
+    public void onLoginSuccess(AuthEvent.Success event) {
+        showChangeProfileNotification(event.profile);
+    }
+
     public class MyLocationListener implements LocationListener {
 
         public void onLocationChanged(final Location loc) {
             if (isBetterLocation(loc, previousBestLocation)) {
                 Timber.v("onLocationChanged: %s %s", loc.getLatitude(), loc.getLongitude());
-                if(isChangeProfileByLocationEnable()) {
+                if (isChangeProfileByLocationEnable()) {
                     final LocalProfile profile = databaseDataProvider.getNearestLocalProfile(
                             loc.getLatitude(), loc.getLongitude());
-                    if(profile != null && !profile.active) {
-                        //TODO IVAN_PL auth methods should be refactored and extracted in AuthHelper class!
-                        if(!TextUtils.isEmpty(profile.indoorServer)) {
-                            connectToOutdoorService(profile);
-                        } else {
-                            loginWithUserCredentials(profile);
-                        }
+                    if (profile != null && !profile.active) {
+                        AuthService.login(LocationService.this, profile);
                     }
                     previousBestLocation = loc;
                 }
@@ -186,61 +169,7 @@ public class LocationService extends Service {
 
     }
 
-    private void connectToOutdoorService(final LocalProfile profile) {
-        apiClient.init(profile);
-        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
-            @Override
-            public void onSuccess(ServerStatus response) {
-                final LocalProfile unselectedProfile = databaseDataProvider.getActiveLocalProfile();
-                if (unselectedProfile != null) {
-                    unselectedProfile.active = false;
-                    databaseDataProvider.updateLocalProfile(unselectedProfile);
-                }
-
-                profile.active = true;
-                databaseDataProvider.updateLocalProfile(profile);
-                dataContext.clear();
-                showChangeProfileNotification(profile);
-                bus.post(new AccountChangedEvent());
-            }
-
-            @Override
-            public void onFailure(boolean isNetworkError) {
-                if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
-                    loginWithUserCredentials(profile);
-                } else {
-                    apiClient.init(databaseDataProvider.getActiveLocalProfile());
-                }
-            }
-        });
-    }
-
-    private void loginWithUserCredentials(final LocalProfile profile) {
-        apiClient.init(profile, true);
-        apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-            @Override
-            public void onAuthComplete() {
-                final LocalProfile unselectedProfile = databaseDataProvider.getActiveLocalProfile();
-                if (unselectedProfile != null) {
-                    unselectedProfile.active = false;
-                    databaseDataProvider.updateLocalProfile(unselectedProfile);
-                }
-
-                profile.active = true;
-                databaseDataProvider.updateLocalProfile(profile);
-                dataContext.clear();
-                showChangeProfileNotification(profile);
-                bus.post(new AccountChangedEvent());
-            }
-
-            @Override
-            public void onAuthFiled() {
-                apiClient.init(databaseDataProvider.getActiveLocalProfile());
-            }
-        });
-    }
-
-    private void showChangeProfileNotification(LocalProfile profile){
+    private void showChangeProfileNotification(LocalProfile profile) {
         int notificationId = 001;
         Intent viewIntent = new Intent(this, MainActivity.class);
         PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
@@ -259,7 +188,7 @@ public class LocationService extends Service {
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
-    private boolean isChangeProfileByLocationEnable(){
+    private boolean isChangeProfileByLocationEnable() {
         SharedPreferences prefs = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         return prefs.getBoolean(CHANGE_PROFILE_BY_LOCATION, false);
     }

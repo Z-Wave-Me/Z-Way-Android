@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 03.07.14 17:56.
+ * Created by Ivan Platonov on 19.10.14 14:23.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -22,8 +22,25 @@
 
 package me.z_wave.android.network;
 
+import javax.net.ssl.X509TrustManager;
+
 /**
- * Created by Ivan PL on 03.07.2014.
+ * Created by Ivan Pl on 19.10.2014.
  */
-public class DefaultHttpClient {
+public class ZWaveTrustManager implements X509TrustManager {
+
+    @Override
+    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+
+    }
+
+    @Override
+    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+
+    }
+
+    @Override
+    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+        return null;
+    }
 }

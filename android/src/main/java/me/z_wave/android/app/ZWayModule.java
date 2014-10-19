@@ -23,6 +23,7 @@
 package me.z_wave.android.app;
 
 import com.squareup.otto.Bus;
+
 import dagger.Module;
 import dagger.Provides;
 import me.z_wave.android.broadcastReceivers.NetworkStateChangeReceiver;
@@ -30,6 +31,7 @@ import me.z_wave.android.data.DataContext;
 import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.servises.NotificationService;
@@ -73,7 +75,8 @@ import javax.inject.Singleton;
                 CameraActivity.class,
                 BaseDeviceListFragment.class,
                 AttentionDialogFragment.class,
-                NetworkStateChangeReceiver.class
+                NetworkStateChangeReceiver.class,
+                AuthService.class
         },
         library = true,
         complete = false

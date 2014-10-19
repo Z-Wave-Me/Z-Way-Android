@@ -22,12 +22,8 @@
 
 package me.z_wave.android.network.auth;
 
-import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.Headers;
 import retrofit.http.POST;
 
 /**
@@ -37,7 +33,7 @@ public interface AuthRequest {
 
     @FormUrlEncoded
     @POST("/zboxweb")
-    public void auth(@Field("act") String act, @Field("login") String login,
-                     @Field("pass") String password, Callback<Object> callback);
+    Object auth(@Field("act") String act,
+                @Field("login") String login, @Field("pass") String password);
 
 }

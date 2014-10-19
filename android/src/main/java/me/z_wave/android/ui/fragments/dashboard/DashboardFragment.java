@@ -33,16 +33,21 @@ import android.widget.GridView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import me.z_wave.android.R;
+import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.fragments.BaseDeviceListFragment;
 import timber.log.Timber;
 
-public class DashboardFragment extends BaseDeviceListFragment{
+public class DashboardFragment extends BaseDeviceListFragment {
 
     @InjectView(R.id.dashboard_widgets)
     GridView widgetsGridView;
@@ -74,7 +79,7 @@ public class DashboardFragment extends BaseDeviceListFragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.dashboard_edit:
                 bus.post(new CommitFragmentEvent(new EditDashboardFragment(), true));
                 break;
@@ -82,8 +87,20 @@ public class DashboardFragment extends BaseDeviceListFragment{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void updateDevicesList(List<Device> devices) {
+        final Profile profile = dataContext.getActiveProfile();
+        for (Device device : devices) {
+            if (profile.positions.contains(device.id)) {
+                updateDevice(device);
+            } else {
+                mDevices.remove(device);
+            }
+        }
+    }
+
     @Subscribe
-    public void onDataUpdated(OnDataUpdatedEvent event){
+    public void onDataUpdated(OnDataUpdatedEvent event) {
         Timber.v("Dashboard list updated!");
         mAdapter.setProfile(dataContext.getActiveProfile());
         updateDevicesList(event.devices);
@@ -91,16 +108,16 @@ public class DashboardFragment extends BaseDeviceListFragment{
         changeEmptyDashboardMsgVisibility();
     }
 
-    private void prepareDevicesView(){
+    private void prepareDevicesView() {
         mDevices = dataContext.getDashboardDevices();
         mAdapter = new DevicesGridAdapter(getActivity(), mDevices,
                 dataContext.getActiveProfile(), this);
         widgetsGridView.setAdapter(mAdapter);
     }
 
-    private void changeEmptyDashboardMsgVisibility(){
+    private void changeEmptyDashboardMsgVisibility() {
         final int msgVisibility = mAdapter.isEmpty() ? View.VISIBLE : View.GONE;
-        if(emptyListMsg.getVisibility() != msgVisibility){
+        if (emptyListMsg.getVisibility() != msgVisibility) {
             emptyListMsg.setVisibility(msgVisibility);
         }
     }

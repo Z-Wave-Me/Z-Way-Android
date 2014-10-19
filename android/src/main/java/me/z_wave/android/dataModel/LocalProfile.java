@@ -25,6 +25,7 @@ package me.z_wave.android.dataModel;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
+import java.io.Serializable;
 import java.util.List;
 
 import me.z_wave.android.database.tables.ProfileTable;
@@ -32,7 +33,7 @@ import me.z_wave.android.database.tables.ProfileTable;
 /**
  * Created by Ivan PL on 07.07.2014.
  */
-public class LocalProfile {
+public class LocalProfile implements Serializable {
 
     public int id;
     public int serverId;
@@ -54,11 +55,11 @@ public class LocalProfile {
         name = cursor.getString(cursor.getColumnIndex(ProfileTable.P_NAME));
         indoorServer = cursor.getString(cursor.getColumnIndex(ProfileTable.P_INDOOR_SERVER));
         login = cursor.getString(cursor.getColumnIndex(ProfileTable.P_LOGIN));
-        password  = cursor.getString(cursor.getColumnIndex(ProfileTable.P_PASSWORD));
+        password = cursor.getString(cursor.getColumnIndex(ProfileTable.P_PASSWORD));
         latitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LATITUDE));
         longitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LONGITUDE));
         address = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ADDRESS));
-        active  = cursor.getInt(cursor.getColumnIndex(ProfileTable.P_ACTIVE)) == 1;
+        active = cursor.getInt(cursor.getColumnIndex(ProfileTable.P_ACTIVE)) == 1;
     }
 
 }

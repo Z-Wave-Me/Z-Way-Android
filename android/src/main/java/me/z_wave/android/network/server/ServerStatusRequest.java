@@ -32,6 +32,6 @@ import retrofit.http.GET;
 public interface ServerStatusRequest {
 
     @GET("/ZAutomation/api/v1/status")
-    void getServerStatus(Callback<ServerStatus> callback);
+    ServerStatus getServerStatus();
 
 }

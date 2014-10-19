@@ -31,12 +31,14 @@ import android.os.Bundle;
 
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
+
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.CloseAppEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.DialogCancelEvent;
@@ -46,6 +48,7 @@ import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.LocationService;
@@ -56,7 +59,7 @@ import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.utils.InternetConnectionUtils;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity  implements FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends BaseActivity implements FragmentManager.OnBackStackChangedListener {
 
     @Inject
     public DataContext dataContext;
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
         mBindHelper.keep(DataUpdateService.class);
         setupActionBar();
 
-        if(savedInstanceState == null)
+        if (savedInstanceState == null)
             commitFragment(new DashboardFragment(), false);
     }
 
@@ -108,22 +111,22 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
     }
 
     @Subscribe
-    public void onCommitFragment(CommitFragmentEvent event){
+    public void onCommitFragment(CommitFragmentEvent event) {
         commitFragment(event.fragment, event.addToBackStack);
     }
 
     @Subscribe
-    public void onStartActivity(StartActivityEvent event){
+    public void onStartActivity(StartActivityEvent event) {
         startActivity(event.intent);
     }
 
     @Subscribe
-    public void showAttentionDialog(ShowAttentionDialogEvent event){
+    public void showAttentionDialog(ShowAttentionDialogEvent event) {
         super.showAttentionDialog(event);
     }
 
     @Subscribe
-    public void onShowHideProgress(ProgressEvent event){
+    public void onShowHideProgress(ProgressEvent event) {
         super.onShowHideProgress(event);
     }
 
@@ -143,7 +146,7 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
     }
 
     private void showHideInternetConnectionLoseDialog(boolean isOnline) {
-        if(!isOnline) {
+        if (!isOnline) {
             final ConnectionLoseDialog dialog = new ConnectionLoseDialog();
             dialog.show(getFragmentManager(), ConnectionLoseDialog.class.getSimpleName());
 //            stopService(new Intent(this, NotificationService.class));
@@ -151,10 +154,11 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
         } else {
             final Fragment fragment = getFragmentManager().findFragmentByTag(
                     ConnectionLoseDialog.class.getSimpleName());
-            if(fragment != null && fragment instanceof ConnectionLoseDialog) {
+            if (fragment != null && fragment instanceof ConnectionLoseDialog) {
                 ((ConnectionLoseDialog) fragment).dismiss();
             }
-            //TODO try to reconnect and restart services
+            final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getApplicationContext());
+            AuthService.login(this, provider.getActiveLocalProfile());
         }
     }
 
@@ -175,12 +179,12 @@ public class MainActivity extends BaseActivity  implements FragmentManager.OnBac
         actionBar.show();
     }
 
-    private void startNotificationListening(){
+    private void startNotificationListening() {
         final Intent i = new Intent(this, NotificationService.class);
         startService(i);
     }
 
-    private void startLocationListening(){
+    private void startLocationListening() {
         final Intent i = new Intent(this, LocationService.class);
         startService(i);
     }

@@ -36,10 +36,6 @@ public class DataUpdateService extends BaseUpdateDataService {
     @Override
     public void onUpdateData() {
         try{
-            //TODO remove profiles and locations request in another plase
-            dataContext.addProfiles(apiClient.getProfiles().data);
-            dataContext.addLocations(apiClient.getLocations().data);
-
             final DevicesStateResponse devicesStateResponse = apiClient.getDevices(mLastUpdateTime);
             mLastUpdateTime = devicesStateResponse.data.updateTime;
             dataContext.addDevices(devicesStateResponse.data.devices);

@@ -23,10 +23,8 @@
 package me.z_wave.android.ui.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +35,8 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,11 +55,13 @@ import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
+import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProfileUpdatedEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
+import me.z_wave.android.servises.AuthService;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -173,18 +175,14 @@ public class ProfileFragment extends BaseFragment {
         final LocalProfile profile = profileContext.getProfile();
         saveEnteredData();
         if (item.getItemId() == R.id.action_done) {
-            if(mIsCreateMode) {
+            if (mIsCreateMode) {
                 if (TextUtils.isEmpty(profile.name)) {
                     showToast("Profile name can't be empty");
                 } else {
                     bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
                     long profileId = provider.addLocalProfile(profile);
                     profile.id = (int) profileId;
-                    if(!TextUtils.isEmpty(profile.indoorServer)) {
-                        connectToOutdorService(profile);
-                    } else {
-                        loginWithUserCredentials(profile);
-                    }
+                    AuthService.login(getActivity(), profile);
                 }
             } else {
                 provider.updateLocalProfile(profile);
@@ -197,72 +195,17 @@ public class ProfileFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void connectToOutdorService(final LocalProfile profile) {
-        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
-        apiClient.init(profile);
-        apiClient.checkServerStatus(new ApiClient.SimpleApiCallback<ServerStatus>() {
-            @Override
-            public void onSuccess(ServerStatus response) {
-                bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-                final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                if (unselectedProfile != null) {
-                    unselectedProfile.active = false;
-                    provider.updateLocalProfile(unselectedProfile);
-                }
-
-                profile.active = true;
-                provider.updateLocalProfile(profile);
-
-                dataContext.clear();
-                bus.post(new AccountChangedEvent());
-                goBack();
-            }
-
-            @Override
-            public void onFailure(boolean isNetworkError) {
-                if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
-                    loginWithUserCredentials(profile);
-                } else {
-                    apiClient.init(provider.getActiveLocalProfile());
-                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-//                            bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
-                    bus.post(new ShowAttentionDialogEvent("New profile was saved."));
-                    goBack();
-                }
-            }
-        });
+    @Subscribe
+    public void onAuthSuccess(AuthEvent.Success event) {
+        bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+        goBack();
     }
 
-    private void loginWithUserCredentials(final LocalProfile profile) {
-        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
-            apiClient.init(profile, true);
-            apiClient.auth(new ApiClient.OnAuthCompleteListener() {
-                @Override
-                public void onAuthComplete() {
-                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-                    final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-                    if (unselectedProfile != null) {
-                        unselectedProfile.active = false;
-                        provider.updateLocalProfile(unselectedProfile);
-                    }
-
-                    profile.active = true;
-                    provider.updateLocalProfile(profile);
-
-                    dataContext.clear();
-                    bus.post(new AccountChangedEvent());
-                    goBack();
-                }
-
-                @Override
-                public void onAuthFiled() {
-                    apiClient.init(provider.getActiveLocalProfile());
-                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-//                                bus.post(new ShowAttentionDialogEvent("Can't Login!\nPlease check entered data."));
-                    bus.post(new ShowAttentionDialogEvent("New profile was saved."));
-                    goBack();
-                }
-            });
+    @Subscribe
+    public void onAuthFail(AuthEvent.Fail event) {
+        bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+        bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+        goBack();
     }
 
     @Override
@@ -323,10 +266,10 @@ public class ProfileFragment extends BaseFragment {
         return provider.getLocalProfileWithId(profileId);
     }
 
-    public String setDefaultUriPort(String uri){
+    public String setDefaultUriPort(String uri) {
         try {
             URI oldUri = new URI(uri);
-            if(oldUri.getPort() == -1) {
+            if (oldUri.getPort() == -1) {
                 URI newUri = new URI(oldUri.getScheme(), oldUri.getUserInfo(),
                         oldUri.getHost(), DEFAULT_PORT, oldUri.getPath(),
                         oldUri.getQuery(), oldUri.getFragment());
