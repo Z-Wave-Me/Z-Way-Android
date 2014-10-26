@@ -30,10 +30,6 @@ public class Profile {
     public String name;
     public String description;
     public List<String> positions;
-    //TODO IVAN_PL active should be deleted
-    public boolean active;
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -55,7 +51,6 @@ public class Profile {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", positions=" + positions +
-                ", active=" + active +
                 '}';
     }
 }

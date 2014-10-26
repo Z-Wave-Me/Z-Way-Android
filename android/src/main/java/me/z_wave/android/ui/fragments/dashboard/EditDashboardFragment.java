@@ -71,10 +71,8 @@ public class EditDashboardFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(dataContext.getActiveProfile() != null) {
-            mDevicesIds = new ArrayList<String>(dataContext.getActiveProfile().positions);
-            prepareDevicesView();
-        }
+        mDevicesIds = getDashboardDevicesIds();
+        prepareDevicesView();
 
         dragSortGridView.setDropListener(this);
         dragSortGridView.setRemoveListener(this);
@@ -100,7 +98,7 @@ public class EditDashboardFragment extends BaseFragment implements
             mAdapter.insert(item, to);
 
             final String position = mDevicesIds.get(from);
-            mDevicesIds.remove(position);
+            mDevicesIds.remove(from);
             mDevicesIds.add(to, position);
         }
     }
@@ -143,6 +141,15 @@ public class EditDashboardFragment extends BaseFragment implements
     private void prepareDevicesView() {
         mAdapter = new EditDashboardGridAdapter(getActivity(), dataContext.getDashboardDevices());
         dragSortGridView.setAdapter(mAdapter);
+    }
+
+    private List<String> getDashboardDevicesIds() {
+        final List<Device> devices = dataContext.getDashboardDevices();
+        final List<String> result = new ArrayList<String>();
+        for(Device device : devices) {
+            result.add(device.id);
+        }
+        return result;
     }
 
     public DragSortController buildController(DragSortListView dslv) {
