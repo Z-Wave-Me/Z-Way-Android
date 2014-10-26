@@ -249,7 +249,7 @@ public class DataContext {
     }
 
     public Profile getActiveProfile(){
-        if(mProfiles != null){
+        if(mProfiles != null && mProfiles.size() > 0){
             return mProfiles.get(0);
 //            for(Profile profile : mProfiles){
 //                if(profile.active)

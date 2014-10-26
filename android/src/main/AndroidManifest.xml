@@ -93,6 +93,10 @@
             android:name=".servises.AuthService"
             android:exported="false" >
         </service>
+        <service
+            android:name=".servises.UpdateDeviceService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

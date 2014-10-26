@@ -31,8 +31,8 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
-import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.otto.events.CancelConnectionEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
 /**
@@ -41,9 +41,6 @@ import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 public class ReconnectionProgressDialog extends BaseDialogFragment implements View.OnClickListener {
 
     public static final String KEY_PROFILE_NAME = "profile_name";
-
-    @Inject
-    ApiClient apiClient;
 
     @Inject
     public MainThreadBus bus;
@@ -71,8 +68,8 @@ public class ReconnectionProgressDialog extends BaseDialogFragment implements Vi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final String profileName = getArguments().getString(KEY_PROFILE_NAME);
-        getView().findViewById(R.id.cancel_connection).setOnClickListener(this);
-        final TextView textView = (TextView) getView().findViewById(R.id.connecting_to);
+        findViewById(R.id.cancel_connection).setOnClickListener(this);
+        final TextView textView = (TextView) findViewById(R.id.connecting_to);
         textView.setText(String.format(getString(R.string.connecting_to), profileName));
         setCancelable(false);
     }
@@ -80,7 +77,7 @@ public class ReconnectionProgressDialog extends BaseDialogFragment implements Vi
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.cancel_connection) {
-            apiClient.cancelConnection();
+            bus.post(new CancelConnectionEvent());
             bus.post(new ShowReconnectionProgressEvent(false, false, ""));
         }
     }

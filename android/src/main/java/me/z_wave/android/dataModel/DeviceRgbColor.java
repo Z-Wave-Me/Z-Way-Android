@@ -22,7 +22,9 @@
 
 package me.z_wave.android.dataModel;
 
-public class DeviceRgbColor {
+import java.io.Serializable;
+
+public class DeviceRgbColor implements Serializable {
     public int r;
     public int g;
     public int b;

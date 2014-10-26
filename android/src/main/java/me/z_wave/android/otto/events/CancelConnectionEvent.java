@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 10.07.14 14:45.
+ * Created by Ivan Platonov on 26.10.14 11:52.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -22,13 +22,9 @@
 
 package me.z_wave.android.otto.events;
 
-import me.z_wave.android.ui.dialogs.BaseDialogFragment;
+/**
+ * Created by Ivan Pl on 26.10.2014.
+ */
+public class CancelConnectionEvent {
 
-public class ShowDialogEvent {
-
-    public final BaseDialogFragment dialogFragment;
-
-    public ShowDialogEvent(BaseDialogFragment dialogFragment) {
-        this.dialogFragment = dialogFragment;
-    }
 }

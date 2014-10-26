@@ -45,6 +45,7 @@ import me.z_wave.android.otto.events.DialogCancelEvent;
 import me.z_wave.android.otto.events.InternetConnectionChangeEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
@@ -171,6 +172,11 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
     public void showNetworkSettings(ShowNetworkSettingsEvent event) {
         Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
         startActivity(intent);
+    }
+
+    @Subscribe
+    public void showDialog(ShowDialogEvent event) {
+        event.dialogFragment.show(getFragmentManager(), "Dialog");
     }
 
     private void setupActionBar() {

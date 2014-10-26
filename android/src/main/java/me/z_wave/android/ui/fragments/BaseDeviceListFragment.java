@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -31,16 +32,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
-import me.z_wave.android.app.Constants;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.dataModel.Filter;
-import me.z_wave.android.dataModel.LocalProfile;
-import me.z_wave.android.database.DatabaseDataProvider;
+import me.z_wave.android.dataModel.DeviceRgbColor;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
+import me.z_wave.android.ui.dialogs.ColorPickerDialog;
 
 /**
  * Created by Ivan PL on 22.09.2014.
@@ -48,77 +49,27 @@ import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 public class BaseDeviceListFragment extends BaseFragment
         implements DevicesGridAdapter.DeviceStateUpdatedListener {
 
-    @Inject
-    ApiClient apiClient;
-
     protected List<Device> mDevices;
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
-        apiClient.updateDevicesState(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Device state changed!");
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
+        UpdateDeviceService.updateDeviceState(getActivity(), updatedDevice);
     }
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
-        apiClient.updateDevicesLevel(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Seek changed " + updatedDevice.metrics.level);
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if(isAdded()){
-                    if(isNetworkError){
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
+        UpdateDeviceService.updateDeviceLevel(getActivity(), updatedDevice);
     }
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
-        apiClient.updateToggle(updatedDevice, new ApiClient.EmptyApiCallback<Device>() {
-            @Override
-            public void onSuccess() {
-                showToast("Toggle clicked");
-            }
-
-            @Override
-            public void onFailure(Device request, boolean isNetworkError) {
-                if (isAdded()) {
-                    if (isNetworkError) {
-                        showToast(R.string.request_network_problem);
-                    } else {
-                        showToast(R.string.request_server_problem_msg);
-                    }
-                }
-            }
-        });
+        UpdateDeviceService.updateDeviceToggle(getActivity(), updatedDevice);
     }
 
     @Override
     public void onColorViewClicked(Device updatedDevice) {
-        showToast("rgb clicked");
+        final ColorPickerDialog dialog = ColorPickerDialog.newInstance(updatedDevice);
+        bus.post(new ShowDialogEvent(dialog));
     }
 
     @Override

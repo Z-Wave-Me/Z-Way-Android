@@ -24,6 +24,7 @@ package me.z_wave.android.ui.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -46,6 +47,10 @@ public class BaseDialogFragment extends DialogFragment {
         super.onSaveInstanceState(outState);
         //workaround for http://code.google.com/p/android/issues/detail?id=19917
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+    }
+
+    public View findViewById(int id) {
+        return getView().findViewById(id);
     }
 
 }

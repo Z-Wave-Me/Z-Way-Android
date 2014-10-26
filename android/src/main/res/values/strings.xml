@@ -107,6 +107,8 @@
     <string name="dialog_connection_lose_msg">No Internet connection!</string>
     <string name="dialog_connection_lose_close_app">Close App</string>
     <string name="dialog_connection_lose_settings">Settings</string>
+    
+    <string name="dialog_color_picker_select_color">Select color…</string>
 
 
 </resources>

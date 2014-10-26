@@ -35,10 +35,12 @@ import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.DataUpdateService;
 import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.servises.NotificationService;
+import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.dialogs.AttentionDialogFragment;
+import me.z_wave.android.ui.dialogs.ColorPickerDialog;
 import me.z_wave.android.ui.dialogs.ConnectionLoseDialog;
 import me.z_wave.android.ui.dialogs.BaseDialogFragment;
 import me.z_wave.android.ui.dialogs.ProgressDialog;
@@ -76,7 +78,9 @@ import javax.inject.Singleton;
                 BaseDeviceListFragment.class,
                 AttentionDialogFragment.class,
                 NetworkStateChangeReceiver.class,
-                AuthService.class
+                AuthService.class,
+                ColorPickerDialog.class,
+                UpdateDeviceService.class
         },
         library = true,
         complete = false

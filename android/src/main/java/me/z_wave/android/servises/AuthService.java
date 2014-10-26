@@ -29,6 +29,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.otto.Subscribe;
 
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
@@ -48,6 +49,7 @@ import me.z_wave.android.network.server.ServerStatusRequest;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.AuthEvent;
+import me.z_wave.android.otto.events.CancelConnectionEvent;
 import me.z_wave.android.utils.BooleanTypeAdapter;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -75,6 +77,7 @@ public class AuthService extends IntentService {
     private DefaultHttpClient mClient;
     private Cookie mCookie;
     private int mAuthTriesCounter;
+    private boolean mCancelEvent;
 
     public static void login(Context context, LocalProfile profile) {
         Intent intent = new Intent(context, AuthService.class);
@@ -91,6 +94,13 @@ public class AuthService extends IntentService {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         ((ZWayApplication) getApplicationContext()).inject(this);
+        bus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bus.unregister(this);
     }
 
     @Override
@@ -103,6 +113,11 @@ public class AuthService extends IntentService {
                 handleActionAuth(profile);
             }
         }
+    }
+
+    @Subscribe
+    public void onCancelEvent(CancelConnectionEvent event) {
+        mCancelEvent = true;
     }
 
     private void handleActionAuth(LocalProfile profile) {
@@ -137,6 +152,10 @@ public class AuthService extends IntentService {
 
 
     private void connectToOutdoorService(RestAdapter adapter, final LocalProfile profile) {
+        if(mCancelEvent) {
+            return;
+        }
+
         try {
             adapter.create(ServerStatusRequest.class).getServerStatus();
             onAuthSuccess(profile, LoginType.OUTDOOR);
@@ -168,6 +187,10 @@ public class AuthService extends IntentService {
     }
 
     private void authWithUserCredentials(RestAdapter adapter, final LocalProfile profile) {
+        if(mCancelEvent) {
+            return;
+        }
+
         mAuthTriesCounter++;
         try {
             adapter.create(AuthRequest.class).auth("login", profile.login, profile.password);
@@ -194,6 +217,10 @@ public class AuthService extends IntentService {
     }
 
     private void onAuthSuccess(LocalProfile profile, LoginType loginType) {
+        if(mCancelEvent) {
+            return;
+        }
+
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getApplicationContext());
         final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
         if (unselectedProfile != null) {

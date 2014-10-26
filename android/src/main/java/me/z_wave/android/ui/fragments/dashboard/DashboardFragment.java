@@ -90,11 +90,13 @@ public class DashboardFragment extends BaseDeviceListFragment {
     @Override
     protected void updateDevicesList(List<Device> devices) {
         final Profile profile = dataContext.getActiveProfile();
-        for (Device device : devices) {
-            if (profile.positions.contains(device.id)) {
-                updateDevice(device);
-            } else {
-                mDevices.remove(device);
+        if(profile != null) {
+            for (Device device : devices) {
+                if (profile.positions.contains(device.id)) {
+                    updateDevice(device);
+                } else {
+                    mDevices.remove(device);
+                }
             }
         }
     }

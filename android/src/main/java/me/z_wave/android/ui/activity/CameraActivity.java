@@ -41,20 +41,18 @@ import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Metrics;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
+import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.views.mjpegView.MjpegView;
 
 /**
  * Created by Ivan PL on 09.09.2014.
  */
-public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCallback<Device> {
+public class CameraActivity extends BaseActivity {
 
     public static final String KEY_DEVICE = "device";
 
     @InjectView(R.id.video_mjpeg_view) MjpegView mjpegView;
     private Device mDevice;
-
-    @Inject
-    ApiClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,54 +91,44 @@ public class CameraActivity extends BaseActivity implements ApiClient.EmptyApiCa
         mjpegView.stopPlayback();
     }
 
-    @Override
-    public void onSuccess() {
-
-    }
-
-    @Override
-    public void onFailure(Device request, boolean isNetworkError) {
-
-    }
-
     @OnClick(R.id.video_btn_up)
     public void moveCameraUp() {
-        apiClient.moveCameraUp(mDevice, this);
+        UpdateDeviceService.moveCameraUp(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_down)
     public void moveCameraDown() {
-        apiClient.moveCameraDown(mDevice, this);
+        UpdateDeviceService.moveCameraDown(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_left)
     public void moveCameraLeft() {
-        apiClient.moveCameraLeft(mDevice, this);
+        UpdateDeviceService.moveCameraLeft(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_right)
     public void moveCameraRight() {
-        apiClient.moveCameraRight(mDevice, this);
+        UpdateDeviceService.moveCameraRight(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_zoom_in)
     public void zoomIn() {
-        apiClient.cameraZoomIn(mDevice, this);
+        UpdateDeviceService.zoomCameraIn(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_zoom_out)
     public void zoomOut() {
-        apiClient.cameraZoomOut(mDevice, this);
+        UpdateDeviceService.zoomCameraOut(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_open)
     public void cameraOpen() {
-        apiClient.openCamera(mDevice, this);
+        UpdateDeviceService.openCamera(this, mDevice);
     }
 
     @OnClick(R.id.video_btn_close)
     public void cameraClose() {
-        apiClient.closeCamera(mDevice, this);
+        UpdateDeviceService.closeCamera(this, mDevice);
     }
 
     private void changeButtonVisibility(View v, boolean isVisible) {

@@ -30,15 +30,43 @@ public interface UpdateDeviceRequest {
 
     //TODO refactor this!
     @GET("/ZAutomation/api/v1/devices/{id}/command/{state}")
-    void updateDeviceSwitchState(@Path("id") String id, @Path("state") String state, Callback<Device> callback);
+    Device updateDeviceSwitchState(@Path("id") String id, @Path("state") String state);
 
     @GET("/ZAutomation/api/v1/devices/{id}/command/setMode")
-    void updateMode(@Path("id") String id, @Query("mode") String mode, Callback<Device> callback);
+    Device updateMode(@Path("id") String id, @Query("mode") String mode);
 
     @GET("/ZAutomation/api/v1/devices/{id}/command/exact")
-    void updateLevel(@Path("id") String id, @Query("level") String level, Callback<Device> callback);
+    Device updateLevel(@Path("id") String id, @Query("level") String level);
 
     @GET("/ZAutomation/api/v1/devices/{id}/command/on")
-    void updateTogle(@Path("id") String id, Callback<Device> callback);
+    Device updateToggle(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/exact")
+    Device updateRGB(@Path("id") String id, @Query("red") int red,
+                   @Query("green") int green, @Query("blue") int blue);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/zoomIn")
+    Device zoomCameraIn(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/zoomOut")
+    Device zoomCameraOut(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/left")
+    Device moveCameraLeft(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/right")
+    Device moveCameraRight(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/up")
+    Device movevCameraUp(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/down")
+    Device moveCameraDown(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/open")
+    Device openCamera(@Path("id") String id);
+
+    @GET("/ZAutomation/api/v1/devices/{id}/command/close")
+    Device closeCamera(@Path("id") String id);
 
 }

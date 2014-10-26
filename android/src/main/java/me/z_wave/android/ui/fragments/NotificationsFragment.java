@@ -92,8 +92,8 @@ public class NotificationsFragment extends BaseListFragment implements DragSortL
         apiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
             @Override
             public void onSuccess() {
-                mAdapter.remove(notification);
-                bus.post(new OnGetNotificationEvent());
+//                mAdapter.remove(notification);
+//                bus.post(new OnGetNotificationEvent());
             }
 
             @Override
