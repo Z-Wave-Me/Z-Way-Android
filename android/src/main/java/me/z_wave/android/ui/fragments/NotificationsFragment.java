@@ -26,17 +26,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.widget.AbsListView;
 
-import com.mobeta.android.dslv.DragSortController;
+import butterknife.ButterKnife;
+
 import com.mobeta.android.dslv.DragSortListView;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,12 +41,16 @@ import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.adapters.NotificationsListAdapter;
 
-public class NotificationsFragment extends BaseListFragment implements DragSortListView.RemoveListener {
+public class NotificationsFragment extends BaseListFragment implements DragSortListView.RemoveListener, AbsListView.OnScrollListener {
 
     @Inject
     ApiClient apiClient;
 
     private NotificationsListAdapter mAdapter;
+    private View mFooterView;
+    private boolean mLoading;
+
+    private int mNotificationsCount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,12 +62,14 @@ public class NotificationsFragment extends BaseListFragment implements DragSortL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mFooterView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.layout_list_footer, null, false);
         prepareListView();
     }
 
     @Override
     public void remove(int which) {
-        if(which < mAdapter.getCount()) {
+        if (which < mAdapter.getCount()) {
             final Notification deletedNotification = mAdapter.getItem(which);
             markNotificationAsRedeemed(deletedNotification);
             mAdapter.remove(deletedNotification);
@@ -76,15 +77,42 @@ public class NotificationsFragment extends BaseListFragment implements DragSortL
     }
 
     @Subscribe
-    public void onGetNotification(OnGetNotificationEvent event){
+    public void onGetNotification(OnGetNotificationEvent event) {
         mAdapter.clear();
         mAdapter.addAll(dataContext.getNotifications());
     }
 
-    private void prepareListView(){
+    private void prepareListView() {
+        getListView().addFooterView(mFooterView, null, false);
+
+
         mAdapter = new NotificationsListAdapter(getActivity(), dataContext.getNotifications());
-        ((DragSortListView)getListView()).setRemoveListener(this);
+        ((DragSortListView) getListView()).setRemoveListener(this);
         setListAdapter(mAdapter);
+
+        getListView().removeFooterView(mFooterView);
+        getListView().setOnScrollListener(this);
+//        {
+//            @Override
+//            public void onScrollStateChanged(AbsListView arg0, int arg1)
+//            {
+//                // nothing here
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+//            {
+//                boolean lastItem = (firstVisibleItem + visibleItemCount == totalItemCount);
+//                boolean moreRows = getListAdapter().getCount() < datasource.getSize();
+//
+//                if (!loading &&  lastItem && moreRows)
+//                {
+//                    loading = true;
+//                    getListView().addFooterView(footerView, null, false);
+//                    (new LoadNextPage()).execute("");
+//                }
+//            }
+//        });
     }
 
     private void markNotificationAsRedeemed(final Notification notification) {
@@ -101,5 +129,22 @@ public class NotificationsFragment extends BaseListFragment implements DragSortL
 
             }
         });
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//        boolean lastItem = (firstVisibleItem + visibleItemCount == totalItemCount);
+//        boolean moreRows = getListAdapter().getCount() < datasource.getSize();
+//
+//        if (!mLoading && lastItem && moreRows) {
+//            mLoading = true;
+//            getListView().addFooterView(mFooterView, null, false);
+//            (new LoadNextPage()).execute("");
+//        }
     }
 }

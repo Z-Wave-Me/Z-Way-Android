@@ -184,13 +184,31 @@ public class ApiClient {
     }
 
     public NotificationResponse getNotifications(final long lastUpdateTime) {
-        return mAdaptor.create(NotificationRequest.class).getNotifications(lastUpdateTime);
+        return mAdaptor.create(NotificationRequest.class).getNotifications(Constants.NOTIFICATIONS_LIMIT, lastUpdateTime);
     }
 
     public void updateNotifications(final Notification notification,
                                     final EmptyApiCallback<String> callback) {
         mAdaptor.create(UpdateNotificationRequest.class).updateNotification(notification.id, notification
                 , new Callback<NotificationResponse>() {
+                    @Override
+                    public void success(NotificationResponse notificationResponse, Response response) {
+                        Timber.v(notificationResponse.toString());
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        boolean networkUnreachable = isNetworkUnreachableError(error);
+                        callback.onFailure("", networkUnreachable);
+                    }
+                }
+        );
+    }
+
+    public void getNotificationPage(int offset, final EmptyApiCallback<String> callback) {
+        mAdaptor.create(NotificationRequest.class).getNotifications(Constants.NOTIFICATIONS_LIMIT,
+                offset, true, new Callback<NotificationResponse>() {
                     @Override
                     public void success(NotificationResponse notificationResponse, Response response) {
                         Timber.v(notificationResponse.toString());

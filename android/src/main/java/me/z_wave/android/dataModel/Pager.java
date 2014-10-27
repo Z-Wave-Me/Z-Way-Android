@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 15.06.14 22:53.
+ * Created by Ivan Platonov on 27.10.14 22:43.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -20,19 +20,18 @@
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.z_wave.android.network.notification;
+package me.z_wave.android.dataModel;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import com.google.gson.annotations.SerializedName;
 
-public interface NotificationRequest {
+/**
+ * Created by Ivan Pl on 27.10.2014.
+ */
+public class Pager {
 
-    @GET("/ZAutomation/api/v1/notifications")
-    void getNotifications(@Query("limit")int limit, @Query("offset") int offset,
-                          @Query("pagination") boolean pagination, Callback<NotificationResponse> callback);
-
-    @GET("/ZAutomation/api/v1/notifications")
-    NotificationResponse getNotifications(@Query("limit")int limit, @Query("since") long updateTime);
+    public int offset;
+    public int limit;
+    @SerializedName("page_total")
+    public int pageTotal;
 
 }
