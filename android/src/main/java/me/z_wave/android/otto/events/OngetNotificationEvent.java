@@ -22,5 +22,13 @@
 
 package me.z_wave.android.otto.events;
 
+import me.z_wave.android.network.notification.NotificationDataWrapper;
+
 public class OnGetNotificationEvent {
+
+    public final NotificationDataWrapper notificationDataWrapper;
+
+    public OnGetNotificationEvent(NotificationDataWrapper notificationDataWrapper) {
+        this.notificationDataWrapper = notificationDataWrapper;
+    }
 }

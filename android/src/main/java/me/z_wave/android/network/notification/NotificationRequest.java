@@ -32,7 +32,7 @@ public interface NotificationRequest {
     void getNotifications(@Query("limit")int limit, @Query("offset") int offset,
                           @Query("pagination") boolean pagination, Callback<NotificationResponse> callback);
 
-    @GET("/ZAutomation/api/v1/notifications")
+    @GET("/ZAutomation/api/v1/notifications?pagination=true")
     NotificationResponse getNotifications(@Query("limit")int limit, @Query("since") long updateTime);
 
 }

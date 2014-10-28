@@ -24,32 +24,30 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dslv="http://schemas.android.com/apk/res-auto"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.mobeta.android.dslv.DragSortListView
+    <com.fortysevendeg.swipelistview.SwipeListView
         android:id="@id/android:list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/filter_list_divider_color"
-        android:dividerHeight="1dp"
-        dslv:drag_start_mode="onMove"
-        dslv:float_background_color="@android:color/transparent"
-        dslv:remove_enabled="true"
-        dslv:remove_mode="flingRemove"
-        dslv:sort_enabled="false"
-        dslv:track_drag_sort="false"
-        dslv:use_default_controller="true" />
+        android:listSelector="#00000000"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        swipe:swipeFrontView="@+id/front"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeMode="right"
+        dslv:swipeActionRight="dismiss"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeOpenOnLongPress="false"/>
 
-    <LinearLayout
+    <LinearLayout android:id="@id/android:empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"

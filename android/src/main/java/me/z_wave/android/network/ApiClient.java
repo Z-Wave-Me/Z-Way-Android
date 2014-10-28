@@ -206,13 +206,13 @@ public class ApiClient {
         );
     }
 
-    public void getNotificationPage(int offset, final EmptyApiCallback<String> callback) {
+    public void getNotificationPage(int offset, final ApiCallback<NotificationDataWrapper, String> callback) {
         mAdaptor.create(NotificationRequest.class).getNotifications(Constants.NOTIFICATIONS_LIMIT,
                 offset, true, new Callback<NotificationResponse>() {
                     @Override
                     public void success(NotificationResponse notificationResponse, Response response) {
                         Timber.v(notificationResponse.toString());
-                        callback.onSuccess();
+                        callback.onSuccess(notificationResponse.data);
                     }
 
                     @Override

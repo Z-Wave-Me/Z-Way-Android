@@ -22,13 +22,28 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:minHeight="48dp"
-          android:gravity="center_vertical"
-          android:textColor="@color/main_text_color"
-          android:paddingLeft="16dp"
-          android:paddingRight="16sp"
-          android:textSize="18sp"
-          android:text="Garage"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp">
+
+    <View android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
+
+    <TextView android:id="@+id/front"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="48dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/main_text_color"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:paddingLeft="16dp"
+        android:paddingRight="16sp"
+        android:textSize="18sp"
+        android:text="Garage"/>
+
+
+</RelativeLayout>

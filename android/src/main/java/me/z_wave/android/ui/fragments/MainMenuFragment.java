@@ -99,6 +99,7 @@ public class MainMenuFragment extends BaseFragment {
     TextView profileLocation;
 
     private View mSelectedView;
+    private int mNotificationsCount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,13 +142,13 @@ public class MainMenuFragment extends BaseFragment {
 
     @Subscribe
     public void onGetNotification(OnGetNotificationEvent event){
-        final List<Notification> notifications = dataContext.getNotifications();
-        if(notifications.isEmpty()) {
+        mNotificationsCount = event.notificationDataWrapper.notificationsCount;
+        if(mNotificationsCount == 0) {
             notificationsView.setText(R.string.notification_everything_ok);
         } else {
             notificationsView.setText(
                     String.format(getString(R.string.notification_count),
-                            notifications.size()));
+                            mNotificationsCount));
         }
     }
 

@@ -22,13 +22,19 @@
 
 package me.z_wave.android.network.notification;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import me.z_wave.android.dataModel.Notification;
+import me.z_wave.android.dataModel.Pager;
 
 public class NotificationDataWrapper{
     public long updateTime;
     public List<Notification> notifications;
+    @SerializedName("total_count")
+    public int notificationsCount;
+    public Pager pager;
 
     @Override
     public String toString() {

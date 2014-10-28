@@ -6,12 +6,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
     }
 }
 
 allprojects {
     repositories {
         mavenCentral()
+        maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
     }
 }

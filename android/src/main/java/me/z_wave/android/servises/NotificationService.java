@@ -24,32 +24,19 @@ package me.z_wave.android.servises;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
-import me.z_wave.android.app.ZWayApplication;
-import me.z_wave.android.data.DataContext;
-import me.z_wave.android.network.ApiClient;
-import me.z_wave.android.network.notification.NotificationDataWrapper;
 import me.z_wave.android.network.notification.NotificationResponse;
-import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.ui.activity.MainActivity;
 import retrofit.RetrofitError;
 import timber.log.Timber;
-
-import javax.inject.Inject;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class NotificationService extends BaseUpdateDataService {
     private long mLastUpdateTime;
@@ -70,7 +57,7 @@ public class NotificationService extends BaseUpdateDataService {
                 Timber.v("Notification updated! notifications count " + result.data.notifications.size());
                 dataContext.addNotifications(result.data.notifications);
                 showNotification(result.data.notifications.get(result.data.notifications.size() - 1));
-                bus.post(new OnGetNotificationEvent());
+                bus.post(new OnGetNotificationEvent(result.data));
             }
         } catch (RetrofitError e) {
             e.printStackTrace();

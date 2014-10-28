@@ -42,11 +42,21 @@ public class NotificationsListAdapter extends ArrayAdapter<Notification> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             convertView = View.inflate(getContext(), R.layout.layout_notification_list_item, null);
+            convertView.setTag(new ViewHolder(convertView));
         }
 
+        final ViewHolder holder = (ViewHolder) convertView.getTag();
         final Notification notification = getItem(position);
-        ((TextView) convertView).setText(notification.message);
+        holder.notificationTitle.setText(notification.message);
         return convertView;
+    }
+
+    private class ViewHolder {
+        public TextView notificationTitle;
+
+        private ViewHolder(View parent) {
+            notificationTitle = (TextView) parent.findViewById(R.id.front);
+        }
     }
 
 }
