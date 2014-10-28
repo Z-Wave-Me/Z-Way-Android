@@ -24,6 +24,7 @@ package me.z_wave.android.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -178,10 +179,13 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
     private void prepareSeekBar(ViewHolder holder, final Device device){
         final DeviceType deviceType = device.deviceType;
-        final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL;
+        final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL
+                || deviceType == DeviceType.THERMOSTAT;
 
         holder.seekBar.setOnSeekBarChangeListener(null);
         int value = 0;
+        final  int min = Integer.valueOf(device.metrics.min);;
+        final int max = Integer.valueOf(device.metrics.max);
         try {
             value = Integer.valueOf(device.metrics.level);
         } catch (NumberFormatException e) {
@@ -189,6 +193,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         }
 
         changeViewVisibility(holder.seekBar, isSeekBarVisible);
+        holder.seekBar.setMax(max-min);
         if(isSeekBarVisible){
             try {
                 holder.seekBar.setProgress(value);
@@ -208,7 +213,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    device.metrics.level = String.valueOf(seekBar.getProgress());
+                    device.metrics.level = String.valueOf(min + seekBar.getProgress());
                     mListener.onSeekBarStateChanged(device);
                 }
             });

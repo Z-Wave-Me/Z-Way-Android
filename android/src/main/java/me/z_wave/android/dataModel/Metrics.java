@@ -33,6 +33,8 @@ public class Metrics implements Serializable {
     public String iconBase;
     public String icon;
     public String mode;
+    public String min = "0";
+    public String max = "100";
     public DeviceRgbColor color;
 
     //Camera metrics
