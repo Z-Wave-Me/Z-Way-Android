@@ -30,7 +30,7 @@ public class Constants {
     public static final RestAdapter.LogLevel API_LOG_LEVEL = DEBUG_MODE ?
             RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
 
-    public static final int NOTIFICATIONS_LIMIT = 5;
+    public static final int NOTIFICATIONS_LIMIT = 100;
 
     public static final String BASE_API_URL = "/ZAutomation/api/v1";
 

@@ -42,6 +42,7 @@ import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.AuthEvent;
+import me.z_wave.android.otto.events.StartStopLocationListeningEvent;
 import me.z_wave.android.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -81,6 +82,11 @@ public class LocationService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Subscribe
+    public void onStartStopLocationListening(StartStopLocationListeningEvent event) {
+
     }
 
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {

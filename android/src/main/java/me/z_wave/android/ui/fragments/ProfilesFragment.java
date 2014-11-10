@@ -47,6 +47,7 @@ import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
+import me.z_wave.android.otto.events.StartStopLocationListeningEvent;
 import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.LocationService;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
@@ -136,6 +137,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(LocationService.CHANGE_PROFILE_BY_LOCATION, isChecked);
         editor.commit();
+        bus.post(new StartStopLocationListeningEvent(isChecked));
     }
 
     private boolean isChangeProfileByLocationEnable() {

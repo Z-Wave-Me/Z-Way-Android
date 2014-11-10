@@ -43,8 +43,8 @@
         android:theme="@style/ZWayAppTheme" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w" />
-        <!-- android:value="AIzaSyCgp_nefkPdcMFhBcO_7NsLSRjF7_LdVnI"/> //pl debug -->
+            android:value="AIzaSyBB9ME4f7CifuT45Ug9oGNux5hvCmii0F8"/> //pl debug
+        <!--android:value="AIzaSyCTi7eWuXA_UxXzbancprWLlLJ_CZMCb0w" />-->
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -37,7 +37,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
 import java.util.Properties;
+
+import me.z_wave.android.network.HttpClientHelper;
 
 /**
  * Created by Ivan PL on 10.09.2014.
@@ -50,14 +53,24 @@ public class MjpegInputStream extends DataInputStream {
     private final static int FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH;
     private int mContentLength = -1;
 
-    public static MjpegInputStream read(String url) {
+    public static MjpegInputStream read(String url, Map<String, String> headers) {
         HttpResponse res;
-        DefaultHttpClient httpclient = new DefaultHttpClient();
+//        DefaultHttpClient httpclient = new DefaultHttpClient();
+        final DefaultHttpClient httpclient = HttpClientHelper.createHttpsClient();
         try {
-            res = httpclient.execute(new HttpGet(URI.create(url)));
+            final HttpGet httpGet = new HttpGet(URI.create(url));
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpGet.addHeader("Cookie", entry.getKey() +"="+ entry.getValue());
+//                System.out.println(entry.getKey() + "/" + entry.getValue());
+            }
+
+            res = httpclient.execute(httpGet);
             return new MjpegInputStream(res.getEntity().getContent());
         } catch (ClientProtocolException e) {
-        } catch (IOException e) {}
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

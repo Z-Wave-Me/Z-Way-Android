@@ -34,6 +34,8 @@ import javax.inject.Inject;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.DeviceRgbColor;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowDialogEvent;
@@ -42,6 +44,7 @@ import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
 import me.z_wave.android.ui.dialogs.ColorPickerDialog;
+import me.z_wave.android.utils.CameraUtils;
 
 /**
  * Created by Ivan PL on 22.09.2014.
@@ -74,8 +77,10 @@ public class BaseDeviceListFragment extends BaseFragment
 
     @Override
     public void onOpenCameraView(Device updatedDevice) {
-        if(!TextUtils.isEmpty(updatedDevice.metrics.url)
-                && URLUtil.isValidUrl(updatedDevice.metrics.url)) {
+        final LocalProfile profile = DatabaseDataProvider.getInstance(getActivity()).getActiveLocalProfile();
+        final String cameraUrl = CameraUtils.getCameraUrl(profile, updatedDevice.metrics.url);
+        if(!TextUtils.isEmpty(cameraUrl)
+                && URLUtil.isValidUrl(cameraUrl)) {
             final Intent intent = new Intent(getActivity(), CameraActivity.class);
             intent.putExtra(CameraActivity.KEY_DEVICE, updatedDevice);
             bus.post(new StartActivityEvent(intent));

@@ -255,6 +255,10 @@ public class ApiClient {
         return mAdaptor != null;
     }
 
+    public Cookie getCookie() {
+        return mCookie;
+    }
+
     private RequestInterceptor createCookiesInterceptor() {
         final CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);

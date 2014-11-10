@@ -29,6 +29,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.URLUtil;
 
+import org.apache.http.cookie.Cookie;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -43,6 +45,7 @@ import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.views.mjpegView.MjpegView;
+import me.z_wave.android.utils.CameraUtils;
 
 /**
  * Created by Ivan PL on 09.09.2014.
@@ -53,6 +56,8 @@ public class CameraActivity extends BaseActivity {
 
     @InjectView(R.id.video_mjpeg_view) MjpegView mjpegView;
     private Device mDevice;
+
+    @Inject ApiClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ public class CameraActivity extends BaseActivity {
 
         mjpegView.setDisplayMode(MjpegView.SIZE_BEST_FIT);
         mjpegView.showFps(true);
+        prepareHeaders();
 
         Metrics cameraMetrics = mDevice.metrics;
         changeButtonVisibility(findViewById(R.id.video_btn_up), cameraMetrics.hasUp);
@@ -81,7 +87,8 @@ public class CameraActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        final String cameraUrl = getCameraUrl(mDevice.metrics.url);
+        final LocalProfile profile = DatabaseDataProvider.getInstance(this).getActiveLocalProfile();
+        final String cameraUrl = CameraUtils.getCameraUrl(profile, mDevice.metrics.url);
         mjpegView.setSource(cameraUrl);
     }
 
@@ -135,18 +142,11 @@ public class CameraActivity extends BaseActivity {
         v.setVisibility(isVisible ? View.VISIBLE :View.INVISIBLE);
     }
 
-    private String getCameraUrl(String baseUrl) {
-        if(TextUtils.isEmpty(baseUrl))
-            return null;
-
-        if(URLUtil.isValidUrl(baseUrl))
-            return baseUrl;
-
-        final LocalProfile profile = DatabaseDataProvider.getInstance(this).getActiveLocalProfile();
-        final String serverUrl = TextUtils.isEmpty(profile.indoorServer) ? Constants.DEFAULT_URL
-                : profile.indoorServer;
-
-        return String.format("%s%s", serverUrl, baseUrl);
+    private void prepareHeaders() {
+        final Cookie cookie = apiClient.getCookie();
+        if(cookie != null && !TextUtils.isEmpty(cookie.getValue())) {
+            mjpegView.addHeader(cookie.getName(), cookie.getValue());
+        }
     }
 
 }

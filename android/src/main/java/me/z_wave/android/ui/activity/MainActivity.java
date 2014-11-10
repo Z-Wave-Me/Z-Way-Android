@@ -26,7 +26,9 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.provider.Settings;
@@ -49,6 +51,7 @@ import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.otto.events.StartStopLocationListeningEvent;
 import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.BindHelper;
 import me.z_wave.android.servises.DataUpdateService;
@@ -87,7 +90,9 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
     protected void onStart() {
         super.onStart();
         startNotificationListening();
-        startLocationListening();
+        if(isChangeProfileByLocationEnable()) {
+            startLocationListening();
+        }
         mBindHelper.onBind(this);
     }
 
@@ -179,6 +184,13 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         event.dialogFragment.show(getFragmentManager(), "Dialog");
     }
 
+    @Subscribe
+    public void onStartStopLocationListening(StartStopLocationListeningEvent event) {
+        if(isChangeProfileByLocationEnable()) {
+            startLocationListening();
+        }
+    }
+
     private void setupActionBar() {
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -199,6 +211,11 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         mMainMenu = (MainMenuFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mMainMenu.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         mMainMenu.showDrawer();
+    }
+
+    private boolean isChangeProfileByLocationEnable() {
+        final SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        return prefs.getBoolean(LocationService.CHANGE_PROFILE_BY_LOCATION, false);
     }
 
 }
