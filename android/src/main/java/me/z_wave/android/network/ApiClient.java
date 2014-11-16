@@ -88,9 +88,12 @@ public class ApiClient {
         mLocalProfile = profile;
         final String url = TextUtils.isEmpty(mLocalProfile.indoorServer)
                 ? Constants.DEFAULT_URL : mLocalProfile.indoorServer;
+
+        final DefaultHttpClient client = HttpClientHelper.createHttpsClient();
         mAdaptor = new RestAdapter.Builder()
                 .setConverter(new GsonConverter(getGson()))
                 .setLogLevel(Constants.API_LOG_LEVEL)
+                .setClient(new ApacheClient(client))
                 .setEndpoint(url)
                 .build();
     }

@@ -24,7 +24,6 @@ package me.z_wave.android.ui.fragments;
 
 import android.content.Context;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -57,13 +56,13 @@ import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.otto.events.ShowProgressEvent;
 
-public class ChooseLocationFragment extends BaseFragment implements GoogleMap.OnMapClickListener {
-
-    private GoogleMap googleMap;
-    private Marker mSelectedPositionMarker;
+public class ChooseLocationFragment extends BaseFragment implements GoogleMap.OnMapClickListener,
+        GoogleMap.OnMyLocationChangeListener {
 
     @Inject
     NewProfileContext profileContext;
+    private GoogleMap googleMap;
+    private Marker mSelectedPositionMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,13 +75,13 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (googleMap == null) {
-            googleMap =  ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+            googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         }
 
-        centerMapOnMyLocation();
+        googleMap.setMyLocationEnabled(true);
         googleMap.setOnMapClickListener(this);
-//        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//        locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+        googleMap.setOnMyLocationChangeListener(this);
+        focusOnLastKnownLocation();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
 
     @Override
     public void onMapClick(LatLng latLng) {
-        if(mSelectedPositionMarker == null){
+        if (mSelectedPositionMarker == null) {
             mSelectedPositionMarker = createMarker(latLng);
         } else {
             mSelectedPositionMarker.setPosition(latLng);
@@ -110,8 +109,8 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_choose){
-            if(mSelectedPositionMarker != null){
+        if (item.getItemId() == R.id.action_choose) {
+            if (mSelectedPositionMarker != null) {
                 bus.post(new ShowProgressEvent(true));
                 final LocalProfile profile = profileContext.getProfile();
                 LatLng position = mSelectedPositionMarker.getPosition();
@@ -125,35 +124,47 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
         return super.onOptionsItemSelected(item);
     }
 
-    private Marker createMarker(LatLng latLng){
+    @Override
+    public void onMyLocationChange(Location location) {
+        if (location != null) {
+            final LatLng currentPoint = new LatLng(location.getLatitude(),
+                    location.getLongitude());
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPoint, 12f));
+            googleMap.setOnMyLocationChangeListener(null);
+        }
+    }
+
+    private Marker createMarker(LatLng latLng) {
         return googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title("Selected location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
     }
 
-    private void centerMapOnMyLocation() {
-        googleMap.setMyLocationEnabled(true);
-        final Location location = googleMap.getMyLocation();
+    private void focusOnLastKnownLocation() {
+        final LocationManager locationManager = (LocationManager) getActivity()
+                .getSystemService(Context.LOCATION_SERVICE);
+        final Location location = locationManager
+                .getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         if (location != null) {
             final LatLng currentPoint = new LatLng(location.getLatitude(),
                     location.getLongitude());
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPoint, 12f));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPoint, 12f));
         }
     }
 
-    private String getAddress(LatLng position){
+    private String getAddress(LatLng position) {
         final Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
             final List<Address> addresses = geocoder.getFromLocation(position.latitude,
                     position.longitude, 1);
-            if(addresses.size() > 0) {
+            if (addresses.size() > 0) {
                 final Address address = addresses.get(0);
-                if(address != null){
+                if (address != null) {
                     final StringBuilder builder = new StringBuilder();
-                    if(!TextUtils.isEmpty(address.getThoroughfare())){
+                    if (!TextUtils.isEmpty(address.getThoroughfare())) {
                         builder.append(address.getThoroughfare());
-                        if(!TextUtils.isEmpty(address.getSubThoroughfare()))
+                        if (!TextUtils.isEmpty(address.getSubThoroughfare()))
                             builder.append(" " + address.getSubThoroughfare());
                     }
                     appendIfNotEmpty(builder, address.getLocality());
@@ -169,10 +180,11 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
     }
 
     private void appendIfNotEmpty(StringBuilder builder, String substr) {
-        if(!TextUtils.isEmpty(substr)){
-            if(builder.length() > 0)
+        if (!TextUtils.isEmpty(substr)) {
+            if (builder.length() > 0)
                 builder.append(", ");
             builder.append(substr);
         }
     }
+
 }

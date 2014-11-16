@@ -66,7 +66,7 @@ public class HttpClientHelper {
 
     private static HttpClient createDefaultHttpClient() {
         final HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 10000);
         HttpConnectionParams.setSoTimeout(httpParameters, 10000);
         return new org.apache.http.impl.client.DefaultHttpClient(httpParameters);
     }
