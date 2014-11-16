@@ -22,9 +22,9 @@
 
 package me.z_wave.android.ui.dialogs;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,20 +42,10 @@ import me.z_wave.android.servises.UpdateDeviceService;
  */
 public class ColorPickerDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    public static final String KEY_RGB_DEVICE = "key_rgb_device";
+    public static final String KEY_COLOR = "key_color";
 
     private ColorPicker mColorPicker;
-    private Device mDevice;
 
-    public static ColorPickerDialog newInstance(Device device) {
-        final ColorPickerDialog dialog = new ColorPickerDialog();
-        final Bundle args = new Bundle();
-        args.putSerializable(KEY_RGB_DEVICE, device);
-        dialog.setArguments(args);
-        return dialog;
-    }
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_color_picker, container, false);
@@ -64,7 +54,6 @@ public class ColorPickerDialog extends BaseDialogFragment implements View.OnClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDevice = (Device) getArguments().getSerializable(KEY_RGB_DEVICE);
         findViewById(R.id.color_picker_cancel).setOnClickListener(this);
         findViewById(R.id.color_picker_ok).setOnClickListener(this);
         getDialog().setTitle(R.string.dialog_color_picker_select_color);
@@ -77,11 +66,21 @@ public class ColorPickerDialog extends BaseDialogFragment implements View.OnClic
         dismiss();
         if(v.getId() == R.id.color_picker_ok) {
             final int color = mColorPicker.getColor();
-            mDevice.metrics.color.r = Color.red(color);
-            mDevice.metrics.color.g = Color.green(color);
-            mDevice.metrics.color.b = Color.blue(color);
-            UpdateDeviceService.updateRgbColor(getActivity(), mDevice);
+            onColorPicked(color);
         }
+    }
+
+    public void setOldColor(int color) {
+        Bundle args = getArguments();
+        if(args == null) {
+            args = new Bundle();
+            setArguments(args);
+        }
+        args.putInt(KEY_COLOR, color);
+    }
+
+    public void onColorPicked(int color) {
+
     }
 
     private void prepareColorPicker() {
@@ -90,12 +89,7 @@ public class ColorPickerDialog extends BaseDialogFragment implements View.OnClic
         mColorPicker.setShowOldCenterColor(true);
         mColorPicker.addSVBar(svBar);
 
-        final int oldColor = getOldColor();
+        final int oldColor = getArguments() != null ? getArguments().getInt(KEY_COLOR) : Color.BLACK;
         mColorPicker.setOldCenterColor(oldColor);
-    }
-
-    private int getOldColor() {
-        final DeviceRgbColor color = mDevice.metrics.color;
-        return Color.argb(255, color.r, color.g, color.b);
     }
 }

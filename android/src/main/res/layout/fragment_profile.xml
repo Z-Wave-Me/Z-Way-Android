@@ -75,8 +75,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="48dp"
-            android:paddingRight="20dp"
             android:paddingLeft="20dp"
             android:gravity="center_vertical"
             android:background="@color/white">
@@ -90,11 +90,19 @@
                 android:text="@string/profile_url"/>
 
             <EditText android:id="@+id/profile_url"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@null"
                 android:inputType="textUri"
                 android:hint="@string/profile_http"/>
+
+            <ImageButton android:id="@+id/scan_network"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_search"
+                android:layout_marginRight="4dp"
+                android:background="@android:drawable/list_selector_background"/>
 
         </LinearLayout>
 

@@ -29,14 +29,10 @@ import android.webkit.URLUtil;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
-import me.z_wave.android.dataModel.DeviceRgbColor;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
-import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
@@ -70,8 +66,17 @@ public class BaseDeviceListFragment extends BaseFragment
     }
 
     @Override
-    public void onColorViewClicked(Device updatedDevice) {
-        final ColorPickerDialog dialog = ColorPickerDialog.newInstance(updatedDevice);
+    public void onColorViewClicked(final Device device) {
+        final ColorPickerDialog dialog = new ColorPickerDialog() {
+            @Override
+            public void onColorPicked(int color) {
+                device.metrics.color.r = Color.red(color);
+                device.metrics.color.g = Color.green(color);
+                device.metrics.color.b = Color.blue(color);
+                UpdateDeviceService.updateRgbColor(getActivity(), device);
+            }
+        };
+        dialog.setOldColor(device.metrics.color.getColorAsInt());
         bus.post(new ShowDialogEvent(dialog));
     }
 

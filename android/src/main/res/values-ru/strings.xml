@@ -51,7 +51,7 @@
     <string name="filters_types">Типы</string>
     <string name="filters_tags">Теги</string>
 
-    <string name="devices_empty_msg">Пусто</string>
+    <string name="empty_msg">Пусто</string>
     
     <string name="notification_everything_ok">Всё хорошо</string>
     <string name="notification_count">У вас %d уведомлений</string>

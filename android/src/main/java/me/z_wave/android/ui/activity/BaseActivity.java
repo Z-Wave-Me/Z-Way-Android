@@ -24,8 +24,10 @@ package me.z_wave.android.ui.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.crittercism.app.Crittercism;
 
@@ -36,13 +38,15 @@ import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.dialogs.AttentionDialogFragment;
+import me.z_wave.android.ui.dialogs.ConnectionLoseDialog;
 import me.z_wave.android.ui.dialogs.ProgressDialog;
 import me.z_wave.android.ui.dialogs.ReconnectionProgressDialog;
 import me.z_wave.android.utils.FragmentUtils;
 
 import javax.inject.Inject;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity implements AttentionDialogFragment.AttentionDialogListener,
+        ConnectionLoseDialog.ConnectionLoseDialogListener {
 
     @Inject
     MainThreadBus bus;
@@ -70,6 +74,22 @@ public class BaseActivity extends Activity {
         bus.unregister(this);
     }
 
+    @Override
+    public void onDismiss() {
+        mIsDialogVisible = false;
+    }
+
+    @Override
+    public void onCloseAppClicked() {
+        finish();
+    }
+
+    @Override
+    public void onShowNetworkSettings() {
+        final Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+        startActivity(intent);
+    }
+
     public int getScreenOrientationOption(){
         final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
         return  isTablet ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -89,10 +109,6 @@ public class BaseActivity extends Activity {
             dialog.show(getFragmentManager(), AttentionDialogFragment.class.getSimpleName());
             mIsDialogVisible = true;
         }
-    }
-
-    public void onDialogCancel() {
-        mIsDialogVisible = false;
     }
 
     public void onShowHideProgress(ProgressEvent event){

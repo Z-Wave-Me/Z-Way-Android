@@ -39,12 +39,6 @@ import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.activity.MainActivity;
 import me.z_wave.android.ui.activity.StartActivity;
-import me.z_wave.android.ui.dialogs.AttentionDialogFragment;
-import me.z_wave.android.ui.dialogs.ColorPickerDialog;
-import me.z_wave.android.ui.dialogs.ConnectionLoseDialog;
-import me.z_wave.android.ui.dialogs.BaseDialogFragment;
-import me.z_wave.android.ui.dialogs.ProgressDialog;
-import me.z_wave.android.ui.dialogs.ReconnectionProgressDialog;
 import me.z_wave.android.ui.fragments.*;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import me.z_wave.android.ui.fragments.dashboard.EditDashboardFragment;
@@ -66,21 +60,16 @@ import javax.inject.Singleton;
                 NotificationService.class,
                 EditDashboardFragment.class,
                 SplashFragment.class,
-                BaseDialogFragment.class,
-                ProgressDialog.class,
-                ConnectionLoseDialog.class,
                 ChooseLocationFragment.class,
                 MainMenuFragment.class,
-                ReconnectionProgressDialog.class,
                 EditDevicesFragment.class,
                 LocationService.class,
                 CameraActivity.class,
                 BaseDeviceListFragment.class,
-                AttentionDialogFragment.class,
                 NetworkStateChangeReceiver.class,
                 AuthService.class,
-                ColorPickerDialog.class,
-                UpdateDeviceService.class
+                UpdateDeviceService.class,
+                NetworkScanFragment.class
         },
         library = true,
         complete = false

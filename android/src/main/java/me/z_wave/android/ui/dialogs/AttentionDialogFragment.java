@@ -22,13 +22,13 @@
 
 package me.z_wave.android.ui.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import me.z_wave.android.R;
-import me.z_wave.android.otto.events.DialogCancelEvent;
 
 /**
  * Created by Ivan Pl on 12.10.2014.
@@ -37,12 +37,29 @@ public class AttentionDialogFragment extends BaseDialogFragment {
 
     public static final String KEY_MESSAGE = "key_message";
 
+    public interface AttentionDialogListener {
+        void onDismiss();
+    }
+
+    private AttentionDialogListener mListener;
+
     public static AttentionDialogFragment newInstance(String message) {
         final AttentionDialogFragment dialogFragment = new AttentionDialogFragment();
         final Bundle args = new Bundle();
         args.putString(KEY_MESSAGE, message);
         dialogFragment.setArguments(args);
         return dialogFragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (AttentionDialogListener) activity;
+        } catch(ClassCastException e) {
+            throw new RuntimeException(activity.getClass().getSimpleName()
+                    + " must implement " + AttentionDialogListener.class.getSimpleName());
+        }
     }
 
     @Override
@@ -65,6 +82,6 @@ public class AttentionDialogFragment extends BaseDialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        bus.post(new  DialogCancelEvent());
+        mListener.onDismiss();
     }
 }

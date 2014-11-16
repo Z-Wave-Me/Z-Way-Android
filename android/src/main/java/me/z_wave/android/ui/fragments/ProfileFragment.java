@@ -63,7 +63,7 @@ import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.servises.AuthService;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends NetworkScanFragment {
 
     private static final int DEFAULT_PROFILE_ID = -1;
     private static final int DEFAULT_PORT = 8083;
@@ -100,6 +100,7 @@ public class ProfileFragment extends BaseFragment {
     NewProfileContext profileContext;
 
     private boolean mIsCreateMode;
+    private boolean mIgnoreAuthEvents = true;
 
     public static ProfileFragment newInstance(int profileId) {
         final ProfileFragment fragment = new ProfileFragment();
@@ -169,8 +170,6 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        //TODO IVAN_PL refactor this!!!
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile profile = profileContext.getProfile();
         saveEnteredData();
@@ -179,6 +178,7 @@ public class ProfileFragment extends BaseFragment {
                 if (TextUtils.isEmpty(profile.name)) {
                     showToast("Profile name can't be empty");
                 } else {
+                    mIgnoreAuthEvents = false;
                     bus.post(new ShowReconnectionProgressEvent(true, false, profile.name));
                     long profileId = provider.addLocalProfile(profile);
                     profile.id = (int) profileId;
@@ -195,17 +195,28 @@ public class ProfileFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onUrlSelected(String url) {
+        profileUrl.setText(url);
+    }
+
     @Subscribe
     public void onAuthSuccess(AuthEvent.Success event) {
-        bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-        goBack();
+        if(!mIgnoreAuthEvents) {
+            mIgnoreAuthEvents = true;
+            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+            goBack();
+        }
     }
 
     @Subscribe
     public void onAuthFail(AuthEvent.Fail event) {
-        bus.post(new ShowReconnectionProgressEvent(false, false, ""));
-        bus.post(new ShowAttentionDialogEvent("New profile was saved."));
-        goBack();
+        if(!mIgnoreAuthEvents) {
+            mIgnoreAuthEvents = true;
+            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+            bus.post(new ShowAttentionDialogEvent("New profile was saved."));
+            goBack();
+        }
     }
 
     @Override
@@ -230,6 +241,11 @@ public class ProfileFragment extends BaseFragment {
     void changeLocation() {
         bus.post(new CommitFragmentEvent(new ChooseLocationFragment(), true));
         showToast("change location");
+    }
+
+    @OnClick(R.id.scan_network)
+    void scanNetwork() {
+        startDiscovering();
     }
 
     private String getUrl() {

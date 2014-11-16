@@ -22,25 +22,33 @@
 
 package me.z_wave.android.ui.dialogs;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import javax.inject.Inject;
 
 import me.z_wave.android.R;
-import me.z_wave.android.network.ApiClient;
-import me.z_wave.android.otto.MainThreadBus;
-import me.z_wave.android.otto.events.CloseAppEvent;
-import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
-import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 
 public class ConnectionLoseDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    @Inject
-    public MainThreadBus bus;
+    public interface ConnectionLoseDialogListener {
+        void onCloseAppClicked();
+        void onShowNetworkSettings();
+    }
+
+    private ConnectionLoseDialogListener mListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (ConnectionLoseDialogListener) activity;
+        } catch(ClassCastException e) {
+            throw new RuntimeException(activity.getClass().getSimpleName()
+                    + " must implement " + ConnectionLoseDialogListener.class.getSimpleName());
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +72,9 @@ public class ConnectionLoseDialog extends BaseDialogFragment implements View.OnC
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.connection_lose_close_app) {
-            bus.post(new CloseAppEvent());
+            mListener.onCloseAppClicked();
         } else if(view.getId() == R.id.connection_lose_open_settings) {
-            bus.post(new ShowNetworkSettingsEvent());
+            mListener.onShowNetworkSettings();
         }
     }
 

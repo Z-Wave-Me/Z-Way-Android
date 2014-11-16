@@ -25,7 +25,6 @@ package me.z_wave.android.ui.activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,14 +40,11 @@ import javax.inject.Inject;
 import me.z_wave.android.R;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.database.DatabaseDataProvider;
-import me.z_wave.android.otto.events.CloseAppEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.otto.events.DialogCancelEvent;
 import me.z_wave.android.otto.events.InternetConnectionChangeEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowDialogEvent;
-import me.z_wave.android.otto.events.ShowNetworkSettingsEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.otto.events.StartStopLocationListeningEvent;
@@ -142,11 +138,6 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
     }
 
     @Subscribe
-    public void onDialogCancel(DialogCancelEvent event) {
-        onDialogCancel();
-    }
-
-    @Subscribe
     public void onInternetConnectionStateChanged(InternetConnectionChangeEvent event) {
         showHideInternetConnectionLoseDialog(event.isOnline);
     }
@@ -166,17 +157,6 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
             final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getApplicationContext());
             AuthService.login(this, provider.getActiveLocalProfile());
         }
-    }
-
-    @Subscribe
-    public void closeApp(CloseAppEvent event) {
-        finish();
-    }
-
-    @Subscribe
-    public void showNetworkSettings(ShowNetworkSettingsEvent event) {
-        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-        startActivity(intent);
     }
 
     @Subscribe

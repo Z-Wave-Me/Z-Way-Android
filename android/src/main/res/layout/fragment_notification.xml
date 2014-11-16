@@ -23,7 +23,6 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:dslv="http://schemas.android.com/apk/res-auto"
     xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -37,7 +36,7 @@
         swipe:swipeFrontView="@+id/front"
         swipe:swipeBackView="@+id/back"
         swipe:swipeMode="right"
-        dslv:swipeActionRight="dismiss"
+        swipe:swipeActionRight="dismiss"
         swipe:swipeCloseAllItemsWhenMoveList="true"
         swipe:swipeOpenOnLongPress="false"/>
 

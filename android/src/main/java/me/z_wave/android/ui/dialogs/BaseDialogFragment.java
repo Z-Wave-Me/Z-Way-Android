@@ -33,15 +33,6 @@ import me.z_wave.android.otto.MainThreadBus;
 
 public class BaseDialogFragment extends DialogFragment {
 
-    @Inject
-    MainThreadBus bus;
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ((ZWayApplication) getActivity().getApplication()).inject(this);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

@@ -22,10 +22,16 @@
 
 package me.z_wave.android.dataModel;
 
+import android.graphics.Color;
+
 import java.io.Serializable;
 
 public class DeviceRgbColor implements Serializable {
     public int r;
     public int g;
     public int b;
+
+    public int getColorAsInt() {
+        return Color.argb(255, r, g, b);
+    }
 }

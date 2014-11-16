@@ -29,12 +29,10 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.otto.events.DialogCancelEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.ui.fragments.SplashFragment;
-import me.z_wave.android.utils.InternetConnectionUtils;
 
 /**
  * Created by Ivan PL on 08.07.2014.
@@ -70,11 +68,6 @@ public class StartActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onDialogCancel(DialogCancelEvent event) {
-        onDialogCancel();
-    }
-
-    @Subscribe
     public void onShowHideProgress(ProgressEvent event){
         super.onShowHideProgress(event);
     }
@@ -83,6 +76,5 @@ public class StartActivity extends BaseActivity {
     public void onShowHideReconnectionProgressEvent(ShowReconnectionProgressEvent event) {
         super.onShowHideReconnectionProgress(event);
     }
-
 
 }
