@@ -77,6 +77,9 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         super.onCreateOptionsMenu(menu, inflater);
         getActionBar().show();
         inflater.inflate(R.menu.menu_profiles, menu);
+        if(mAdapter!= null && mAdapter.getCount() <= 0 ) {
+            menu.findItem(R.id.profile_edit).setVisible(false);
+        }
     }
 
     @Override

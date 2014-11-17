@@ -18,8 +18,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 9
-        versionName 'demo_0.1.8.2'//'0.1.7'
+        versionCode 10
+        versionName 'demo_0.2.1'//'0.1.7'
     }
 
     productFlavors {

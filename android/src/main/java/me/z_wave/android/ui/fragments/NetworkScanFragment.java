@@ -68,8 +68,10 @@ public class NetworkScanFragment extends BaseFragment {
     public void stopDiscovering() {
         if (isAdded()) {
             mNetworkScanTask = null;
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
+            if(mProgressDialog != null) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
 
             if (mFoundUrls != null && mFoundUrls.size() > 0) {
                 final SelectUrlDialog dialog = prepareSelectUrlDialog();

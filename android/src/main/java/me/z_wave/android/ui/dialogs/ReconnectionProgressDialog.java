@@ -42,8 +42,6 @@ public class ReconnectionProgressDialog extends BaseDialogFragment implements Vi
 
     public static final String KEY_PROFILE_NAME = "profile_name";
 
-    @Inject
-    public MainThreadBus bus;
 
     public static ReconnectionProgressDialog newInstance(String profileName) {
         final ReconnectionProgressDialog dialog = new ReconnectionProgressDialog();
