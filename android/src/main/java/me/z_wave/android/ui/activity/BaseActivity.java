@@ -34,6 +34,7 @@ import com.crittercism.app.Crittercism;
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.otto.MainThreadBus;
+import me.z_wave.android.otto.events.CancelConnectionEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
@@ -123,7 +124,14 @@ public class BaseActivity extends Activity implements AttentionDialogFragment.At
 
     public void onShowHideReconnectionProgress(ShowReconnectionProgressEvent event){
         if(event.show && mReconnectionProgressDialog == null){
-            mReconnectionProgressDialog = ReconnectionProgressDialog.newInstance(event.profileName);
+            mReconnectionProgressDialog = new ReconnectionProgressDialog() {
+                @Override
+                public void onCancelConnection() {
+                    bus.post(new CancelConnectionEvent());
+                    bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+                }
+            };
+            mReconnectionProgressDialog.setProfileName(event.profileName);
             mReconnectionProgressDialog.show(getFragmentManager(), ProgressDialog.class.getSimpleName());
         } else if(!event.show && mReconnectionProgressDialog != null) {
             mReconnectionProgressDialog.dismiss();

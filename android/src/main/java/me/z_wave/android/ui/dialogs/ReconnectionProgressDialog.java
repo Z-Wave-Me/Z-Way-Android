@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import me.z_wave.android.R;
@@ -75,9 +77,22 @@ public class ReconnectionProgressDialog extends BaseDialogFragment implements Vi
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.cancel_connection) {
-            bus.post(new CancelConnectionEvent());
-            bus.post(new ShowReconnectionProgressEvent(false, false, ""));
+            onCancelConnection();
         }
+    }
+
+    public void setProfileName(String profileName) {
+        Bundle args = getArguments();
+        if(args == null) {
+            args = new Bundle();
+            setArguments(args);
+        }
+        args.putString(KEY_PROFILE_NAME, profileName);
+    }
+
+
+    public void onCancelConnection() {
+
     }
 
 }
