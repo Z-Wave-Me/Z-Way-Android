@@ -56,8 +56,6 @@ public class DevicesFragment extends BaseDeviceListFragment {
     @InjectView(R.id.devices_msg_empty)
     View emptyListMsg;
 
-
-    private DevicesGridAdapter mAdapter;
     private Filter mFilter;
     private String mFilterValue;
 
@@ -104,9 +102,9 @@ public class DevicesFragment extends BaseDeviceListFragment {
     protected void updateDevicesList(List<Device> devices) {
         for(Device device : devices) {
             if(isAppropriateDevice(device)) {
-                updateDevice(device);
+                adapter.update(device);
             } else {
-                mDevices.remove(device);
+                adapter.remove(device);
             }
         }
     }
@@ -114,24 +112,25 @@ public class DevicesFragment extends BaseDeviceListFragment {
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
-        mAdapter.setProfile(dataContext.getActiveProfile());
+        adapter.setProfile(dataContext.getActiveProfile());
         updateDevicesList(event.devices);
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         changeEmptyMsgVisibility();
     }
 
     private void changeEmptyMsgVisibility(){
-        final int msgVisibility = mAdapter == null || mAdapter.getCount() == 0 ? View.VISIBLE : View.GONE;
+        final int msgVisibility = adapter == null || adapter.getCount() == 0 ? View.VISIBLE : View.GONE;
         if(emptyListMsg.getVisibility() != msgVisibility){
             emptyListMsg.setVisibility(msgVisibility);
         }
     }
 
     private void prepareDevicesView(){
-        mDevices =  getFilteredDeviceList();
-        mAdapter = new DevicesGridAdapter(getActivity(), mDevices,
-                dataContext.getActiveProfile(), this);
-        widgetsGridView.setAdapter(mAdapter);
+        final List<Device> devices = getFilteredDeviceList();
+        if(devices != null) {
+            adapter.addAll(devices);
+        }
+        widgetsGridView.setAdapter(adapter);
     }
 
     private List<Device> getFilteredDeviceList(){

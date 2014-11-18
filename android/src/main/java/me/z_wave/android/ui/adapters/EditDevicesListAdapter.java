@@ -50,7 +50,10 @@ public class EditDevicesListAdapter extends ArrayAdapter<Device> {
 
     public EditDevicesListAdapter(Context context, List<Device> objects, Profile profile) {
         super(context, 0, objects);
-        mDevicesIds = new ArrayList<String>(profile.positions);
+        mDevicesIds = new ArrayList<String>();
+        if(profile != null) {
+            mDevicesIds.addAll(profile.positions);
+        }
     }
 
     @Override

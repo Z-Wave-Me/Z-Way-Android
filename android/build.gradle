@@ -19,10 +19,14 @@ android {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 10
-        versionName 'demo_0.2.1'//'0.1.7'
+        versionName '0.2.2'
     }
-
     productFlavors {
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix 'dev'
+        }
     }
 }
 
@@ -34,15 +38,12 @@ dependencies {
     compile 'com.jakewharton.timber:timber:2.2.2'
     compile 'com.crittercism:crittercism-android-agent:5.0.3'
     compile 'com.larswerkman:HoloColorPicker:1.4'
-    compile ('com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar')
+    compile 'com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar'
     compile project(':dragsortlistview')
-
     // Event Bus Library:
     compile 'com.squareup:otto:1.3.5'
-
     // View Injection Library:
     compile 'com.jakewharton:butterknife:5.1.1'
-
     // Dependency Injection Library
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.squareup.dagger:dagger:1.2.2'

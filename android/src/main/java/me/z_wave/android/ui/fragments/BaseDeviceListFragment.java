@@ -24,9 +24,11 @@ package me.z_wave.android.ui.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.z_wave.android.R;
@@ -48,7 +50,14 @@ import me.z_wave.android.utils.CameraUtils;
 public class BaseDeviceListFragment extends BaseFragment
         implements DevicesGridAdapter.DeviceStateUpdatedListener {
 
-    protected List<Device> mDevices;
+    public DevicesGridAdapter adapter;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        adapter = new DevicesGridAdapter(getActivity(), new ArrayList<Device>(),
+                dataContext.getActiveProfile(), this);
+    }
 
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
@@ -95,19 +104,7 @@ public class BaseDeviceListFragment extends BaseFragment
     }
 
     protected void updateDevicesList(List<Device> devices) {
-        for(Device device : devices) {
-            updateDevice(device);
-        }
-    }
 
-    protected void updateDevice(Device device) {
-        final int devicePosition = mDevices.indexOf(device);
-        if(devicePosition >= 0) {
-            mDevices.remove(device);
-            mDevices.add(devicePosition, device);
-        } else {
-            mDevices.add(device);
-        }
     }
 
 }

@@ -36,6 +36,7 @@ import butterknife.InjectView;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.z_wave.android.R;
@@ -54,8 +55,6 @@ public class DashboardFragment extends BaseDeviceListFragment {
 
     @InjectView(R.id.dashboard_msg_empty)
     View emptyListMsg;
-
-    private DevicesGridAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,9 +92,9 @@ public class DashboardFragment extends BaseDeviceListFragment {
         if(profile != null) {
             for (Device device : devices) {
                 if (profile.positions.contains(device.id)) {
-                    updateDevice(device);
+                    adapter.update(device);
                 } else {
-                    mDevices.remove(device);
+                    adapter.remove(device);
                 }
             }
         }
@@ -104,21 +103,22 @@ public class DashboardFragment extends BaseDeviceListFragment {
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event) {
         Timber.v("Dashboard list updated!");
-        mAdapter.setProfile(dataContext.getActiveProfile());
+        adapter.setProfile(dataContext.getActiveProfile());
         updateDevicesList(event.devices);
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView() {
-        mDevices = dataContext.getDashboardDevices();
-        mAdapter = new DevicesGridAdapter(getActivity(), mDevices,
-                dataContext.getActiveProfile(), this);
-        widgetsGridView.setAdapter(mAdapter);
+        final List<Device> device = dataContext.getDashboardDevices();
+        if(device != null) {
+            adapter.addAll(device);
+        }
+        widgetsGridView.setAdapter(adapter);
     }
 
     private void changeEmptyDashboardMsgVisibility() {
-        final int msgVisibility = mAdapter.isEmpty() ? View.VISIBLE : View.GONE;
+        final int msgVisibility = adapter.isEmpty() ? View.VISIBLE : View.GONE;
         if (emptyListMsg.getVisibility() != msgVisibility) {
             emptyListMsg.setVisibility(msgVisibility);
         }

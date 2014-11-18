@@ -25,6 +25,7 @@ package me.z_wave.android.ui.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -39,7 +40,7 @@ import me.z_wave.android.dataModel.Profile;
 
 import java.util.List;
 
-public class DevicesGridAdapter extends ArrayAdapter<Device> {
+public class DevicesGridAdapter extends BaseAdapter {
 
     public interface DeviceStateUpdatedListener{
         void onSwitchStateChanged(Device updatedDevice);
@@ -51,13 +52,18 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
     }
 
     private final DeviceStateUpdatedListener mListener;
+    private List<Device> mDevices;
+    private Context mContext;
+    private LayoutInflater mInflater;
     private Profile mProfile;
 
 
     public DevicesGridAdapter(Context context, List<Device> objects, Profile profile,
                               DeviceStateUpdatedListener listener) {
-        super(context, 0, objects);
+        mInflater = LayoutInflater.from(context);
         mListener = listener;
+        mDevices = objects;
+        mContext = context;
         mProfile = profile;
     }
 
@@ -66,14 +72,29 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
     }
 
     @Override
+    public int getCount() {
+        return mDevices.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mDevices.size() > position ? mDevices.get(position) : null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = View.inflate(getContext(), R.layout.layout_device_greed_item, null);
+            convertView = mInflater.inflate(R.layout.layout_device_greed_item, parent, false);
             convertView.setTag(new ViewHolder(convertView));
         }
 
         final ViewHolder holder = (ViewHolder) convertView.getTag();
-        final Device device = getItem(position);
+        final Device device = (Device) getItem(position);
 
         holder.name.setText(device.metrics.title);
         setDeviceIcon(holder, device);
@@ -88,9 +109,30 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
         return convertView;
     }
 
+    public void update(Device device) {
+        final int devicePosition = mDevices.indexOf(device);
+        if(devicePosition >= 0) {
+            mDevices.remove(device);
+            mDevices.add(devicePosition, device);
+        } else {
+            mDevices.add(device);
+        }
+
+    }
+
+    public void remove(Device device) {
+        mDevices.remove(device);
+    }
+
+    public void addAll(List<Device> devices) {
+        for(Device device : devices) {
+            update(device);
+        }
+    }
+
     private void setDeviceIcon(ViewHolder holder, Device device) {
         if(device.isIconLink()){
-            Picasso.with(getContext()).load(device.metrics.icon).into(holder.icon);
+            Picasso.with(mContext).load(device.metrics.icon).into(holder.icon);
         } else {
             if(device.getIconId() == 0){
                 holder.icon.setImageDrawable(null);
@@ -110,7 +152,7 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
         holder.addRemove.setText(addRemoveTextResId);
         holder.addRemove.setBackgroundColor(
-                getContext().getResources().getColor(addRemoveBgColorResId));
+                mContext.getResources().getColor(addRemoveBgColorResId));
         holder.addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +204,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
                             : ((Switch) v).getTextOff().toString();
 
                     if(device.deviceType == DeviceType.DOORLOCK){
-                        if(!device.metrics.mode.equalsIgnoreCase(newState)){
+                        if(device.metrics.mode == null ||
+                                !device.metrics.mode.equalsIgnoreCase(newState)){
                             device.metrics.mode = newState;
                             mListener.onSwitchStateChanged(device);
                         }
@@ -267,6 +310,8 @@ public class DevicesGridAdapter extends ArrayAdapter<Device> {
 
         }
     }
+
+
 
     private void changeViewVisibility(View view, boolean isVisible){
         final int visibility = isVisible ? View.VISIBLE : View.GONE;
