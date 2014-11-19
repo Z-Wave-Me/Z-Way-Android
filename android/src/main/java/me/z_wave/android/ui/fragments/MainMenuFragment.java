@@ -114,7 +114,6 @@ public class MainMenuFragment extends BaseFragment {
 
         final View dashboardView = getView().findViewById(R.id.nav_drawer_dashboard);
         setSelectedView(dashboardView);
-
         prepareRoomsList();
         prepareTypesList();
         prepareTagsList();

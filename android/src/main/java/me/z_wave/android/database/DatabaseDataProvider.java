@@ -39,46 +39,40 @@ import me.z_wave.android.database.tables.ProfileTable;
  */
 public class DatabaseDataProvider {
 
-    private DatabaseHelper mDatabaseHelper;
-    private static DatabaseDataProvider mInstanse;
+    private SQLiteDatabase mDatabase;
+    private static DatabaseDataProvider mInstance;
 
     public static DatabaseDataProvider getInstance(Context context) {
-        if(mInstanse == null) {
-            mInstanse = new DatabaseDataProvider(context);
+        if(mInstance == null) {
+            mInstance = new DatabaseDataProvider(context);
         }
-        return mInstanse;
+        return mInstance;
     }
 
     private DatabaseDataProvider(Context context) {
-        mDatabaseHelper = new DatabaseHelper(context);
+        final DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        mDatabase = databaseHelper.getReadableDatabase();
     }
 
     public long addLocalProfile(LocalProfile localProfile) {
         final ContentValues initialValues = ProfileTable.createContentValues(localProfile);
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        long profileId = database.insert(ProfileTable.TABLE_NAME, null, initialValues);
-        database.close();
+        long profileId = mDatabase.insert(ProfileTable.TABLE_NAME, null, initialValues);
         return profileId;
     }
 
     public void removeLocalProfile(LocalProfile localProfile) {
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        database.delete(ProfileTable.TABLE_NAME, BaseColumns._ID + "=" + localProfile.id, null);
-        database.close();
+        mDatabase.delete(ProfileTable.TABLE_NAME, BaseColumns._ID + "=" + localProfile.id, null);
     }
 
     public void updateLocalProfile(LocalProfile localProfile) {
         final ContentValues updateValues = ProfileTable.createContentValues(localProfile);
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        database.update(ProfileTable.TABLE_NAME, updateValues, BaseColumns._ID + "="
+        mDatabase.update(ProfileTable.TABLE_NAME, updateValues, BaseColumns._ID + "="
                 + localProfile.id, null);
-        database.close();
     }
 
     public List<LocalProfile> getLocalProfiles() {
         final List<LocalProfile> profiles = new ArrayList<LocalProfile>();
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        final Cursor cursor = database.query(ProfileTable.TABLE_NAME, null,
+        final Cursor cursor = mDatabase.query(ProfileTable.TABLE_NAME, null,
                 null, null, null, null, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {
@@ -90,43 +84,36 @@ public class DatabaseDataProvider {
             }
             cursor.close();
         }
-        database.close();
         return profiles;
     }
 
     public LocalProfile getLocalProfileWithId(int id) {
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        final Cursor cursor = database.query(ProfileTable.TABLE_NAME, null,
+        final Cursor cursor = mDatabase.query(ProfileTable.TABLE_NAME, null,
                 BaseColumns._ID + "=" + id, null, null, null, null, "1");
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 final LocalProfile localProfile = new LocalProfile(cursor);
                 cursor.close();
-                database.close();
                 return localProfile;
             }
             cursor.close();
         }
-        database.close();
         return null;
     }
 
     public LocalProfile getActiveLocalProfile() {
-        final SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
-        final Cursor cursor = database.query(ProfileTable.TABLE_NAME, null,
+        final Cursor cursor = mDatabase.query(ProfileTable.TABLE_NAME, null,
                 ProfileTable.P_ACTIVE + "='1'", null, null, null, null,"1");
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 LocalProfile profile = new LocalProfile(cursor);
                 cursor.close();
-                database.close();
                 return profile;
             }
             cursor.close();
         }
-        database.close();
         return null;
     }
 

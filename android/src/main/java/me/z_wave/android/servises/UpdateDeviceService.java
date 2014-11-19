@@ -34,13 +34,6 @@ import me.z_wave.android.network.ApiClient;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
 public class UpdateDeviceService extends IntentService {
 
     private static final String ACTION_UPDATE_SWITCH_STATE = "me.z_wave.android.servises.action.UPDATE_SWITCH_STATE";
@@ -162,7 +155,6 @@ public class UpdateDeviceService extends IntentService {
         super.onStart(intent, startId);
         ((ZWayApplication) getApplicationContext()).inject(this);
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {

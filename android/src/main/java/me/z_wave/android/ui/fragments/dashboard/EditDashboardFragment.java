@@ -121,7 +121,7 @@ public class EditDashboardFragment extends BaseFragment implements
                     @Override
                     public void onSuccess(List<Profile> result) {
                         bus.post(new ProgressEvent(false, false));
-                        dataContext.setProfiles(result);
+                        dataContext.addProfiles(result);
                         goBack();
                     }
 

@@ -39,21 +39,17 @@ public class DataContext {
     private List<Notification> mNotifications;
     private List<Profile> mProfiles;
 
-    public void setLocations(List<Location> locations) {
-        mLocation = locations;
-    }
-
-    public void setProfiles(List<Profile> profiles){
-        mProfiles = profiles;
-    }
-
-    public void setDevices(List<Device> devices){
-        mDevices = devices;
+    public DataContext() {
+        mDevices = new ArrayList<Device>();
+        mLocation = new ArrayList<Location>();
+        mNotifications = new ArrayList<Notification>();
+        mProfiles =new ArrayList<Profile>();
     }
 
     public void addNotifications(List<Notification> notifications){
-        if(mNotifications == null || mNotifications.isEmpty()){
-            mNotifications = notifications;
+        Timber.v("Add " + notifications.size() + " notifications");
+        if(mNotifications.isEmpty()){
+            mNotifications.addAll(notifications);
         } else {
             for(Notification notification : notifications){
                 final int i = mNotifications.indexOf(notification);
@@ -65,11 +61,14 @@ public class DataContext {
                 }
             }
         }
+        Timber.v("Notifications count " + mProfiles.size());
+        Timber.v("---------------------------");
     }
 
     public void addLocations(List<Location> locations) {
-        if(mLocation == null || mLocation.isEmpty()){
-            mLocation = locations;
+        Timber.v("Add " + locations.size() + " locations");
+        if(mLocation.isEmpty()){
+            mLocation.addAll(locations);
         } else {
             for (Location location : locations) {
                 final int i = mLocation.indexOf(location);
@@ -81,12 +80,14 @@ public class DataContext {
                 }
             }
         }
+        Timber.v("Locations count " + mLocation.size());
+        Timber.v("---------------------------");
     }
 
     public void addDevices(List<Device> devices) {
-        Timber.v("add " + devices.size() + " devices");
-        if(mDevices == null || mDevices.isEmpty()){
-            mDevices = devices;
+        Timber.v("Add " + devices.size() + " devices");
+        if(mDevices.isEmpty()){
+            mDevices.addAll(devices);
         } else {
             for (Device device : devices) {
                 final int i = mDevices.indexOf(device);
@@ -98,7 +99,26 @@ public class DataContext {
                 }
             }
         }
-        Timber.v("devices count " + mDevices.size());
+        Timber.v("Devices count " + mDevices.size());
+        Timber.v("---------------------------");
+    }
+
+    public void addProfiles(List<Profile> profiles) {
+        Timber.v("Add " + profiles.size() + " profiles");
+        if (mProfiles.isEmpty()){
+            mProfiles.addAll(profiles);
+        } else {
+            for (Profile profile : profiles) {
+                final int i = mProfiles.indexOf(profile);
+                if (i >= 0) {
+                    mProfiles.remove(i);
+                    mProfiles.add(i, profile);
+                } else {
+                    mProfiles.add(profile);
+                }
+            }
+        }
+        Timber.v("Profiles count " + mProfiles.size());
         Timber.v("---------------------------");
     }
 
@@ -146,15 +166,10 @@ public class DataContext {
 
 
     public List<Notification> getNotifications(){
-        if(mNotifications == null)
-            mNotifications = new ArrayList<Notification>();
         return mNotifications;
     }
 
     public List<Device> getDevicesWithType(String deviceType){
-        if(mDevices == null)
-            mDevices = new ArrayList<Device>();
-
         if(deviceType.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
@@ -167,9 +182,6 @@ public class DataContext {
     }
 
     public List<Device> getDevicesWithTag(String deviceTag){
-        if(mDevices == null)
-            mDevices = new ArrayList<Device>();
-
         if(deviceTag.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
@@ -182,9 +194,6 @@ public class DataContext {
     }
 
     public List<Device> getDevicesForLocation(String location){
-        if(mDevices == null)
-            mDevices = new ArrayList<Device>();
-
         if(location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
@@ -197,9 +206,6 @@ public class DataContext {
     }
 
     public List<Device> getDashboardDevices(){
-        if(mDevices == null)
-            mDevices = new ArrayList<Device>();
-
         final Profile profile = getActiveProfile();
         final List<Device> result = new ArrayList<Device>();
 
@@ -216,25 +222,7 @@ public class DataContext {
         return result;
     }
 
-    public void addProfiles(List<Profile> profiles) {
-        if (mProfiles == null || mProfiles.isEmpty()){
-            mProfiles = profiles;
-        } else {
-            for (Profile profile : profiles) {
-                final int i = mProfiles.indexOf(profile);
-                if (i >= 0) {
-                    mProfiles.remove(i);
-                    mProfiles.add(i, profile);
-                } else {
-                    mProfiles.add(profile);
-                }
-            }
-        }
-    }
-
     public List<Profile> getProfiles(){
-        if(mProfiles == null)
-            mProfiles = new ArrayList<Profile>();
         return mProfiles;
     }
 
@@ -260,6 +248,7 @@ public class DataContext {
     }
 
     public void clear(){
+        Timber.v("Clear data context");
         clearList(mDevices);
         clearList(mLocation);
         clearList(mNotifications);
@@ -267,7 +256,7 @@ public class DataContext {
     }
 
     private void clearList(List list){
-        if(list != null && !list.isEmpty())
+        if(list != null)
             list.clear();
     }
 

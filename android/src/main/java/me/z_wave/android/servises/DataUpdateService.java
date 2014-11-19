@@ -38,9 +38,10 @@ public class DataUpdateService extends BaseUpdateDataService {
         try{
             final DevicesStateResponse devicesStateResponse = apiClient.getDevices(mLastUpdateTime);
             mLastUpdateTime = devicesStateResponse.data.updateTime;
-            dataContext.addDevices(devicesStateResponse.data.devices);
-            if(devicesStateResponse.data.devices.size() > 0)
+            if(devicesStateResponse.data.devices.size() > 0) {
+                dataContext.addDevices(devicesStateResponse.data.devices);
                 bus.post(new OnDataUpdatedEvent(devicesStateResponse.data.devices));
+            }
         } catch (RetrofitError e){
             e.printStackTrace();
         }

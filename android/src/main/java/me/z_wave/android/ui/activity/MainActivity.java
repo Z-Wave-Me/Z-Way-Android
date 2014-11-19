@@ -146,16 +146,12 @@ public class MainActivity extends BaseActivity implements FragmentManager.OnBack
         if (!isOnline) {
             final ConnectionLoseDialog dialog = new ConnectionLoseDialog();
             dialog.show(getFragmentManager(), ConnectionLoseDialog.class.getSimpleName());
-//            stopService(new Intent(this, NotificationService.class));
-//            mBindHelper.onUnbind(this);
         } else {
             final Fragment fragment = getFragmentManager().findFragmentByTag(
                     ConnectionLoseDialog.class.getSimpleName());
             if (fragment != null && fragment instanceof ConnectionLoseDialog) {
                 ((ConnectionLoseDialog) fragment).dismiss();
             }
-            final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getApplicationContext());
-            AuthService.login(this, provider.getActiveLocalProfile());
         }
     }
 

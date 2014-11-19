@@ -73,9 +73,9 @@ public class LocationService extends Service {
         databaseDataProvider = DatabaseDataProvider.getInstance(getApplicationContext());
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 100, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 100, listener);
         if (locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 100, listener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, listener);
         return super.onStartCommand(intent, flags, startId);
     }
 

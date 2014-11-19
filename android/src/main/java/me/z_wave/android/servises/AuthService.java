@@ -152,41 +152,33 @@ public class AuthService extends IntentService {
 
 
     private void connectToOutdoorService(RestAdapter adapter, final LocalProfile profile) {
+        Timber.v("Connect to outdoor, try " + (mAuthTriesCounter + 1));
         if(mCancelEvent) {
             return;
         }
 
+        mAuthTriesCounter++;
         try {
             adapter.create(ServerStatusRequest.class).getServerStatus();
             onAuthSuccess(profile, LoginType.OUTDOOR);
         } catch (RetrofitError e) {
             if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
                 final RestAdapter newAdaptor = prepareRestAdaptor(profile, true);
+                mAuthTriesCounter = 0; //we should try to login with find.z-wave 3 times
                 authWithUserCredentials(newAdaptor, profile);
             } else {
-                onAuthFail(profile, LoginType.OUTDOOR, e.isNetworkError());
+                if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
+                    mAuthTriesCounter = 0;
+                    onAuthFail(profile, LoginType.OUTDOOR, e.isNetworkError());
+                } else {
+                    connectToOutdoorService(adapter, profile);
+                }
             }
-        }
-    }
-
-    private void checkCookie(RestAdapter adapter,
-                             final LocalProfile profile) {
-        final CookieStore cookieStore = mClient.getCookieStore();
-        if (cookieStore == null || cookieStore.getCookies().size() == 0 ||
-                TextUtils.isEmpty(cookieStore.getCookies().get(0).getValue())) {
-            if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
-                mAuthTriesCounter = 0;
-                onAuthFail(profile, LoginType.WITH_CREDENTIALS, false);
-            } else {
-                authWithUserCredentials(adapter, profile);
-            }
-        } else {
-            mCookie = mClient.getCookieStore().getCookies().get(0);
-            onAuthSuccess(profile, LoginType.WITH_CREDENTIALS);
         }
     }
 
     private void authWithUserCredentials(RestAdapter adapter, final LocalProfile profile) {
+        Timber.v("Auth with find.z-wave, try " + (mAuthTriesCounter + 1));
         if(mCancelEvent) {
             return;
         }
@@ -216,7 +208,25 @@ public class AuthService extends IntentService {
         }
     }
 
+    private void checkCookie(RestAdapter adapter,
+                             final LocalProfile profile) {
+        final CookieStore cookieStore = mClient.getCookieStore();
+        if (cookieStore == null || cookieStore.getCookies().size() == 0 ||
+                TextUtils.isEmpty(cookieStore.getCookies().get(0).getValue())) {
+            if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
+                mAuthTriesCounter = 0;
+                onAuthFail(profile, LoginType.WITH_CREDENTIALS, false);
+            } else {
+                authWithUserCredentials(adapter, profile);
+            }
+        } else {
+            mCookie = mClient.getCookieStore().getCookies().get(0);
+            onAuthSuccess(profile, LoginType.WITH_CREDENTIALS);
+        }
+    }
+
     private void onAuthSuccess(LocalProfile profile, LoginType loginType) {
+        Timber.v("Auth success!");
         if(mCancelEvent) {
             return;
         }
@@ -244,6 +254,7 @@ public class AuthService extends IntentService {
     }
 
     private void onAuthFail(LocalProfile profile, LoginType loginType, boolean isNetworkError) {
+        Timber.v("Auth fail");
         bus.post(new AuthEvent.Fail(profile, loginType, isNetworkError));
     }
 
