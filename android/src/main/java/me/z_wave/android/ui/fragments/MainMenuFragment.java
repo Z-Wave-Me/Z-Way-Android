@@ -114,6 +114,7 @@ public class MainMenuFragment extends BaseFragment {
 
         final View dashboardView = getView().findViewById(R.id.nav_drawer_dashboard);
         setSelectedView(dashboardView);
+        //TODO produce ConcurrentModificationException exception! need find the reason!
         prepareRoomsList();
         prepareTypesList();
         prepareTagsList();
@@ -197,7 +198,7 @@ public class MainMenuFragment extends BaseFragment {
         mSelectedView.setSelected(true);
     }
 
-    private void prepareRoomsList(){
+    private synchronized void prepareRoomsList(){
         final List<Location> rooms = dataContext.getLocations();
         roomsGroupView.setVisibility(rooms.isEmpty() ? View.GONE : View.VISIBLE);
         if(!rooms.isEmpty()) {
@@ -210,7 +211,7 @@ public class MainMenuFragment extends BaseFragment {
         }
     }
 
-    private void prepareTypesList(){
+    private synchronized void prepareTypesList(){
         final List<String> types = dataContext.getDeviceTypes();
         typesGroupView.setVisibility(types.isEmpty() ? View.GONE : View.VISIBLE);
         if(!types.isEmpty()) {
@@ -223,7 +224,7 @@ public class MainMenuFragment extends BaseFragment {
         }
     }
 
-    private void prepareTagsList(){
+    private synchronized void prepareTagsList(){
         final List<String> tags = dataContext.getDeviceTags();
         tagsGroupView.setVisibility(tags.isEmpty() ? View.GONE : View.VISIBLE);
         if(!tags.isEmpty()) {

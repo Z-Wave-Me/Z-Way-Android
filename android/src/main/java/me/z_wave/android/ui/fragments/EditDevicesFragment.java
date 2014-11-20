@@ -89,26 +89,27 @@ public class EditDevicesFragment extends BaseListFragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_dashboard_done:
+                //TODO hotfix, need find the reason of nullpointer in profile.positions = mAdapter.getDashboardDevicesIds()
                 final Profile profile = dataContext.getActiveProfile();
-                profile.positions = mAdapter.getDashboardDevicesIds();
+                if(profile != null && mAdapter != null) {
+                    profile.positions = mAdapter.getDashboardDevicesIds();
+                    bus.post(new ProgressEvent(true, false));
+                    apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+                        @Override
+                        public void onSuccess(List<Profile> result) {
+                            bus.post(new ProgressEvent(false, false));
+                            dataContext.addProfiles(result);
+                            goBack();
+                        }
 
-                bus.post(new ProgressEvent(true, false));
-                apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-                    @Override
-                    public void onSuccess(List<Profile> result) {
-                        bus.post(new ProgressEvent(false, false));
-                        dataContext.addProfiles(result);
-                        goBack();
-                    }
-
-                    @Override
-                    public void onFailure(String request, boolean isNetworkError) {
-                        bus.post(new ProgressEvent(false, false));
-                        //TODO IVAN_PL error show
-                        goBack();
-                    }
-                });
-
+                        @Override
+                        public void onFailure(String request, boolean isNetworkError) {
+                            bus.post(new ProgressEvent(false, false));
+                            //TODO IVAN_PL error show
+                            goBack();
+                        }
+                    });
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

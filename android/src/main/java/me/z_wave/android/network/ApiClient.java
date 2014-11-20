@@ -149,7 +149,6 @@ public class ApiClient {
                 color.r, color.g, color.b);
     }
 
-
     public void moveCameraRight(final Device updatedDevice) {
         mAdaptor.create(UpdateDeviceRequest.class).moveCameraRight(updatedDevice.id);
     }
@@ -210,21 +209,25 @@ public class ApiClient {
     }
 
     public void getNotificationPage(int offset, final ApiCallback<NotificationDataWrapper, String> callback) {
-        mAdaptor.create(NotificationRequest.class).getNotifications(Constants.NOTIFICATIONS_LIMIT,
-                offset, true, new Callback<NotificationResponse>() {
-                    @Override
-                    public void success(NotificationResponse notificationResponse, Response response) {
-                        Timber.v(notificationResponse.toString());
-                        callback.onSuccess(notificationResponse.data);
-                    }
+        if(mAdaptor != null) {
+            mAdaptor.create(NotificationRequest.class).getNotifications(Constants.NOTIFICATIONS_LIMIT,
+                    offset, true, new Callback<NotificationResponse>() {
+                        @Override
+                        public void success(NotificationResponse notificationResponse, Response response) {
+                            Timber.v(notificationResponse.toString());
+                            callback.onSuccess(notificationResponse.data);
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        boolean networkUnreachable = isNetworkUnreachableError(error);
-                        callback.onFailure("", networkUnreachable);
+                        @Override
+                        public void failure(RetrofitError error) {
+                            boolean networkUnreachable = isNetworkUnreachableError(error);
+                            callback.onFailure("", networkUnreachable);
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            callback.onFailure("", false);
+        }
     }
 
     public ProfilesResponse getProfiles() {

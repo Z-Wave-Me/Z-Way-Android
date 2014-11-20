@@ -247,8 +247,8 @@ public class AuthService extends IntentService {
         }
 
         dataContext.clear();
-        dataContext.addProfiles(apiClient.getProfiles().data);
-        dataContext.addLocations(apiClient.getLocations().data);
+        loadProfiles();
+        loadLocation();
         bus.post(new AuthEvent.Success(profile, loginType));
         bus.post(new AccountChangedEvent());
     }
@@ -267,5 +267,21 @@ public class AuthService extends IntentService {
                     ? Constants.DEFAULT_URL : profile.indoorServer;
         }
         return url;
+    }
+
+    private void loadProfiles(){
+        try {
+            dataContext.addProfiles(apiClient.getProfiles().data);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLocation(){
+        try {
+            dataContext.addLocations(apiClient.getLocations().data);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 }

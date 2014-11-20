@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.network.ApiClient;
+import retrofit.RetrofitError;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
@@ -193,54 +194,106 @@ public class UpdateDeviceService extends IntentService {
 
 
     private void updateRgbColor(Device device) {
-        apiClient.updateRGBColor(device);
+        try {
+            apiClient.updateRGBColor(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void updateSwitchState(Device device) {
-        apiClient.updateDevicesState(device);
+        try {
+            apiClient.updateDevicesState(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void updateMode(Device device) {
-        apiClient.updateDevicesMode(device);
+        try {
+            apiClient.updateDevicesMode(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void updateLevel(Device device) {
-        apiClient.updateDevicesLevel(device);
+        try {
+            apiClient.updateDevicesLevel(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void updateToggle(Device device) {
-        apiClient.updateToggle(device);
+        try {
+            apiClient.updateToggle(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void zoomIn(Device device) {
-        apiClient.zoomCameraIn(device);
+        try {
+            apiClient.zoomCameraIn(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void zoomOut(Device device) {
-        apiClient.zoomCameraOut(device);
+        try {
+            apiClient.zoomCameraOut(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void moveCameraLeft(Device device) {
-        apiClient.moveCameraLeft(device);
+        try {
+            apiClient.moveCameraLeft(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void moveCameraRight(Device device) {
-        apiClient.moveCameraRight(device);
+        try {
+            apiClient.moveCameraRight(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void moveCameraUp(Device device) {
-        apiClient.moveCameraUp(device);
+        try {
+            apiClient.moveCameraUp(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void moveCameraDown(Device device) {
-        apiClient.moveCameraDown(device);
+        try {
+            apiClient.moveCameraDown(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void openCamera(Device device) {
-        apiClient.openCamera(device);
+        try {
+            apiClient.openCamera(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 
     private void closeCamera(Device device) {
-        apiClient.closeCamera(device);
+        try {
+            apiClient.closeCamera(device);
+        } catch (RetrofitError e){
+            e.printStackTrace();
+        }
     }
 }
