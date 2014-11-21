@@ -150,8 +150,10 @@ public class NotificationsFragment extends BaseListFragment
 
                 @Override
                 public void onFailure(String request, boolean isNetworkError) {
-                    getListView().removeFooterView(mFooterView);
-                    mLoading = false;
+                    if(isAdded() && isVisible()) {
+                        getListView().removeFooterView(mFooterView);
+                        mLoading = false;
+                    }
                 }
             });
         }
