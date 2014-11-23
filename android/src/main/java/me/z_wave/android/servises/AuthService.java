@@ -66,6 +66,9 @@ public class AuthService extends IntentService {
     private static final String ACTION_LOGIN = "me.z_wave.android.servises.action.LOGIN";
 
     private static final String EXTRA_LOGIN_PROFILE = "me.z_wave.android.servises.extra.PROFILE";
+    private static final String EXTRA_LOGIN_REQUEST_DELAY = "me.z_wave.android.servises.extra.REQUEST_DELAY";
+
+    private static final int DEFAULT_AUTH_REQUEST_DELAY = 10000; //10 sec
 
     @Inject
     ApiClient apiClient;
@@ -78,11 +81,21 @@ public class AuthService extends IntentService {
     private Cookie mCookie;
     private int mAuthTriesCounter;
     private boolean mCancelEvent;
+    private int mDelay = DEFAULT_AUTH_REQUEST_DELAY;
+
+    public static void login(Context context, LocalProfile profile, int requestDelay) {
+        Intent intent = new Intent(context, AuthService.class);
+        intent.setAction(ACTION_LOGIN);
+        intent.putExtra(EXTRA_LOGIN_PROFILE, profile);
+        intent.putExtra(EXTRA_LOGIN_REQUEST_DELAY, requestDelay);
+        context.startService(intent);
+    }
 
     public static void login(Context context, LocalProfile profile) {
         Intent intent = new Intent(context, AuthService.class);
         intent.setAction(ACTION_LOGIN);
         intent.putExtra(EXTRA_LOGIN_PROFILE, profile);
+        intent.putExtra(EXTRA_LOGIN_REQUEST_DELAY, DEFAULT_AUTH_REQUEST_DELAY);
         context.startService(intent);
     }
 
@@ -110,6 +123,8 @@ public class AuthService extends IntentService {
             if (ACTION_LOGIN.equals(action)) {
                 final LocalProfile profile = (LocalProfile) intent
                         .getSerializableExtra(EXTRA_LOGIN_PROFILE);
+                mDelay = intent.getIntExtra(EXTRA_LOGIN_REQUEST_DELAY,
+                        DEFAULT_AUTH_REQUEST_DELAY);
                 handleActionAuth(profile);
             }
         }
@@ -134,7 +149,7 @@ public class AuthService extends IntentService {
     public RestAdapter prepareRestAdaptor(LocalProfile profile, boolean useDefaultUrl) {
         if (profile != null) {
             Timber.v("init ApiClient for %s", profile);
-            mClient = HttpClientHelper.createHttpsClient();
+            mClient = HttpClientHelper.createHttpsClient(mDelay);
             final String url = getServerUrl(profile, useDefaultUrl);
             final Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Boolean.class, new BooleanTypeAdapter())
@@ -152,27 +167,20 @@ public class AuthService extends IntentService {
 
 
     private void connectToOutdoorService(RestAdapter adapter, final LocalProfile profile) {
-        Timber.v("Connect to outdoor, try " + (mAuthTriesCounter + 1));
+        Timber.v("Connect to outdoor...");
         if(mCancelEvent) {
             return;
         }
 
-        mAuthTriesCounter++;
         try {
             adapter.create(ServerStatusRequest.class).getServerStatus();
             onAuthSuccess(profile, LoginType.OUTDOOR);
         } catch (RetrofitError e) {
             if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
                 final RestAdapter newAdaptor = prepareRestAdaptor(profile, true);
-                mAuthTriesCounter = 0; //we should try to login with find.z-wave 3 times
                 authWithUserCredentials(newAdaptor, profile);
             } else {
-                if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
-                    mAuthTriesCounter = 0;
-                    onAuthFail(profile, LoginType.OUTDOOR, e.isNetworkError());
-                } else {
-                    connectToOutdoorService(adapter, profile);
-                }
+                onAuthFail(profile, LoginType.OUTDOOR, e.isNetworkError());
             }
         }
     }

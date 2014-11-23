@@ -24,8 +24,6 @@ package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,22 +32,12 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.LocalProfile;
-import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.database.DatabaseDataProvider;
-import me.z_wave.android.network.ApiClient;
-import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
-import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
-import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.servises.AuthService;
 
 /**
@@ -58,6 +46,7 @@ import me.z_wave.android.servises.AuthService;
 public class SplashFragment extends BaseFragment {
 
     private static final long SPLASH_DISPLAY_LENGTH = 3000;
+    private static final int SPLASH_LOGIN_REQUEST_DELAY = 3000;
 
     private LocalProfile mLocalProfile;
     private boolean mIsAuthFiled = false;
@@ -82,7 +71,7 @@ public class SplashFragment extends BaseFragment {
         if (mIsAuthFiled) {
             bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
         } else {
-            tryConnectToTheServer();
+            tryToConnect();
         }
     }
 
@@ -97,7 +86,7 @@ public class SplashFragment extends BaseFragment {
         onCantConnect();
     }
 
-    private void tryConnectToTheServer() {
+    private void tryToConnect() {
         if (mLocalProfile == null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -106,7 +95,7 @@ public class SplashFragment extends BaseFragment {
                 }
             }, SPLASH_DISPLAY_LENGTH);
         } else {
-            AuthService.login(getActivity(), mLocalProfile);
+            AuthService.login(getActivity(), mLocalProfile, SPLASH_LOGIN_REQUEST_DELAY);
         }
     }
 

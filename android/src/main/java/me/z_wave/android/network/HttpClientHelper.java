@@ -22,6 +22,8 @@
 
 package me.z_wave.android.network;
 
+import android.util.Log;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -42,10 +44,17 @@ import javax.net.ssl.TrustManager;
  */
 public class HttpClientHelper {
 
+    public static final int DEFAULT_DELAY = 30000;
+
     public static DefaultHttpClient createHttpsClient() {
+        return createHttpsClient(DEFAULT_DELAY);
+    }
+
+    public static DefaultHttpClient createHttpsClient(int delay) {
+        final int actualDelay = delay < 0 ? DEFAULT_DELAY : delay;
         try {
             //TODO set default port to 8083
-            final HttpClient client = createDefaultHttpClient();
+            final HttpClient client = createDefaultHttpClient(actualDelay);
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{new ZWaveTrustManager()}, null);
 
@@ -64,10 +73,11 @@ public class HttpClientHelper {
         }
     }
 
-    private static HttpClient createDefaultHttpClient() {
+    private static HttpClient createDefaultHttpClient(int delay) {
+        Log.v("AuthService", "Delay - " + delay);
         final HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters, 60000);
-        HttpConnectionParams.setSoTimeout(httpParameters, 60000);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, delay);
+        HttpConnectionParams.setSoTimeout(httpParameters, delay);
         return new org.apache.http.impl.client.DefaultHttpClient(httpParameters);
     }
 
