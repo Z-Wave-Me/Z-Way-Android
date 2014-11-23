@@ -23,12 +23,21 @@
 package me.z_wave.android.app;
 
 import android.app.Application;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+
+import java.util.HashMap;
+
 import dagger.ObjectGraph;
+import me.z_wave.android.R;
 import timber.log.Timber;
 
-public class ZWayApplication extends Application {
+public class
+        ZWayApplication extends Application {
 
     private ObjectGraph objectGraph;
+    private HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     @Override
     public void onCreate() {
@@ -42,6 +51,15 @@ public class ZWayApplication extends Application {
 
     public void inject(Object object) {
         objectGraph.inject(object);
+    }
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+            final GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            final Tracker t = analytics.newTracker(R.xml.global_tracker);
+            mTrackers.put(trackerId, t);
+        }
+        return mTrackers.get(trackerId);
     }
 
 }

@@ -53,11 +53,15 @@ public class DataContext {
         } else {
             for(Notification notification : notifications){
                 final int i = mNotifications.indexOf(notification);
-                if (i >= 0) {
-                    mNotifications.remove(i);
-                    mNotifications.add(i, notification);
+                if(i < mNotifications.size()) {
+                    if (i >= 0) {
+                        mNotifications.remove(i);
+                        mNotifications.add(i, notification);
+                    } else {
+                        mNotifications.add(notification);
+                    }
                 } else {
-                    mNotifications.add(notification);
+                    //need to detect the reason of error
                 }
             }
         }

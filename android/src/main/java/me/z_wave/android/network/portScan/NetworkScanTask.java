@@ -202,15 +202,8 @@ public class NetworkScanTask extends AsyncTask<Void, String, Void> {
             final String host = addr;
 
             try {
-//                if((new InetSocketAddress(String.valueOf(addr), mPort)).getAddress().isReachable(100)) {
-//                    Log.v(NetworkScanFragment.class.getSimpleName(), addr + ".get() connect success!!!");
-//                    publish(host);
-//                } else {
-//                    Log.v(NetworkScanFragment.class.getSimpleName(), addr + " connect filed");
-//                    publish(null);
-//                }
                 final Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(String.valueOf(addr), mPort), 100);
+                socket.connect(new InetSocketAddress(String.valueOf(addr), mPort), 500);
                 socket.close();
                 Log.v(NetworkScanFragment.class.getSimpleName(), addr + " connect success!!!");
                 publish(host);

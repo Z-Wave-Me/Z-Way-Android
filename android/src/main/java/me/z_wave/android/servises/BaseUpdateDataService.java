@@ -44,7 +44,7 @@ import timber.log.Timber;
  */
 public abstract class BaseUpdateDataService extends Service {
 
-    public static final int UPDAT_TIME = 20000; //15 sec
+    public static final int UPDATE_TIME = 1000; //15 sec
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -110,7 +110,7 @@ public abstract class BaseUpdateDataService extends Service {
             public void run() {
                 update();
             }
-        }, 0, UPDAT_TIME);
+        }, 0, UPDATE_TIME);
     }
 
     private void update() {
