@@ -175,6 +175,7 @@ public class ProfileFragment extends NetworkScanFragment {
         saveEnteredData();
         if (item.getItemId() == R.id.action_done) {
             if (mIsCreateMode) {
+                trackEvent(R.string.category_profiles, R.string.action_add_profile);
                 if (TextUtils.isEmpty(profile.name)) {
                     showToast("Profile name can't be empty");
                 } else {
@@ -185,6 +186,7 @@ public class ProfileFragment extends NetworkScanFragment {
                     AuthService.login(getActivity(), profile);
                 }
             } else {
+                trackEvent(R.string.category_profiles, R.string.action_edit_profile);
                 provider.updateLocalProfile(profile);
                 showToast(R.string.profile_changes_are_saved);
                 bus.post(new ProfileUpdatedEvent());
@@ -226,6 +228,7 @@ public class ProfileFragment extends NetworkScanFragment {
 
     @OnClick(R.id.profile_delete)
     void deleteProfile() {
+        trackEvent(R.string.category_profiles, R.string.action_remove_profile);
         final LocalProfile profile = profileContext.getProfile();
         if (!profile.active) {
             final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());

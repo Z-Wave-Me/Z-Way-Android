@@ -22,6 +22,7 @@
 
 package me.z_wave.android.data;
 
+import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;

@@ -22,8 +22,22 @@
 
 package me.z_wave.android.dataModel;
 
+import me.z_wave.android.R;
+
 public enum Filter {
     LOCATION, TYPE, TAG;
+
+    public int getFilterLabelResId() {
+        switch (this) {
+            case LOCATION:
+                return R.string.label_devices_with_location;
+            case TYPE:
+                return R.string.label_devices_with_type;
+            case TAG:
+                return R.string.label_devices_with_tag;
+        }
+        return 0;
+    }
 
     public static final String DEFAULT_FILTER = "All";
 }

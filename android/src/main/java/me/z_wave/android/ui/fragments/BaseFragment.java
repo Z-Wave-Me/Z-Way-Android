@@ -28,6 +28,11 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import me.z_wave.android.app.TrackerName;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.otto.MainThreadBus;
@@ -87,6 +92,25 @@ public class BaseFragment extends Fragment{
 
     public ActionBar getActionBar(){
         return getActivity().getActionBar();
+    }
+
+    public Tracker getTracker() {
+        return ((ZWayApplication) getActivity().getApplication()).getTracker(TrackerName.BASIC);
+    }
+
+    public void trackEvent(int categoryId, int actionId, int labelId) {
+        getTracker().send(new HitBuilders.EventBuilder()
+                .setCategory(getString(categoryId))
+                .setAction(getString(actionId))
+                .setLabel(getString(labelId))
+                .build());
+    }
+
+    public void trackEvent(int categoryId, int actionId) {
+        getTracker().send(new HitBuilders.EventBuilder()
+                .setCategory(getString(categoryId))
+                .setAction(getString(actionId))
+                .build());
     }
 
     protected void showToast(int stringId) {

@@ -33,8 +33,7 @@ import dagger.ObjectGraph;
 import me.z_wave.android.R;
 import timber.log.Timber;
 
-public class
-        ZWayApplication extends Application {
+public class ZWayApplication extends Application {
 
     private ObjectGraph objectGraph;
     private HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
@@ -53,9 +52,10 @@ public class
         objectGraph.inject(object);
     }
 
-    synchronized Tracker getTracker(TrackerName trackerId) {
+    public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
             final GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            analytics.enableAutoActivityReports(this);
             final Tracker t = analytics.newTracker(R.xml.global_tracker);
             mTrackers.put(trackerId, t);
         }

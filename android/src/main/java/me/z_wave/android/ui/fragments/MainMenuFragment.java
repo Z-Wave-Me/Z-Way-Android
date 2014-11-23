@@ -178,11 +178,13 @@ public class MainMenuFragment extends BaseFragment {
     @OnClick(R.id.nav_drawer_dashboard)
     public void showDashboard(View v){
         changeFragment(v, new DashboardFragment());
+        trackEvent(R.string.category_devices, R.string.action_show_devices, R.string.label_devices_favourite);
     }
 
     @OnClick(R.id.nav_drawer_all_devices)
     public void showAllDevices(View v){
         changeFragment(v, DevicesFragment.newInstance(Filter.TYPE, Filter.DEFAULT_FILTER));
+        trackEvent(R.string.category_devices, R.string.action_show_devices, R.string.label_devices_all);
     }
 
     @OnClick(R.id.nav_drawer_notifications)
@@ -244,6 +246,7 @@ public class MainMenuFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 changeFragment(v, DevicesFragment.newInstance(filter, filterValue));
+                trackEvent(R.string.category_devices, R.string.action_show_devices, filter.getFilterLabelResId());
             }
         });
         return menuItem;

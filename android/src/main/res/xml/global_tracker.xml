@@ -26,7 +26,7 @@
     <integer name="ga_sessionTimeout">300</integer>
 
     <!-- Enable automatic Activity measurement -->
-    <bool name="ga_autoActivityTracking">false</bool>
+    <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- The screen names that will appear in reports -->
     <screenName name="me.z_wave.android.ui.fragments.dashboard.DashboardFragment">
@@ -62,5 +62,5 @@
 
 
     <!--  The following value should be replaced with correct property id. -->
-    <string name="ga_trackingId">UA-XXXXXXX-Y</string>
+    <string name="ga_trackingId">UA-56994558-1</string>
 </resources>

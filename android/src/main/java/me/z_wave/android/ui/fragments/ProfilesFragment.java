@@ -135,6 +135,10 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final int actionResId = isChecked ? R.string.action_enable_change_profile_by_location :
+                R.string.action_disable_change_profile_by_location;
+                trackEvent(R.string.category_locations, actionResId);
+
         final SharedPreferences prefs = getActivity().getSharedPreferences(
                 getActivity().getPackageName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();

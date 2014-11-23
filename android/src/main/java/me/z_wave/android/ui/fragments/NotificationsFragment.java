@@ -107,6 +107,7 @@ public class NotificationsFragment extends BaseListFragment
     }
 
     private void markNotificationAsRedeemed(final Notification notification) {
+        trackEvent(R.string.category_notifications, R.string.action_remove_notification);
         notification.redeemed = true;
         apiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
             @Override
