@@ -19,14 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package me.z_wave.android.app;
 
 import retrofit.RestAdapter;
 
 public class Constants {
 
-    public static final boolean DEBUG_MODE = false;
+    public static final boolean DEBUG_MODE = true;
     public static final RestAdapter.LogLevel API_LOG_LEVEL = DEBUG_MODE ?
             RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
 
@@ -40,7 +39,7 @@ public class Constants {
 
     //TODO remove stub
     public static final String URL_KEY = "url_key";
-    public static final String DEFAULT_URL = "https://find.z-wave.me";//"http://mskoff.z-wave.me:10483";
+    public static final String DEFAULT_URL = "https://find.z-wave.me";
     public static final String DEFAULT_PORT = "8083";
 
 }

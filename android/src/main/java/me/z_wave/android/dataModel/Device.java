@@ -25,6 +25,8 @@ package me.z_wave.android.dataModel;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import com.google.gson.annotations.SerializedName;
+
 import me.z_wave.android.R;
 
 import java.io.Serializable;
@@ -37,6 +39,8 @@ public class Device implements Serializable{
     public List<String> tags;
     public String location;
     public DeviceType deviceType;
+    @SerializedName("permanently_hidden")
+    public boolean permanentlyHidden;
 
 
     @Override

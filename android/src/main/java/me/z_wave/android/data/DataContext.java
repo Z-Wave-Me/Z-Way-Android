@@ -94,10 +94,8 @@ public class DataContext {
 
     public void addDevices(List<Device> devices) {
         Timber.v("Add " + devices.size() + " devices");
-        if (mDevices.isEmpty()) {
-            mDevices.addAll(devices);
-        } else {
-            for (Device device : devices) {
+        for (Device device : devices) {
+            if (!device.permanentlyHidden) {
                 final int i = mDevices.indexOf(device);
                 if (i >= 0) {
                     mDevices.remove(i);
