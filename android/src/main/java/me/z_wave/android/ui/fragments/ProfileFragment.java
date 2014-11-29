@@ -151,14 +151,16 @@ public class ProfileFragment extends NetworkScanFragment {
     }
 
     private void fillPage(LocalProfile profile) {
-        profileName.setText(profile.name);
-        profileUrl.setText(profile.indoorServer);
-        profileLogin.setText(profile.login);
-        profilePassword.setText(profile.password);
+        if(profile != null) {
+            profileName.setText(profile.name);
+            profileUrl.setText(profile.indoorServer);
+            profileLogin.setText(profile.login);
+            profilePassword.setText(profile.password);
 
-        location.setVisibility(TextUtils.isEmpty(profile.address) ? View.GONE : View.VISIBLE);
-        if (!TextUtils.isEmpty(profile.address)) {
-            location.setText(profile.address);
+            location.setVisibility(TextUtils.isEmpty(profile.address) ? View.GONE : View.VISIBLE);
+            if (!TextUtils.isEmpty(profile.address)) {
+                location.setText(profile.address);
+            }
         }
     }
 

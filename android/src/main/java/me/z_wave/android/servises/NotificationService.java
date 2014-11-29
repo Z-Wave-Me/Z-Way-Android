@@ -39,7 +39,16 @@ import retrofit.RetrofitError;
 import timber.log.Timber;
 
 public class NotificationService extends BaseUpdateDataService {
+
+    private static final int UPDATE_TIME_PERIOD = 60000; //1 min
+
     private long mLastUpdateTime;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        setUpdateTime(UPDATE_TIME_PERIOD);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

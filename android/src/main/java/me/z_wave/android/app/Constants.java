@@ -26,7 +26,7 @@ import retrofit.RestAdapter;
 
 public class Constants {
 
-    public static final boolean DEBUG_MODE = true;
+    public static final boolean DEBUG_MODE = false;
     public static final RestAdapter.LogLevel API_LOG_LEVEL = DEBUG_MODE ?
             RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE;
 

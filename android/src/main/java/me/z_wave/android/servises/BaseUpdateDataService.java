@@ -58,6 +58,7 @@ public abstract class BaseUpdateDataService extends Service {
     DataContext dataContext;
 
     private Timer mTimer;
+    private int updateTime = UPDATE_TIME;
 
     public abstract void onUpdateData();
     public abstract void onAccountChanged(AccountChangedEvent event);
@@ -110,7 +111,7 @@ public abstract class BaseUpdateDataService extends Service {
             public void run() {
                 update();
             }
-        }, 0, UPDATE_TIME);
+        }, 0, updateTime);
     }
 
     private void update() {
@@ -125,7 +126,13 @@ public abstract class BaseUpdateDataService extends Service {
         thread.start();
     }
 
+    protected void setUpdateTime(int time) {
+        updateTime = time;
+    }
+
+
     public class LocalBinder extends Binder {
     }
+
 
 }

@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,7 @@ public class NotificationsFragment extends BaseListFragment
         apiClient.updateNotifications(notification, new ApiClient.EmptyApiCallback<String>() {
             @Override
             public void onSuccess() {
+                Log.v("R_NOTIFICATION", "success");
             }
 
             @Override
@@ -129,14 +131,15 @@ public class NotificationsFragment extends BaseListFragment
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         boolean loadNext = mNotificationsCount < 0 || (totalItemCount - (firstVisibleItem + visibleItemCount) <= 3);
         boolean moreRows = mNotificationsCount < 0 || getListAdapter().getCount() < mNotificationsCount;
-
         if (!mLoading && moreRows && loadNext) {
-            mLoading = true;
+            Log.v("R_NOTIFICATION", "load page");
+                    mLoading = true;
             getListView().addFooterView(mFooterView, null, false);
             apiClient.getNotificationPage(pageNum, new ApiClient.ApiCallback<NotificationDataWrapper,
                     String>() {
                 @Override
                 public void onSuccess(NotificationDataWrapper result) {
+                    Log.v("R_NOTIFICATION", "load page success");
                     if(isAdded() && isVisible()) {
                         getListView().removeFooterView(mFooterView);
                         mLoading = false;
@@ -152,6 +155,7 @@ public class NotificationsFragment extends BaseListFragment
                 @Override
                 public void onFailure(String request, boolean isNetworkError) {
                     if(isAdded() && isVisible()) {
+                        Log.v("R_NOTIFICATION", "load page fail");
                         getListView().removeFooterView(mFooterView);
                         mLoading = false;
                     }

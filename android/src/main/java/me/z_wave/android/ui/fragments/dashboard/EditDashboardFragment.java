@@ -114,24 +114,25 @@ public class EditDashboardFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.edit_dashboard_done:
                 final Profile profile = dataContext.getActiveProfile();
-                profile.positions = mDevicesIds;
+                if(profile != null) {
+                    profile.positions = mDevicesIds;
+                    bus.post(new ProgressEvent(true, false));
+                    apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
+                        @Override
+                        public void onSuccess(List<Profile> result) {
+                            bus.post(new ProgressEvent(false, false));
+                            dataContext.addProfiles(result);
+                            goBack();
+                        }
 
-                bus.post(new ProgressEvent(true, false));
-                apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
-                    @Override
-                    public void onSuccess(List<Profile> result) {
-                        bus.post(new ProgressEvent(false, false));
-                        dataContext.addProfiles(result);
-                        goBack();
-                    }
-
-                    @Override
-                    public void onFailure(String request, boolean isNetworkError) {
-                        bus.post(new ProgressEvent(false, false));
-                        //TODO IVAN_PL error show
-                        goBack();
-                    }
-                });
+                        @Override
+                        public void onFailure(String request, boolean isNetworkError) {
+                            bus.post(new ProgressEvent(false, false));
+                            //TODO IVAN_PL error show
+                            goBack();
+                        }
+                    });
+                }
 
                 break;
         }

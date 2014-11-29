@@ -78,10 +78,13 @@ public class ChooseLocationFragment extends BaseFragment implements GoogleMap.On
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         }
 
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setOnMapClickListener(this);
-        googleMap.setOnMyLocationChangeListener(this);
-        focusOnLastKnownLocation();
+        //Need to add check on latest google services
+        if(googleMap != null) {
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnMapClickListener(this);
+            googleMap.setOnMyLocationChangeListener(this);
+            focusOnLastKnownLocation();
+        }
     }
 
     @Override

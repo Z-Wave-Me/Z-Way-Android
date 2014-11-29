@@ -22,7 +22,8 @@
 
 package me.z_wave.android.data;
 
-import me.z_wave.android.app.ZWayApplication;
+import android.util.Log;
+
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
 import me.z_wave.android.dataModel.Location;
@@ -44,25 +45,27 @@ public class DataContext {
         mDevices = new ArrayList<Device>();
         mLocation = new ArrayList<Location>();
         mNotifications = new ArrayList<Notification>();
-        mProfiles =new ArrayList<Profile>();
+        mProfiles = new ArrayList<Profile>();
     }
 
-    public void addNotifications(List<Notification> notifications){
+    public void addNotifications(List<Notification> notifications) {
         Timber.v("Add " + notifications.size() + " notifications");
-        if(mNotifications.isEmpty()){
+        if (mNotifications.isEmpty()) {
             mNotifications.addAll(notifications);
         } else {
-            for(Notification notification : notifications){
+            for (Notification notification : notifications) {
                 final int i = mNotifications.indexOf(notification);
-                if(i < mNotifications.size()) {
-                    if (i >= 0) {
+                if (i >= 0) {
+                    try {
+                        Timber.v("remove " + i + " of " + mNotifications.size());
                         mNotifications.remove(i);
                         mNotifications.add(i, notification);
-                    } else {
-                        mNotifications.add(notification);
+                    } catch (IndexOutOfBoundsException e) {
+                        //TODO Need to find the reason of this exception!
+                        e.printStackTrace();
                     }
                 } else {
-                    //need to detect the reason of error
+                    mNotifications.add(notification);
                 }
             }
         }
@@ -72,7 +75,7 @@ public class DataContext {
 
     public void addLocations(List<Location> locations) {
         Timber.v("Add " + locations.size() + " locations");
-        if(mLocation.isEmpty()){
+        if (mLocation.isEmpty()) {
             mLocation.addAll(locations);
         } else {
             for (Location location : locations) {
@@ -91,7 +94,7 @@ public class DataContext {
 
     public void addDevices(List<Device> devices) {
         Timber.v("Add " + devices.size() + " devices");
-        if(mDevices.isEmpty()){
+        if (mDevices.isEmpty()) {
             mDevices.addAll(devices);
         } else {
             for (Device device : devices) {
@@ -110,7 +113,7 @@ public class DataContext {
 
     public void addProfiles(List<Profile> profiles) {
         Timber.v("Add " + profiles.size() + " profiles");
-        if (mProfiles.isEmpty()){
+        if (mProfiles.isEmpty()) {
             mProfiles.addAll(profiles);
         } else {
             for (Profile profile : profiles) {
@@ -129,9 +132,9 @@ public class DataContext {
 
     public List<String> getDeviceTypes() {
         final List<String> result = new ArrayList<String>();
-        if(mDevices != null){
+        if (mDevices != null) {
             for (Device device : mDevices) {
-                if(device != null && device.deviceType != null) {
+                if (device != null && device.deviceType != null) {
                     final String deviceType = device.deviceType.toString();
                     if (!result.contains(deviceType))
                         result.add(deviceType);
@@ -143,7 +146,7 @@ public class DataContext {
 
     public List<String> getDeviceTags() {
         final List<String> result = new ArrayList<String>();
-        if(mDevices != null) {
+        if (mDevices != null) {
             for (Device device : mDevices) {
                 for (String tag : device.tags) {
                     if (!result.contains(tag))
@@ -156,7 +159,7 @@ public class DataContext {
 
     public List<String> getLocationsNames() {
         final List<String> result = new ArrayList<String>();
-        if(mLocation != null){
+        if (mLocation != null) {
             for (Location location : mLocation) {
                 if (!result.contains(location.title))
                     result.add(location.title);
@@ -170,54 +173,54 @@ public class DataContext {
     }
 
 
-    public List<Notification> getNotifications(){
+    public List<Notification> getNotifications() {
         return mNotifications;
     }
 
-    public List<Device> getDevicesWithType(String deviceType){
-        if(deviceType.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+    public List<Device> getDevicesWithType(String deviceType) {
+        if (deviceType.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for(Device device : mDevices){
-            if(device.deviceType.toString().equalsIgnoreCase(deviceType))
+        for (Device device : mDevices) {
+            if (device.deviceType.toString().equalsIgnoreCase(deviceType))
                 result.add(device);
         }
         return result;
     }
 
-    public List<Device> getDevicesWithTag(String deviceTag){
-        if(deviceTag.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+    public List<Device> getDevicesWithTag(String deviceTag) {
+        if (deviceTag.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for(Device device : mDevices){
-            if(device.tags.contains(deviceTag))
+        for (Device device : mDevices) {
+            if (device.tags.contains(deviceTag))
                 result.add(device);
         }
         return result;
     }
 
-    public List<Device> getDevicesForLocation(String location){
-        if(location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
+    public List<Device> getDevicesForLocation(String location) {
+        if (location.equalsIgnoreCase(Filter.DEFAULT_FILTER))
             return mDevices;
 
         final ArrayList<Device> result = new ArrayList<Device>();
-        for(Device device : mDevices){
-            if(device.location != null &&  device.location.equalsIgnoreCase(location))
+        for (Device device : mDevices) {
+            if (device.location != null && device.location.equalsIgnoreCase(location))
                 result.add(device);
         }
         return result;
     }
 
-    public List<Device> getDashboardDevices(){
+    public List<Device> getDashboardDevices() {
         final Profile profile = getActiveProfile();
         final List<Device> result = new ArrayList<Device>();
 
-        if(profile != null && profile.positions != null && mDevices != null){
-            for(String position : profile.positions) {
-                for(Device device : mDevices){
-                    if(device.id.equals(position)){
+        if (profile != null && profile.positions != null && mDevices != null) {
+            for (String position : profile.positions) {
+                for (Device device : mDevices) {
+                    if (device.id.equals(position)) {
                         result.add(device);
                         break;
                     }
@@ -227,22 +230,22 @@ public class DataContext {
         return result;
     }
 
-    public List<Profile> getProfiles(){
+    public List<Profile> getProfiles() {
         return mProfiles;
     }
 
-    public Profile getProfileWithId(int id){
-        if(mProfiles != null){
-            for(Profile profile : mProfiles){
-                if(profile.id == id)
+    public Profile getProfileWithId(int id) {
+        if (mProfiles != null) {
+            for (Profile profile : mProfiles) {
+                if (profile.id == id)
                     return profile;
             }
         }
         return null;
     }
 
-    public Profile getActiveProfile(){
-        if(mProfiles != null && mProfiles.size() > 0){
+    public Profile getActiveProfile() {
+        if (mProfiles != null && mProfiles.size() > 0) {
             return mProfiles.get(0);
 //            for(Profile profile : mProfiles){
 //                if(profile.active)
@@ -252,7 +255,7 @@ public class DataContext {
         return null;
     }
 
-    public void clear(){
+    public void clear() {
         Timber.v("Clear data context");
         clearList(mDevices);
         clearList(mLocation);
@@ -260,8 +263,8 @@ public class DataContext {
         clearList(mProfiles);
     }
 
-    private void clearList(List list){
-        if(list != null)
+    private void clearList(List list) {
+        if (list != null)
             list.clear();
     }
 
