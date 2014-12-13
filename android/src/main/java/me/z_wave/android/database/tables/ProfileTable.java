@@ -45,6 +45,7 @@ public class ProfileTable {
     public static final String P_LATITUDE = "PLatitude";
     public static final String P_ADDRESS = "PAddress";
     public static final String P_ACTIVE = "PActive";
+    public static final String P_THEME = "PTheme";
 
     private static final String SQL_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
             + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -57,6 +58,7 @@ public class ProfileTable {
             + P_LATITUDE + " REAL,"
             + P_ADDRESS + " TEXT,"
             + P_ACTIVE + " TEXT,"
+            + P_THEME + " TEXT,"
             + "UNIQUE (" + BaseColumns._ID + "," + P_SERVER_ID + ") ON CONFLICT REPLACE)";
 
     public static void createTable(SQLiteDatabase database){
@@ -64,7 +66,7 @@ public class ProfileTable {
     }
 
     public static void removeTable(SQLiteDatabase database){
-        database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        database.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME + "'");
     }
 
     public static ContentValues createContentValues(LocalProfile profile) {
@@ -78,6 +80,7 @@ public class ProfileTable {
         values.put(P_LATITUDE, profile.latitude);
         values.put(P_ADDRESS, profile.address);
         values.put(P_ACTIVE, profile.active ? 1 : 0);
+        values.put(P_THEME, profile.theme.ordinal());
         return values;
     }
 

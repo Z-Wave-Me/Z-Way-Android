@@ -72,8 +72,7 @@ public class SplashFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (mIsAuthFiled) {
-            final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
-            bus.post(new StartActivityEvent(intent));
+            startProfileActivity();
         } else {
             tryToConnect();
         }
@@ -95,8 +94,7 @@ public class SplashFragment extends BaseFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
-                    bus.post(new StartActivityEvent(intent));
+                    startProfileActivity();
                 }
             }, SPLASH_DISPLAY_LENGTH);
         } else {
@@ -107,8 +105,7 @@ public class SplashFragment extends BaseFragment {
     private void onCantConnect() {
         mIsAuthFiled = true;
         unselectActiveProfile();
-        final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
-        bus.post(new StartActivityEvent(intent));
+        startProfileActivity();
     }
 
     private void unselectActiveProfile() {
@@ -119,4 +116,12 @@ public class SplashFragment extends BaseFragment {
             provider.updateLocalProfile(unselectedProfile);
         }
     }
+
+    private void startProfileActivity() {
+        final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+        intent.putExtra(ProfilesActivity.KEY_FROM_SPLASH, true);
+        bus.post(new StartActivityEvent(intent));
+    }
+
+
 }

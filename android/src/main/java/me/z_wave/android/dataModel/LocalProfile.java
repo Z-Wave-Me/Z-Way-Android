@@ -45,6 +45,7 @@ public class LocalProfile implements Serializable {
     public double latitude;
     public double longitude;
     public boolean active;
+    public Theme theme;
 
     public LocalProfile() {
     }
@@ -60,6 +61,9 @@ public class LocalProfile implements Serializable {
         longitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LONGITUDE));
         address = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ADDRESS));
         active = cursor.getInt(cursor.getColumnIndex(ProfileTable.P_ACTIVE)) == 1;
+
+        final int themeColumnIndex = cursor.getColumnIndex(ProfileTable.P_THEME);
+        theme = themeColumnIndex >= 0 ? Theme.values()[cursor.getInt(themeColumnIndex)] : Theme.DEFAULT;
     }
 
 }

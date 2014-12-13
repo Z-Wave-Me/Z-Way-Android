@@ -87,6 +87,7 @@ public class StartActivity extends BaseActivity {
     @Subscribe
     public void onStartActivity(StartActivityEvent event) {
         startActivity(event.intent);
+        finish();
     }
 
 }

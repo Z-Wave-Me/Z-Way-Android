@@ -166,6 +166,13 @@ public class ProfileFragment extends NetworkScanFragment {
             profileLogin.setText(profile.login);
             profilePassword.setText(profile.password);
 
+            if(profile.theme != null) {
+                themeName.setText(profile.theme.getThemeTitle(getActivity()));
+                final int color = getResources().getColor(profile.theme.getThemeColorId());
+                themeColor.setBackgroundColor(color);
+
+            }
+
             location.setVisibility(TextUtils.isEmpty(profile.address) ? View.GONE : View.VISIBLE);
             if (!TextUtils.isEmpty(profile.address)) {
                 location.setText(profile.address);
@@ -182,8 +189,8 @@ public class ProfileFragment extends NetworkScanFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
-        final LocalProfile profile = profileContext.getProfile();
         saveEnteredData();
+        final LocalProfile profile = profileContext.getProfile();
         if (item.getItemId() == R.id.action_done) {
             if (mIsCreateMode) {
                 trackEvent(R.string.category_profiles, R.string.action_add_profile);
@@ -271,7 +278,8 @@ public class ProfileFragment extends NetworkScanFragment {
                 themeName.setText(theme.getThemeTitle(getActivity()));
                 themeColor.setBackgroundColor(color);
 
-                //need to handle
+                final LocalProfile profile = profileContext.getProfile();
+                profile.theme = theme;
             }
         };
         bus.post(new ShowDialogEvent(dialog));

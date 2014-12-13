@@ -22,11 +22,13 @@
 
 package me.z_wave.android.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
+import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
@@ -40,13 +42,18 @@ import me.z_wave.android.ui.fragments.ProfilesFragment;
  */
 public class ProfilesActivity extends BaseActivity {
 
+    public static final String KEY_FROM_SPLASH = "key_from_splash";
+
+    private boolean isFromSplash;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_base);
         if (savedInstanceState == null)
             commitFragment(new ProfilesFragment(), false);
+        isFromSplash = getIntent().getBooleanExtra(KEY_FROM_SPLASH, false);
     }
 
     @Subscribe
@@ -62,6 +69,15 @@ public class ProfilesActivity extends BaseActivity {
     @Subscribe
     public void showAttentionDialog(ShowAttentionDialogEvent event) {
         super.showAttentionDialog(event);
+    }
+
+    @Subscribe
+    public void onAccountChanged(AccountChangedEvent event){
+        if(isFromSplash) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Subscribe
