@@ -22,6 +22,7 @@
 
 package me.z_wave.android.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -38,7 +39,9 @@ import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.servises.AuthService;
+import me.z_wave.android.ui.activity.ProfilesActivity;
 
 /**
  * Created by Ivan PL on 08.07.2014.
@@ -69,7 +72,8 @@ public class SplashFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (mIsAuthFiled) {
-            bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+            final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+            bus.post(new StartActivityEvent(intent));
         } else {
             tryToConnect();
         }
@@ -91,7 +95,8 @@ public class SplashFragment extends BaseFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+                    final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+                    bus.post(new StartActivityEvent(intent));
                 }
             }, SPLASH_DISPLAY_LENGTH);
         } else {
@@ -102,7 +107,8 @@ public class SplashFragment extends BaseFragment {
     private void onCantConnect() {
         mIsAuthFiled = true;
         unselectActiveProfile();
-        bus.post(new CommitFragmentEvent(new ProfilesFragment(), false));
+        final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+        bus.post(new StartActivityEvent(intent));
     }
 
     private void unselectActiveProfile() {

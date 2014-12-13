@@ -3,7 +3,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 22.06.14 19:11.
+  ~ Created by Ivan Platonov on 07.12.14 16:07.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -22,11 +22,11 @@
   ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/profiles_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/profiles_bg"
-        android:divider="@color/divider_color"
-        android:dividerHeight="1dp"
-        android:drawSelectorOnTop="true"/>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@color/theme_4_selector_color"/>
+    <item android:state_selected="true"
+        android:drawable="@color/theme_4_selector_color"/>
+    <item android:drawable="@android:color/transparent"/>
+
+</selector>

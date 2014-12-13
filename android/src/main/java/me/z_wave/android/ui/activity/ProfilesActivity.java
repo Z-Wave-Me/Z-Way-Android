@@ -1,7 +1,7 @@
 /*
  * Z-Way for Android is a UI for Z-Way server
  *
- * Created by Ivan Platonov on 08.07.14 10:21.
+ * Created by Ivan Platonov on 07.12.14 19:06.
  * Copyright (c) 2014 Z-Wave.Me
  *
  * All rights reserved
@@ -22,55 +22,50 @@
 
 package me.z_wave.android.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+
 import com.squareup.otto.Subscribe;
 
 import me.z_wave.android.R;
-import me.z_wave.android.otto.events.AccountChangedEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.otto.events.StartActivityEvent;
-import me.z_wave.android.ui.fragments.SplashFragment;
+import me.z_wave.android.ui.fragments.ProfilesFragment;
 
 /**
- * Created by Ivan PL on 08.07.2014.
+ * Created by Ivan Pl on 07.12.2014.
  */
-public class StartActivity extends BaseActivity {
+public class ProfilesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(getScreenOrientationOption());
-        setContentView(R.layout.activity_base);
-
-        if(savedInstanceState == null)
-            commitFragment(new SplashFragment(), false);
-
+        setContentView(R.layout.activity_main);
+        if (savedInstanceState == null)
+            commitFragment(new ProfilesFragment(), false);
     }
 
     @Subscribe
-    public void onCommitFragment(CommitFragmentEvent event){
+    public void onCommitFragment(CommitFragmentEvent event) {
         commitFragment(event.fragment, event.addToBackStack);
     }
 
     @Subscribe
-    public void onAccountChanged(AccountChangedEvent event){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+    public void onStartActivity(StartActivityEvent event) {
+        startActivity(event.intent);
     }
 
     @Subscribe
-    public void showAttentionDialog(ShowAttentionDialogEvent event){
+    public void showAttentionDialog(ShowAttentionDialogEvent event) {
         super.showAttentionDialog(event);
     }
 
     @Subscribe
-    public void onShowHideProgress(ProgressEvent event){
+    public void onShowHideProgress(ProgressEvent event) {
         super.onShowHideProgress(event);
     }
 
@@ -82,11 +77,6 @@ public class StartActivity extends BaseActivity {
     @Subscribe
     public void showDialog(ShowDialogEvent event) {
         event.dialogFragment.show(getFragmentManager(), "Dialog");
-    }
-
-    @Subscribe
-    public void onStartActivity(StartActivityEvent event) {
-        startActivity(event.intent);
     }
 
 }

@@ -23,9 +23,35 @@
 
 <resources>
 
-    <style name="ZWayAppTheme" parent="android:Theme.Holo.Light">
+    <style name="ZWayAppBaseTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarTabStyle">@style/ZWayTabsStyle</item>
         <item name="android:textViewStyle">@style/ZWayTextViewStyle</item>
+        <item name="navDrawerItemStyle">@style/NavDrawerItem</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+    </style>
+
+    <style name="ZWayAppTheme1" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style1</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style1</item>
+        <item name="android:listViewStyle">@style/ListView.Style1</item>
+    </style>
+
+    <style name="ZWayAppTheme2" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style2</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style2</item>
+        <item name="android:listViewStyle">@style/ListView.Style2</item>
+    </style>
+
+    <style name="ZWayAppTheme3" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style3</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style3</item>
+        <item name="android:listViewStyle">@style/ListView.Style3</item>
+    </style>
+
+    <style name="ZWayAppTheme4" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style4</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style4</item>
+        <item name="android:listViewStyle">@style/ListView.Style4</item>
     </style>
 
 </resources>

@@ -38,6 +38,7 @@ import me.z_wave.android.servises.NotificationService;
 import me.z_wave.android.servises.UpdateDeviceService;
 import me.z_wave.android.ui.activity.CameraActivity;
 import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.activity.ProfilesActivity;
 import me.z_wave.android.ui.activity.StartActivity;
 import me.z_wave.android.ui.fragments.*;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
@@ -49,8 +50,8 @@ import javax.inject.Singleton;
         injects = {
                 MainActivity.class,
                 StartActivity.class,
+                ProfilesActivity.class,
                 DashboardFragment.class,
-                FiltersFragment.class,
                 NotificationsFragment.class,
                 ProfilesFragment.class,
                 EditProfilesFragment.class,

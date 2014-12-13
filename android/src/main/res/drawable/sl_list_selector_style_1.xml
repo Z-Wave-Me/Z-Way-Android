@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 02.06.14 0:01.
+  ~ Created by Ivan Platonov on 07.12.14 15:49.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -22,6 +23,10 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true"  android:drawable="@drawable/bg_switch_focused" />
-    <item                               android:drawable="@drawable/bg_switch" />
+    <item android:state_pressed="true"
+        android:drawable="@color/theme_1_selector_color"/>
+    <item android:state_selected="true"
+        android:drawable="@color/theme_1_selector_color"/>
+    <item android:drawable="@android:color/transparent"/>
+
 </selector>

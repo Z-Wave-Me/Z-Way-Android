@@ -49,4 +49,10 @@
         <attr name="swipeDrawableChecked" format="reference"/>
         <attr name="swipeDrawableUnchecked" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="NavDrawerItem"/>
+    <declare-styleable name="NavDrawerItemTheme">
+        <attr name="navDrawerItemStyle" format="reference"/>
+    </declare-styleable>
+
 </resources>

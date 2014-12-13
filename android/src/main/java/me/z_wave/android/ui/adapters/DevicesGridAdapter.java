@@ -165,7 +165,9 @@ public class DevicesGridAdapter extends BaseAdapter {
         final DeviceType deviceType = device.deviceType;
         final boolean isValueVisible = deviceType == DeviceType.SENSOR_BINARY
                 || deviceType == DeviceType.BATTERY
-                || deviceType == DeviceType.SENSOR_MULTILEVEL;
+                || deviceType == DeviceType.SENSOR_MULTILEVEL
+                || deviceType == DeviceType.SWITCH_MULTILEVEL
+                || deviceType == DeviceType.THERMOSTAT;
 
         changeViewVisibility(holder.value, isValueVisible);
         if(isValueVisible)
@@ -220,7 +222,7 @@ public class DevicesGridAdapter extends BaseAdapter {
         }
     }
 
-    private void prepareSeekBar(ViewHolder holder, final Device device){
+    private void prepareSeekBar(final ViewHolder holder, final Device device){
         final DeviceType deviceType = device.deviceType;
         final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL
                 || deviceType == DeviceType.THERMOSTAT;
@@ -246,7 +248,7 @@ public class DevicesGridAdapter extends BaseAdapter {
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                    holder.value.setText(String.format("%s %s", progress, device.metrics.scaleTitle));
                 }
 
                 @Override

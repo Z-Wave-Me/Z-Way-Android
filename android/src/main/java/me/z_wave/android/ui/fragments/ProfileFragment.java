@@ -52,6 +52,7 @@ import me.z_wave.android.app.Constants;
 import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.ServerStatus;
+import me.z_wave.android.dataModel.Theme;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.AccountChangedEvent;
@@ -60,8 +61,10 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ProfileUpdatedEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
+import me.z_wave.android.otto.events.ShowDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
 import me.z_wave.android.servises.AuthService;
+import me.z_wave.android.ui.dialogs.ChooseThemeDialog;
 
 public class ProfileFragment extends NetworkScanFragment {
 
@@ -92,6 +95,12 @@ public class ProfileFragment extends NetworkScanFragment {
 
     @InjectView(R.id.profile_delete)
     View deleteButton;
+
+    @InjectView(R.id.profile_app_theme_name)
+    TextView themeName;
+
+    @InjectView(R.id.profile_app_theme_color)
+    View themeColor;
 
     @Inject
     ApiClient apiClient;
@@ -251,6 +260,21 @@ public class ProfileFragment extends NetworkScanFragment {
     @OnClick(R.id.scan_network)
     void scanNetwork() {
         startDiscovering();
+    }
+
+    @OnClick(R.id.profile_app_theme)
+    void chooseAppTheme() {
+        final ChooseThemeDialog dialog = new ChooseThemeDialog(){
+            @Override
+            public void onThemeSelected(Theme theme) {
+                final int color = getActivity().getResources().getColor(theme.getThemeColorId());
+                themeName.setText(theme.getThemeTitle(getActivity()));
+                themeColor.setBackgroundColor(color);
+
+                //need to handle
+            }
+        };
+        bus.post(new ShowDialogEvent(dialog));
     }
 
     private String getUrl() {

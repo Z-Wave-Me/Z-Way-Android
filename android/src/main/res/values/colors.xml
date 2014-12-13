@@ -51,4 +51,20 @@
     <color name="divider_light_gray">#ffd0d0d0</color>
     <color name="light_gray">#bcbcbc</color>
 
+    <color name="theme_1_app_color">#002c5a</color>
+    <color name="theme_1_selector_color">#99002c5a</color>
+    <color name="theme_1_ab_color">#96caff</color>
+
+    <color name="theme_2_app_color">#2a3bbb</color>
+    <color name="theme_2_selector_color">#992a3bbb</color>
+    <color name="theme_2_ab_color">#8084a2</color>
+
+    <color name="theme_3_app_color">#770000</color>
+    <color name="theme_3_selector_color">#99770000</color>
+    <color name="theme_3_ab_color">#cf9494</color>
+
+    <color name="theme_4_app_color">#ea3511</color>
+    <color name="theme_4_selector_color">#99ea3511</color>
+    <color name="theme_4_ab_color">#c4aea9</color>
+
 </resources>

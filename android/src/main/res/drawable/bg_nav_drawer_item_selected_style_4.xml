@@ -3,7 +3,7 @@
 <!--
   ~ Z-Way for Android is a UI for Z-Way server
   ~
-  ~ Created by Ivan Platonov on 28.05.14 23:24.
+  ~ Created by Ivan Platonov on 07.12.14 16:07.
   ~ Copyright (c) 2014 Z-Wave.Me
   ~
   ~ All rights reserved
@@ -23,14 +23,22 @@
   -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/divider_color" />
+
+    <item android:left="14dp"
+        android:right="14dp">
+        <shape
+            android:shape="rectangle">
+            <padding android:bottom="1dp"/>
+            <solid android:color="@color/nav_drawer_item_divider_color" />
         </shape>
     </item>
-    <item android:bottom="1dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
+
+        <item android:bottom="1dp">
+            <shape
+                android:shape="rectangle">
+                <padding android:bottom="10dp"/>
+                <solid android:color="@color/theme_4_app_color" />
+            </shape>
+        </item>
+
 </layer-list>

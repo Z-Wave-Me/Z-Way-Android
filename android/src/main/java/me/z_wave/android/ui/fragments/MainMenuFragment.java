@@ -24,6 +24,7 @@ package me.z_wave.android.ui.fragments;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,8 @@ import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.otto.events.OnGetNotificationEvent;
 import me.z_wave.android.otto.events.ProfileUpdatedEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
+import me.z_wave.android.ui.activity.ProfilesActivity;
 import me.z_wave.android.ui.fragments.dashboard.DashboardFragment;
 import timber.log.Timber;
 
@@ -137,7 +140,9 @@ public class MainMenuFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return mDrawerToggle != null ?
+                (mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item))
+                : super.onOptionsItemSelected(item);
     }
 
     @Subscribe
@@ -172,7 +177,8 @@ public class MainMenuFragment extends BaseFragment {
 
     @OnClick(R.id.nav_drawer_profile)
     public void showProfiles(View v){
-        changeFragment(v, new ProfilesFragment());
+        final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+        bus.post(new StartActivityEvent(intent));
     }
 
     @OnClick(R.id.nav_drawer_dashboard)

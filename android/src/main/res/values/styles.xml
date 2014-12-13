@@ -27,8 +27,6 @@
     </style>
 
     <style name="ZWaySwitchStyle">
-        <!--<item name="android:thumb">@drawable/switch_thumb</item>-->
-        <!--<item name="android:track">@drawable/bg_switch_focused</item>-->
         <item name="android:textOff">"Off"</item>
         <item name="android:textOn">"On"</item>
     </style>
@@ -44,41 +42,25 @@
         <item name="android:gravity">center</item>
     </style>
 
+
+
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <!--<item name="android:background">@drawable/actionbar_background</item>-->
+    </style>
+
     <style name="ZWayTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/main_text_color</item>
     </style>
 
-    <style name="FiltersRadioButton">
-        <item name="android:gravity">center</item>
-        <item name="android:button">@null</item>
-        <item name="android:background">@drawable/sl_bg_filter_radio_btn</item>
-        <item name="android:textColor">@drawable/sl_filter_radio_btn_text_selector</item>
-    </style>
-
-    <style name="HermesDialogWindowTitle" parent="android:Widget">
-        <item name="android:maxLines">1</item>
-        <item name="android:scrollHorizontally">true</item>
-        <item name="android:textAppearance">@style/TextAppearance.DialogWindowTitle</item>
-        <item name="android:minHeight">64dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:paddingRight">16dip</item>
-    </style>
-
-    <style name="TextAppearance.DialogWindowTitle" parent="android:Widget">
-        <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/blue_light</item>
-    </style>
-    
     <style name="NavDrawerItem">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/nav_drawer_text_color</item>
-        <item name="android:background">@drawable/sl_drawer_item_selector</item>
         <item name="android:paddingRight">14dp</item>
         <item name="android:paddingLeft">14dp</item>
         <item name="android:paddingBottom">1dp</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/nav_drawer_text_color</item>
+        <item name="android:background">@drawable/sl_drawer_item_selector</item>
     </style>
 
     <style name="NavDrawerCategory">
@@ -92,6 +74,55 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="ListView" parent="android:Widget.ListView">
+    </style>
 
+    <style name="NavDrawerItem.Style1" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_1</item>
+    </style>
+
+    <style name="ActionBar.Style1" parent="ActionBar">
+        <item name="android:background">@color/theme_1_ab_color</item>
+    </style>
+
+    <style name="ListView.Style1" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_1</item>
+    </style>
+
+    <style name="NavDrawerItem.Style2" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_2</item>
+    </style>
+
+    <style name="ActionBar.Style2" parent="ActionBar">
+        <item name="android:background">@color/theme_2_ab_color</item>
+    </style>
+
+    <style name="ListView.Style2" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_2</item>
+    </style>
+
+    <style name="NavDrawerItem.Style3" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_3</item>
+    </style>
+
+    <style name="ActionBar.Style3" parent="ActionBar">
+        <item name="android:background">@color/theme_3_ab_color</item>
+    </style>
+
+    <style name="ListView.Style3" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_3</item>
+    </style>
+
+    <style name="NavDrawerItem.Style4" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_4</item>
+    </style>
+
+    <style name="ActionBar.Style4" parent="ActionBar">
+        <item name="android:background">@color/theme_4_ab_color</item>
+    </style>
+
+    <style name="ListView.Style4" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_4</item>
+    </style>
 
 </resources>

@@ -23,6 +23,7 @@
 package me.z_wave.android.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,9 +48,12 @@ import me.z_wave.android.otto.events.AuthEvent;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowReconnectionProgressEvent;
+import me.z_wave.android.otto.events.StartActivityEvent;
 import me.z_wave.android.otto.events.StartStopLocationListeningEvent;
 import me.z_wave.android.servises.AuthService;
 import me.z_wave.android.servises.LocationService;
+import me.z_wave.android.ui.activity.MainActivity;
+import me.z_wave.android.ui.activity.ProfilesActivity;
 import me.z_wave.android.ui.adapters.ProfilesListAdapter;
 
 public class ProfilesFragment extends BaseFragment implements AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
@@ -76,6 +80,7 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         getActionBar().show();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         inflater.inflate(R.menu.menu_profiles, menu);
         if(mAdapter!= null && mAdapter.getCount() <= 0 ) {
             menu.findItem(R.id.profile_edit).setVisible(false);
@@ -109,6 +114,11 @@ public class ProfilesFragment extends BaseFragment implements AdapterView.OnItem
         mAdapter.clear();
         mAdapter.addAll(provider.getLocalProfiles());
         mAdapter.notifyDataSetChanged();
+
+        final Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        bus.post(new StartActivityEvent(intent));
+        getActivity().finish();
     }
 
     @Subscribe
