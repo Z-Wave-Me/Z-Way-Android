@@ -95,4 +95,17 @@ public class ProfilesActivity extends BaseActivity {
         event.dialogFragment.show(getFragmentManager(), "Dialog");
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!getFragmentManager().popBackStackImmediate()) {
+            if(isFromSplash) {
+                finish();
+            } else {
+                final Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
 }

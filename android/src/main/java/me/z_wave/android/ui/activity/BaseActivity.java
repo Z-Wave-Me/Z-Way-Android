@@ -33,6 +33,10 @@ import com.crittercism.app.Crittercism;
 
 import me.z_wave.android.R;
 import me.z_wave.android.app.ZWayApplication;
+import me.z_wave.android.data.NewProfileContext;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Theme;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.CancelConnectionEvent;
 import me.z_wave.android.otto.events.ProgressEvent;
@@ -52,6 +56,9 @@ public class BaseActivity extends Activity implements AttentionDialogFragment.At
     @Inject
     MainThreadBus bus;
 
+    @Inject
+    NewProfileContext profileContext;
+
     private ProgressDialog mProgressDialog;
     private ReconnectionProgressDialog mReconnectionProgressDialog;
     private boolean mIsDialogVisible = false;
@@ -61,6 +68,12 @@ public class BaseActivity extends Activity implements AttentionDialogFragment.At
         super.onCreate(savedInstanceState);
         Crittercism.initialize(getApplicationContext(), "53ef3abdd478bc401300000a");
         ((ZWayApplication) getApplication()).inject(this);
+
+        final LocalProfile profile = DatabaseDataProvider.getInstance(this).getActiveLocalProfile();
+        if(profile != null) {
+            final Theme theme = profile.theme != null ? profile.theme : Theme.DEFAULT;
+            setTheme(theme.getThemeId());
+        }
     }
 
     @Override
