@@ -33,7 +33,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -41,6 +44,7 @@ import com.squareup.otto.Subscribe;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,6 +55,7 @@ import me.z_wave.android.R;
 import me.z_wave.android.app.Constants;
 import me.z_wave.android.data.NewProfileContext;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.dataModel.ServerStatus;
 import me.z_wave.android.dataModel.Theme;
 import me.z_wave.android.database.DatabaseDataProvider;
@@ -101,6 +106,12 @@ public class ProfileFragment extends NetworkScanFragment {
 
     @InjectView(R.id.profile_app_theme_color)
     View themeColor;
+
+    @InjectView(R.id.profile_server_profile)
+    View serverProfilesContainer;
+
+    @InjectView(R.id.profile_server_profile_spinner)
+    Spinner serverProfilesSpinner;
 
     @Inject
     ApiClient apiClient;
@@ -177,7 +188,43 @@ public class ProfileFragment extends NetworkScanFragment {
             if (!TextUtils.isEmpty(profile.address)) {
                 location.setText(profile.address);
             }
+
+            prepareServerProfilesSpinner(profile);
+        } else {
+            serverProfilesContainer.setVisibility(View.GONE);
         }
+    }
+
+    private void prepareServerProfilesSpinner(final LocalProfile profile) {
+        DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final List<Profile> serverProfiles = provider.getServerProfiles(profile.id);
+        final ArrayAdapter<Profile> adapter = new ArrayAdapter<Profile>(getActivity(),
+                android.R.layout.simple_spinner_item, serverProfiles);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        serverProfilesSpinner.setAdapter(adapter);
+
+        final int selectedProfilePosition = getSelectedServerProfilePosition(
+                serverProfiles, profile.serverId);
+        serverProfilesSpinner.setSelection(selectedProfilePosition);
+        serverProfilesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final Profile serverProfile = adapter.getItem(position);
+                profile.serverId = serverProfile.id;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private int getSelectedServerProfilePosition(List<Profile> profiles, int selectedProfileId) {
+        for(int i = 0; i < profiles.size(); i++) {
+            if(profiles.get(i).id == selectedProfileId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     @Override

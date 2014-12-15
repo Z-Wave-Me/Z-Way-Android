@@ -40,7 +40,9 @@ import javax.inject.Inject;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.ui.adapters.EditDevicesListAdapter;
@@ -89,8 +91,10 @@ public class EditDevicesFragment extends BaseListFragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_dashboard_done:
+                final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+                final LocalProfile localProfile = provider.getActiveLocalProfile();
+                final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
                 //TODO hotfix, need find the reason of nullpointer in profile.positions = mAdapter.getDashboardDevicesIds()
-                final Profile profile = dataContext.getActiveProfile();
                 if(profile != null && mAdapter != null) {
                     profile.positions = mAdapter.getDashboardDevicesIds();
                     bus.post(new ProgressEvent(true, false));
@@ -116,8 +120,10 @@ public class EditDevicesFragment extends BaseListFragment{
     }
 
     private void prepareDevicesView(){
-        mAdapter = new EditDevicesListAdapter(getActivity(), getFilteredDeviceList(),
-                dataContext.getActiveProfile());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        mAdapter = new EditDevicesListAdapter(getActivity(), getFilteredDeviceList(), profile);
         setListAdapter(mAdapter);
     }
 

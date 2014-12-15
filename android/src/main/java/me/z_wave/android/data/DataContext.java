@@ -170,7 +170,6 @@ public class DataContext {
         return mLocation == null ? new ArrayList<Location>() : mLocation;
     }
 
-
     public List<Notification> getNotifications() {
         return mNotifications;
     }
@@ -211,8 +210,7 @@ public class DataContext {
         return result;
     }
 
-    public List<Device> getDashboardDevices() {
-        final Profile profile = getActiveProfile();
+    public List<Device> getDashboardDevices(Profile profile) {
         final List<Device> result = new ArrayList<Device>();
 
         if (profile != null && profile.positions != null && mDevices != null) {
@@ -238,17 +236,6 @@ public class DataContext {
                 if (profile.id == id)
                     return profile;
             }
-        }
-        return null;
-    }
-
-    public Profile getActiveProfile() {
-        if (mProfiles != null && mProfiles.size() > 0) {
-            return mProfiles.get(0);
-//            for(Profile profile : mProfiles){
-//                if(profile.active)
-//                    return profile;
-//            }
         }
         return null;
     }

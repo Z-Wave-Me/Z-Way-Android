@@ -41,7 +41,9 @@ import java.util.List;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
@@ -88,7 +90,9 @@ public class DashboardFragment extends BaseDeviceListFragment {
 
     @Override
     protected void updateDevicesList(List<Device> devices) {
-        final Profile profile = dataContext.getActiveProfile();
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
         if(profile != null) {
             for (Device device : devices) {
                 if (profile.positions.contains(device.id)) {
@@ -103,14 +107,20 @@ public class DashboardFragment extends BaseDeviceListFragment {
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event) {
         Timber.v("Dashboard list updated!");
-        adapter.setProfile(dataContext.getActiveProfile());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        adapter.setProfile(profile);
         updateDevicesList(event.devices);
         adapter.notifyDataSetChanged();
         changeEmptyDashboardMsgVisibility();
     }
 
     private void prepareDevicesView() {
-        final List<Device> device = dataContext.getDashboardDevices();
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        final List<Device> device = dataContext.getDashboardDevices(profile);
         if(device != null) {
             adapter.addAll(device);
         }

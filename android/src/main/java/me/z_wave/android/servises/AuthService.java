@@ -35,12 +35,17 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import me.z_wave.android.app.Constants;
 import me.z_wave.android.app.ZWayApplication;
 import me.z_wave.android.data.DataContext;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Location;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.HttpClientHelper;
@@ -247,7 +252,6 @@ public class AuthService extends IntentService {
         }
 
         profile.active = true;
-        provider.updateLocalProfile(profile);
         if (loginType == LoginType.OUTDOOR) {
             apiClient.init(profile);
         } else {
@@ -255,8 +259,19 @@ public class AuthService extends IntentService {
         }
 
         dataContext.clear();
-        loadProfiles();
-        loadLocation();
+        final List<Profile> serverProfiles = loadProfiles();
+        final List<Location> locations = loadLocation();
+
+        dataContext.addProfiles(serverProfiles);
+        provider.addServerProfiles(serverProfiles, profile.id);
+        dataContext.addLocations(locations);
+
+        if((profile.serverId < 0 || !isServerProfileExist(serverProfiles, profile.serverId))
+                && serverProfiles.size() > 0) {
+            profile.serverId = serverProfiles.get(0).id;
+        }
+
+        provider.updateLocalProfile(profile);
         bus.post(new AuthEvent.Success(profile, loginType));
         bus.post(new AccountChangedEvent());
     }
@@ -277,19 +292,30 @@ public class AuthService extends IntentService {
         return url;
     }
 
-    private void loadProfiles(){
+    private List<Profile> loadProfiles(){
         try {
-            dataContext.addProfiles(apiClient.getProfiles().data);
+            return apiClient.getProfiles().data;
         } catch (RetrofitError e){
             e.printStackTrace();
         }
+        return new ArrayList<Profile>();
     }
 
-    private void loadLocation(){
+    private List<Location> loadLocation(){
         try {
-            dataContext.addLocations(apiClient.getLocations().data);
+            return apiClient.getLocations().data;
         } catch (RetrofitError e){
             e.printStackTrace();
         }
+        return new ArrayList<Location>();
+    }
+
+    private boolean isServerProfileExist(List<Profile> profiles, int serverProfileId) {
+        for(Profile profile : profiles) {
+            if(profile.id == serverProfileId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

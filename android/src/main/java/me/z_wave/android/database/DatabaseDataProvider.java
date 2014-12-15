@@ -26,13 +26,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
+
+import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.tables.ProfileTable;
+import me.z_wave.android.database.tables.ServerProfileTable;
 
 /**
  * Created by Ivan PL on 07.07.2014.
@@ -142,5 +148,60 @@ public class DatabaseDataProvider {
         }
         return nearestProfile;
     }
+
+    public void addServerProfiles(List<Profile> profiles, int localProfileId) {
+        mDatabase.beginTransaction();
+        final SQLiteStatement stmt = mDatabase.compileStatement(ServerProfileTable.SQL_INSERT_BIG_DATA);
+
+        for (Profile profile : profiles) {
+            final String profilePositions = profile.positions != null ?
+                    TextUtils.join(",", profile.positions) : "";
+
+            stmt.bindString(1, Integer.toString(profile.id));
+            stmt.bindString(2, Integer.toString(localProfileId));
+            stmt.bindString(3, profile.name);
+            stmt.bindString(4, profile.description);
+            stmt.bindString(5, profilePositions);
+
+            stmt.executeInsert();
+            stmt.clearBindings();
+        }
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+
+    public List<Profile> getServerProfiles(int localProfileId) {
+        final List<Profile> profiles = new ArrayList<Profile>();
+        final Cursor cursor = mDatabase.query(ServerProfileTable.TABLE_NAME, null,
+                ServerProfileTable.SP_LOCAL_ID +"=" + localProfileId, null, null, null, null);
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    final Profile profile = new Profile(cursor);
+                    profiles.add(profile);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        return profiles;
+    }
+
+    public Profile getServerProfileWithId(int id) {
+        final Cursor cursor = mDatabase.query(ServerProfileTable.TABLE_NAME, null,
+                ServerProfileTable.SP_SERVER_ID + "=" + id, null, null, null, null, "1");
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                final Profile profile = new Profile(cursor);
+                cursor.close();
+                return profile;
+            }
+            cursor.close();
+        }
+        return null;
+    }
+
 
 }

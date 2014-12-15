@@ -36,6 +36,9 @@ import com.squareup.otto.Subscribe;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.Filter;
+import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.CommitFragmentEvent;
 import me.z_wave.android.otto.events.OnDataUpdatedEvent;
 import me.z_wave.android.ui.adapters.DevicesGridAdapter;
@@ -112,7 +115,10 @@ public class DevicesFragment extends BaseDeviceListFragment {
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
-        adapter.setProfile(dataContext.getActiveProfile());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
+        adapter.setProfile(serverProfile);
         updateDevicesList(event.devices);
         adapter.notifyDataSetChanged();
         changeEmptyMsgVisibility();

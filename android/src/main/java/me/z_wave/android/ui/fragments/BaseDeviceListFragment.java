@@ -34,6 +34,7 @@ import java.util.List;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
 import me.z_wave.android.dataModel.LocalProfile;
+import me.z_wave.android.dataModel.Profile;
 import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.otto.events.ShowAttentionDialogEvent;
 import me.z_wave.android.otto.events.ShowDialogEvent;
@@ -55,8 +56,11 @@ public class BaseDeviceListFragment extends BaseFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
         adapter = new DevicesGridAdapter(getActivity(), new ArrayList<Device>(),
-                dataContext.getActiveProfile(), this);
+                serverProfile, this);
     }
 
     @Override

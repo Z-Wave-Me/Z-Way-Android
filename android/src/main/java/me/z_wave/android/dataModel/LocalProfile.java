@@ -48,6 +48,7 @@ public class LocalProfile implements Serializable {
     public Theme theme;
 
     public LocalProfile() {
+        serverId = -1;
     }
 
     public LocalProfile(Cursor cursor) {

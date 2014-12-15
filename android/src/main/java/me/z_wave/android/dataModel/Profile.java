@@ -22,7 +22,14 @@
 
 package me.z_wave.android.dataModel;
 
+import android.database.Cursor;
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import me.z_wave.android.database.tables.ServerProfileTable;
 
 public class Profile {
 
@@ -30,6 +37,22 @@ public class Profile {
     public String name;
     public String description;
     public List<String> positions;
+
+    public Profile() {
+    }
+
+    public Profile(Cursor cursor) {
+        id = cursor.getInt(cursor.getColumnIndex(ServerProfileTable.SP_SERVER_ID));
+        name = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_NAME));
+        description = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_DESCRIPTION));
+        positions = new ArrayList<String>();
+
+        final String savedPositions = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_POSITIONS));
+        if(!TextUtils.isEmpty(savedPositions)) {
+            final String[] positionsArray = savedPositions.split(",");
+            positions = Arrays.asList(positionsArray);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -46,11 +69,7 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "Profile{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", positions=" + positions +
-                '}';
+        return name;
     }
+
 }

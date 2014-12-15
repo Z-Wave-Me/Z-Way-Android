@@ -27,6 +27,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import me.z_wave.android.database.tables.ProfileTable;
+import me.z_wave.android.database.tables.ServerProfileTable;
 
 /**
  * Created by Ivan PL on 07.07.2014.
@@ -34,7 +35,7 @@ import me.z_wave.android.database.tables.ProfileTable;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "z_way.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,12 +43,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        ServerProfileTable.createTable(sqLiteDatabase);
         ProfileTable.createTable(sqLiteDatabase);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         ProfileTable.removeTable(sqLiteDatabase);
+        ServerProfileTable.removeTable(sqLiteDatabase);
         onCreate(sqLiteDatabase);
     }
 

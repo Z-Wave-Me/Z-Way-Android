@@ -68,6 +68,7 @@
     <string name="profile_password">Password</string>
     <string name="profile_credentials_hint">You can get yours at find.zwave.me</string>
     <string name="profile_location">Location</string>
+    <string name="profile_serv_profile">Server Profile</string>
     <string name="profile_connecting">Connecting…</string>
     <string name="profile_delete">Delete Profile</string>
     <string name="profile_connection_established">Connection established</string>

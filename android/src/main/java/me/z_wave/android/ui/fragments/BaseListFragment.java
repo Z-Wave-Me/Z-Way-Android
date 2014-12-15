@@ -83,7 +83,7 @@ public class BaseListFragment extends ListFragment {
     }
 
     public void goBack() {
-        getActivity().onBackPressed();
+          getActivity().onBackPressed();
     }
 
     public ActionBar getActionBar(){

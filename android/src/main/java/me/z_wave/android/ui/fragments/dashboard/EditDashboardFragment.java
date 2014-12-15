@@ -42,7 +42,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
+import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.otto.events.ProgressEvent;
 import me.z_wave.android.ui.adapters.EditDashboardGridAdapter;
@@ -113,7 +115,9 @@ public class EditDashboardFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_dashboard_done:
-                final Profile profile = dataContext.getActiveProfile();
+                final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+                final LocalProfile localProfile = provider.getActiveLocalProfile();
+                final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
                 if(profile != null) {
                     profile.positions = mDevicesIds;
                     bus.post(new ProgressEvent(true, false));
@@ -140,12 +144,18 @@ public class EditDashboardFragment extends BaseFragment implements
     }
 
     private void prepareDevicesView() {
-        mAdapter = new EditDashboardGridAdapter(getActivity(), dataContext.getDashboardDevices());
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        mAdapter = new EditDashboardGridAdapter(getActivity(), dataContext.getDashboardDevices(profile));
         dragSortGridView.setAdapter(mAdapter);
     }
 
     private List<String> getDashboardDevicesIds() {
-        final List<Device> devices = dataContext.getDashboardDevices();
+        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+        final LocalProfile localProfile = provider.getActiveLocalProfile();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        final List<Device> devices = dataContext.getDashboardDevices(profile);
         final List<String> result = new ArrayList<String>();
         for(Device device : devices) {
             result.add(device.id);
