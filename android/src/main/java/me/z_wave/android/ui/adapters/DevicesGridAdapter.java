@@ -229,7 +229,7 @@ public class DevicesGridAdapter extends BaseAdapter {
 
         holder.seekBar.setOnSeekBarChangeListener(null);
         int value = 0;
-        final  int min = Integer.valueOf(device.metrics.min);;
+        final  int min = Integer.valueOf(device.metrics.min);
         final int max = Integer.valueOf(device.metrics.max);
         try {
             value = Integer.valueOf(device.metrics.level);
@@ -241,14 +241,15 @@ public class DevicesGridAdapter extends BaseAdapter {
         holder.seekBar.setMax(max-min);
         if(isSeekBarVisible){
             try {
-                holder.seekBar.setProgress(value);
+                holder.seekBar.setProgress(value - min);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    holder.value.setText(String.format("%s %s", progress, device.metrics.scaleTitle));
+                    holder.value.setText(String.format("%s %s", min + progress,
+                            device.metrics.getScaleTitle()));
                 }
 
                 @Override
@@ -313,18 +314,10 @@ public class DevicesGridAdapter extends BaseAdapter {
         }
     }
 
-
-
     private void changeViewVisibility(View view, boolean isVisible){
         final int visibility = isVisible ? View.VISIBLE : View.GONE;
         view.setVisibility(visibility);
     }
-
-    //тогл - только кнопка
-    //свич ремоут - в последнюю очередь
-    //камера - важно! при клике открывать окно, там 8 кнопок чтобы вертеть камеру зум + оноф;
-    // + окошко. где стримится видео с камеры
-    //свичg rgb - вкл/выкл + колорпиккер
 
     private class ViewHolder{
         public View parent;

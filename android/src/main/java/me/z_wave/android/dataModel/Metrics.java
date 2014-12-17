@@ -22,6 +22,8 @@
 
 package me.z_wave.android.dataModel;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 public class Metrics implements Serializable {
@@ -47,5 +49,9 @@ public class Metrics implements Serializable {
     public Boolean hasDown;
     public Boolean hasOpen;
     public Boolean hasClose;
+
+    public String getScaleTitle() {
+        return !TextUtils.isEmpty(scaleTitle) && !scaleTitle.equals("null") ? scaleTitle : "";
+    }
 
 }
