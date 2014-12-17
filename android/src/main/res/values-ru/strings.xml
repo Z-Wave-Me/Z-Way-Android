@@ -40,7 +40,7 @@
         Вы можете добавить сюда часто используемые устройства\n
         путём смахивания.
     </string>
-    <string name="dashboadr_remove">Убрать из избранного</string>
+    <string name="dashboard_remove">Убрать из избранного</string>
     <string name="dashboard_to_dashboard">В избранное</string>
     <string name="dashboard_done">Готово</string>
 
@@ -61,18 +61,22 @@
 
     <string name="profile_name">Имя</string>
     <string name="profile_indoor_server">Сервер</string>
+    <string name="profile_url">url</string>
+    <string name="profile_http">http://</string>
     <string name="profile_http_hint">Должно выглядеть как 192.168.0.1:8083</string>
     <string name="profile_credentials">Реквизиты для удалённого доступа</string>
     <string name="profile_login">Логин</string>
     <string name="profile_password">Пароль</string>
-    <string name="profile_credentials_hint">Вы можете получить логин и пароль на find.zwave.me</string>
+    <string name="profile_credentials_hint">Вы можете получить логин и пароль на find.z-wave.me</string>
     <string name="profile_location">Местоположение</string>
+    <string name="profile_serv_profile">Профиль сервера</string>
     <string name="profile_connecting">Подключаюсь…</string>
     <string name="profile_delete">Удалить профиль</string>
     <string name="profile_connection_established">Соединение установлено</string>
     <string name="profile_connection_authorized">Авторизация пройдена</string>
     <string name="profile_connection_filed">Не могу подключиться по указанному адресу</string>
     <string name="profile_changes_are_saved">Изменения сохранены.</string>
+    <string name="profile_app_theme_description">Нажмите для выбора цветового оформления</string>
 
     <string name="loading">Загружается…</string>
     <string name="please_wait">Пожалуйста, подождите…</string>
@@ -83,11 +87,11 @@
     <string name="navigation_drawer_close">Закрыть меню навигации</string>
     <string name="all_devices">Все устройства</string>
 
-    <string name="profile_changed">Активный профиль изменен</string>
-    <string name="profile_changed_to_desc">Активный профиль был изменен на %s</string>
-
     <string name="cancel">Отмена</string>
     <string name="connecting_to">Подключение к %s…</string>
+
+    <string name="profile_changed">Активный профиль изменен</string>
+    <string name="profile_changed_to_desc">Активный профиль был изменен на %s</string>
 
     <string name="switch_binary">Бинарные выключатели</string>
     <string name="switch_multilevel">Многопозиционные выключатели</string>
@@ -99,19 +103,24 @@
     <string name="toggle_button">Сцены</string>
     <string name="switch_rgbw">Управление цветом</string>
     <string name="doorlock">Замки</string>
+    <string name="thermostat">Термостаты</string>
 
-    <string name="profile_url">url</string>
-    <string name="profile_http">http://</string>
+    <string name="invalid_camera_url">Извините, камера имеет неверный URL!</string>
 
-    <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
-    <string name="dialog_connection_lose_msg">No Internet connection!</string>
-    <string name="dialog_connection_lose_close_app">Close App</string>
-    <string name="dialog_connection_lose_settings">Settings</string>
+    <string name="dialog_connection_lose_msg">Нет подключения!</string>
+    <string name="dialog_connection_lose_close_app">Закрыть приложение</string>
+    <string name="dialog_connection_lose_settings">Настройки</string>
 
-    <string name="dialog_color_picker_select_color">Select color…</string>
-    <string name="dialog_network_scan_hint" formatted="false"> %s/%s scanned</string>
-    <string name="dialog_network_scan_scanning">Scanning…</string>
+    <string name="dialog_color_picker_select_color">Выберите цвет…</string>
+    <string name="dialog_network_scan_hint" formatted="false">%s/%s сканировано</string>
+    <string name="dialog_network_scan_scanning">Идёт поиск…</string>
 
-    <string name="dialog_select_url">Select an URL</string>
+    <string name="dialog_select_url">Выберите URL</string>
 
+    <string name="dialog_select_app_theme">Выберите цветовое оформление</string>
+    <string name="theme_default_name">Бирюзовый</string>
+    <string name="theme_1_name">Розовый</string>
+    <string name="theme_2_name">Солнце</string>
+    <string name="theme_3_name">Зелень</string>
+    <string name="theme_4_name">Шоколад</string>
 </resources>

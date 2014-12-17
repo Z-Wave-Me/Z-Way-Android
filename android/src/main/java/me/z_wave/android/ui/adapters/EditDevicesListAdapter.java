@@ -89,7 +89,7 @@ public class EditDevicesListAdapter extends ArrayAdapter<Device> {
 
     private void prepareAddRemoveView(ViewHolder holder, final Device device) {
         final boolean isOnDashboard = mDevicesIds != null && mDevicesIds.contains(device.id);
-        final int addRemoveTextResId = isOnDashboard ? R.string.dashboadr_remove
+        final int addRemoveTextResId = isOnDashboard ? R.string.dashboard_remove
                 : R.string.dashboard_to_dashboard;
         final int addRemoveBgColorResId = isOnDashboard ? R.color.red
                 : R.color.dark_gray;
