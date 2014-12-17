@@ -118,9 +118,11 @@ public class SplashFragment extends BaseFragment {
     }
 
     private void startProfileActivity() {
-        final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
-        intent.putExtra(ProfilesActivity.KEY_FROM_SPLASH, true);
-        bus.post(new StartActivityEvent(intent));
+        if(isAdded() && getActivity() != null) {
+            final Intent intent = new Intent(getActivity(), ProfilesActivity.class);
+            intent.putExtra(ProfilesActivity.KEY_FROM_SPLASH, true);
+            bus.post(new StartActivityEvent(intent));
+        }
     }
 
 

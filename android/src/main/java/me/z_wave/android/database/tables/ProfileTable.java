@@ -28,6 +28,7 @@ import android.provider.BaseColumns;
 
 import me.z_wave.android.dataModel.LocalProfile;
 import me.z_wave.android.dataModel.Profile;
+import me.z_wave.android.dataModel.Theme;
 
 /**
  * Created by Ivan PL on 07.07.2014.
@@ -71,16 +72,18 @@ public class ProfileTable {
 
     public static ContentValues createContentValues(LocalProfile profile) {
         final ContentValues values = new ContentValues();
-        values.put(P_SERVER_ID, profile.serverId);
-        values.put(P_NAME, profile.name);
-        values.put(P_INDOOR_SERVER, profile.indoorServer);
-        values.put(P_LOGIN, profile.login);
-        values.put(P_PASSWORD, profile.password);
-        values.put(P_LONGITUDE, profile.longitude);
-        values.put(P_LATITUDE, profile.latitude);
-        values.put(P_ADDRESS, profile.address);
-        values.put(P_ACTIVE, profile.active ? 1 : 0);
-        values.put(P_THEME, profile.theme.ordinal());
+        if(profile != null) {
+            values.put(P_SERVER_ID, profile.serverId);
+            values.put(P_NAME, profile.name);
+            values.put(P_INDOOR_SERVER, profile.indoorServer);
+            values.put(P_LOGIN, profile.login);
+            values.put(P_PASSWORD, profile.password);
+            values.put(P_LONGITUDE, profile.longitude);
+            values.put(P_LATITUDE, profile.latitude);
+            values.put(P_ADDRESS, profile.address);
+            values.put(P_ACTIVE, profile.active ? 1 : 0);
+            values.put(P_THEME, profile.theme == null ? Theme.DEFAULT.ordinal() : profile.theme.ordinal());
+        }
         return values;
     }
 

@@ -235,21 +235,23 @@ public class ApiClient {
     }
 
     public void updateProfile(Profile profile, final ApiCallback<List<Profile>, String> callback) {
-        mAdaptor.create(UpdateProfileRequest.class).updateProfile(profile.id, profile,
-                new Callback<ProfilesResponse>() {
-                    @Override
-                    public void success(ProfilesResponse profileResponse, Response response) {
-                        Timber.v(profileResponse.toString());
-                        callback.onSuccess(profileResponse.data);
-                    }
+        if(mAdaptor != null && profile != null) {
+            mAdaptor.create(UpdateProfileRequest.class).updateProfile(profile.id, profile,
+                    new Callback<ProfilesResponse>() {
+                        @Override
+                        public void success(ProfilesResponse profileResponse, Response response) {
+                            Timber.v(profileResponse.toString());
+                            callback.onSuccess(profileResponse.data);
+                        }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        boolean networkUnreachable = isNetworkUnreachableError(error);
-                        callback.onFailure("", networkUnreachable);
+                        @Override
+                        public void failure(RetrofitError error) {
+                            boolean networkUnreachable = isNetworkUnreachableError(error);
+                            callback.onFailure("", networkUnreachable);
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     private boolean isNetworkUnreachableError(RetrofitError retrofitError) {

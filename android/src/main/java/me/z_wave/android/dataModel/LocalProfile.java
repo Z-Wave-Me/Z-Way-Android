@@ -49,6 +49,7 @@ public class LocalProfile implements Serializable {
 
     public LocalProfile() {
         serverId = -1;
+        active = false;
     }
 
     public LocalProfile(Cursor cursor) {
