@@ -121,7 +121,11 @@ public class Device implements Serializable{
     }
 
     public String getValue(){
-        return String.format("%s %s", metrics.level, metrics.scaleTitle);
+        if(!TextUtils.isEmpty(metrics.scaleTitle) && !metrics.scaleTitle.equals("null")) {
+            return String.format("%s %s", metrics.level, metrics.scaleTitle);
+        } else {
+            return metrics.level;
+        }
     }
 
     @Override
