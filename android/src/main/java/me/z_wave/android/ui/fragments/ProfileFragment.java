@@ -198,24 +198,28 @@ public class ProfileFragment extends NetworkScanFragment {
     private void prepareServerProfilesSpinner(final LocalProfile profile) {
         DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final List<Profile> serverProfiles = provider.getServerProfiles(profile.id);
-        final ArrayAdapter<Profile> adapter = new ArrayAdapter<Profile>(getActivity(),
-                android.R.layout.simple_spinner_item, serverProfiles);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        serverProfilesSpinner.setAdapter(adapter);
+        if(serverProfiles.size() > 0) {
+            final ArrayAdapter<Profile> adapter = new ArrayAdapter<Profile>(getActivity(),
+                    android.R.layout.simple_spinner_item, serverProfiles);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            serverProfilesSpinner.setAdapter(adapter);
 
-        final int selectedProfilePosition = getSelectedServerProfilePosition(
-                serverProfiles, profile.serverId);
-        serverProfilesSpinner.setSelection(selectedProfilePosition);
-        serverProfilesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final Profile serverProfile = adapter.getItem(position);
-                profile.serverId = serverProfile.id;
-            }
+            final int selectedProfilePosition = getSelectedServerProfilePosition(
+                    serverProfiles, profile.serverId);
+            serverProfilesSpinner.setSelection(selectedProfilePosition);
+            serverProfilesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    final Profile serverProfile = adapter.getItem(position);
+                    profile.serverId = serverProfile.id;
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        } else {
+            serverProfilesContainer.setVisibility(View.GONE);
+        }
     }
 
     private int getSelectedServerProfilePosition(List<Profile> profiles, int selectedProfileId) {
