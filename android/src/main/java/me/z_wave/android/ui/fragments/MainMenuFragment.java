@@ -375,6 +375,8 @@ public class MainMenuFragment extends BaseFragment {
                 return getString(R.string.switch_rgbw);
             } else if(deviceType.equalsIgnoreCase("doorlock")) {
                 return getString(R.string.doorlock);
+            }  else if(deviceType.equalsIgnoreCase("thermostat")) {
+                return getString(R.string.doorlock);
             } else {
                 return deviceType;
             }
