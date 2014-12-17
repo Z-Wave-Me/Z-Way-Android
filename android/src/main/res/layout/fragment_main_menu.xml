@@ -27,32 +27,48 @@
     android:orientation="vertical"
               android:background="@color/nav_drawer_bg_color">
 
-    <LinearLayout android:id="@+id/nav_drawer_profile"
+    <RelativeLayout android:id="@+id/nav_drawer_profile"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:orientation="vertical"
         android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:gravity="center">
+        android:paddingRight="8dp">
 
-        <TextView android:id="@+id/nav_drawer_profile_name"
+        <ImageView android:id="@+id/profile_menu_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/right_arrow_white"
+            android:scaleType="center"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:textColor="@color/nav_drawer_profile_text_color"
-            android:textAllCaps="true"
-            android:text="my Home"/>
+            android:layout_toLeftOf="@id/profile_menu_arrow"
+            android:orientation="vertical"
+            android:layout_centerVertical="true">
 
-        <TextView android:id="@+id/nav_drawer_profile_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:textColor="@color/nav_drawer_profile_text_color"
-            android:text="Russia, Omsk" />
+            <TextView android:id="@+id/nav_drawer_profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:textColor="@color/nav_drawer_profile_text_color"
+                android:textAllCaps="true"
+                android:text="my Home"/>
 
-    </LinearLayout>
+            <TextView android:id="@+id/nav_drawer_profile_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:textColor="@color/nav_drawer_profile_text_color"
+                android:text="Russia, Omsk"/>
+
+            </LinearLayout>
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
