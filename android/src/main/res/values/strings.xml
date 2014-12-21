@@ -102,7 +102,7 @@
     <string name="toggle_button">Toggle Button</string>
     <string name="switch_rgbw">Switch rgbw</string>
     <string name="doorlock">Doorlock</string>
-    <string name="thermostat">Thermostat</string>
+    <string name="thermostat" translatable="false">Thermostat</string>
     
     <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
     <string name="dashboadr_remove">Remove from dashboard</string>

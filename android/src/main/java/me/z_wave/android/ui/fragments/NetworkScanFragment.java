@@ -69,7 +69,7 @@ public class NetworkScanFragment extends BaseFragment {
         if (isAdded()) {
             mNetworkScanTask = null;
             if(mProgressDialog != null) {
-                mProgressDialog.dismiss();
+                mProgressDialog.dismissAllowingStateLoss();
                 mProgressDialog = null;
             }
 
