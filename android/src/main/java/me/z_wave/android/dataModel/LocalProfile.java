@@ -68,4 +68,16 @@ public class LocalProfile implements Serializable {
         theme = themeColumnIndex >= 0 ? Theme.values()[cursor.getInt(themeColumnIndex)] : Theme.DEFAULT;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || ((Object)this).getClass() != o.getClass()) return false;
+        final LocalProfile that = (LocalProfile) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

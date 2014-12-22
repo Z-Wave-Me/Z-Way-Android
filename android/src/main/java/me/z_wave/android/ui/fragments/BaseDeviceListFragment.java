@@ -58,9 +58,11 @@ public class BaseDeviceListFragment extends BaseFragment
         super.onActivityCreated(savedInstanceState);
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile localProfile = provider.getActiveLocalProfile();
-        final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
-        adapter = new DevicesGridAdapter(getActivity(), new ArrayList<Device>(),
-                serverProfile, this);
+        if(localProfile != null) {
+            final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
+            adapter = new DevicesGridAdapter(getActivity(), new ArrayList<Device>(),
+                    serverProfile, this);
+        }
     }
 
     @Override

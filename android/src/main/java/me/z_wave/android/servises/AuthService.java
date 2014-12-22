@@ -246,7 +246,7 @@ public class AuthService extends IntentService {
 
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getApplicationContext());
         final LocalProfile unselectedProfile = provider.getActiveLocalProfile();
-        if (unselectedProfile != null) {
+        if (unselectedProfile != null && !unselectedProfile.equals(profile)) {
             unselectedProfile.active = false;
             provider.updateLocalProfile(unselectedProfile);
         }

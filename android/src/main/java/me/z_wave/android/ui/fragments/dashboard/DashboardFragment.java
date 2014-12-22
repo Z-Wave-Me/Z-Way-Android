@@ -109,11 +109,13 @@ public class DashboardFragment extends BaseDeviceListFragment {
         Timber.v("Dashboard list updated!");
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile localProfile = provider.getActiveLocalProfile();
-        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
-        adapter.setProfile(profile);
-        updateDevicesList(event.devices);
-        adapter.notifyDataSetChanged();
-        changeEmptyDashboardMsgVisibility();
+        if(localProfile != null) {
+            final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+            adapter.setProfile(profile);
+            updateDevicesList(event.devices);
+            adapter.notifyDataSetChanged();
+            changeEmptyDashboardMsgVisibility();
+        }
     }
 
     private void prepareDevicesView() {
