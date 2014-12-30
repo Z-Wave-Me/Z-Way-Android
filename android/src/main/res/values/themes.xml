@@ -52,6 +52,7 @@
         <item name="navDrawerItemStyle">@style/NavDrawerItem.Style4</item>
         <item name="android:actionBarStyle">@style/ActionBar.Style4</item>
         <item name="android:listViewStyle">@style/ListView.Style4</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
 </resources>

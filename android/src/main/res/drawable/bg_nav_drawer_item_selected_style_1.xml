@@ -29,7 +29,7 @@
         <shape
             android:shape="rectangle">
             <padding android:bottom="1dp"/>
-            <solid android:color="@color/nav_drawer_item_divider_color" />
+            <solid android:color="#C4C4C4" />
         </shape>
     </item>
 
@@ -37,7 +37,7 @@
             <shape
                 android:shape="rectangle">
                 <padding android:bottom="10dp"/>
-                <solid android:color="@color/theme_1_app_color" />
+                <solid android:color="@color/theme_1_menu_selector_color" />
             </shape>
         </item>
 

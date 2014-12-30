@@ -69,7 +69,7 @@
     <string name="profile_password">Password</string>
     <string name="profile_credentials_hint">You can get yours at find.z-wave.me</string>
     <string name="profile_location">Location</string>
-    <string name="profile_serv_profile" translatable="false">Server Profile</string>
+    <string name="profile_serv_profile">Server Profile</string>
     <string name="profile_connecting">Connecting…</string>
     <string name="profile_delete">Delete Profile</string>
     <string name="profile_connection_established">Connection established</string>
@@ -106,8 +106,7 @@
     <string name="thermostat">Thermostat</string>
     
     <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
-    <string name="dashboadr_remove">Remove from dashboard</string>
-    
+
     <string name="dialog_connection_lose_msg">No Internet connection!</string>
     <string name="dialog_connection_lose_close_app">Close App</string>
     <string name="dialog_connection_lose_settings">Settings</string>

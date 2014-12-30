@@ -117,6 +117,9 @@ public class MainMenuFragment extends BaseFragment {
 
         final View dashboardView = getView().findViewById(R.id.nav_drawer_dashboard);
         setSelectedView(dashboardView);
+        final LocalProfile profile = DatabaseDataProvider.getInstance(getActivity()).getActiveLocalProfile();
+        getView().setBackgroundColor(getResources().getColor(profile.theme.getMenuBgColorId()));
+
         //TODO produce ConcurrentModificationException exception! need find the reason!
         prepareRoomsList();
         prepareTypesList();

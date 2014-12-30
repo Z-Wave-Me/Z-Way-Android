@@ -27,6 +27,6 @@
         android:drawable="@drawable/bg_nav_drawer_item_selected_style_2"/>
     <item android:state_selected="true"
         android:drawable="@drawable/bg_nav_drawer_item_selected_style_2"/>
-    <item android:drawable="@drawable/bg_nav_drawer_item"/>
+    <item android:drawable="@drawable/bg_nav_drawer_item_style_2"/>
 
 </selector>

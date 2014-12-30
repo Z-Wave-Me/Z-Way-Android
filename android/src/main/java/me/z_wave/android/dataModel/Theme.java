@@ -72,6 +72,23 @@ public enum  Theme {
             case DEFAULT:
                 return R.color.main_app_color;
             case THEME_1:
+                return R.color.theme_1_ab_color;
+            case THEME_2:
+                return R.color.theme_2_ab_color;
+            case THEME_3:
+                return R.color.theme_3_ab_color;
+            case THEME_4:
+                return R.color.theme_4_ab_color;
+            default:
+                return R.color.main_app_color;
+        }
+    }
+
+    public int getMenuBgColorId() {
+        switch (this) {
+            case DEFAULT:
+                return R.color.nav_drawer_bg_color;
+            case THEME_1:
                 return R.color.theme_1_app_color;
             case THEME_2:
                 return R.color.theme_2_app_color;
@@ -80,7 +97,7 @@ public enum  Theme {
             case THEME_4:
                 return R.color.theme_4_app_color;
             default:
-                return R.color.main_app_color;
+                return R.color.nav_drawer_bg_color;
         }
     }
 
