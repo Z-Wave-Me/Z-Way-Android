@@ -104,6 +104,9 @@ public class MainMenuFragment extends BaseFragment {
     private View mSelectedView;
     private int mNotificationsCount;
 
+    private Filter mSelectedMenuItemFilter;
+    private String mSelectedFilterValue;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
@@ -251,9 +254,18 @@ public class MainMenuFragment extends BaseFragment {
         final TextView menuItem = (TextView) LayoutInflater.from(getActivity()).
                 inflate(R.layout.layout_menu_item, parent, false);
         menuItem.setText(filterValue);
+        if(mSelectedMenuItemFilter != null
+                && mSelectedMenuItemFilter == filter
+                && !TextUtils.isEmpty(mSelectedFilterValue)
+                && mSelectedFilterValue.equalsIgnoreCase(filterValue)) {
+            setSelectedView(menuItem);
+        }
+
         menuItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSelectedFilterValue = filterValue;
+                mSelectedMenuItemFilter = filter;
                 changeFragment(v, DevicesFragment.newInstance(filter, filterValue));
                 trackEvent(R.string.category_devices, R.string.action_show_devices, filter.getFilterLabelResId());
             }
