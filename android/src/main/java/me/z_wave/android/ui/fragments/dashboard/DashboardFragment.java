@@ -104,17 +104,30 @@ public class DashboardFragment extends BaseDeviceListFragment {
         }
     }
 
-    @Subscribe
-    public void onDataUpdated(OnDataUpdatedEvent event) {
-        Timber.v("Dashboard list updated!");
+    @Override
+    protected void onAfterDelayListUpdate() {
         final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
         final LocalProfile localProfile = provider.getActiveLocalProfile();
-        if(localProfile != null) {
-            final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
-            adapter.setProfile(profile);
-            updateDevicesList(event.devices);
-            adapter.notifyDataSetChanged();
-            changeEmptyDashboardMsgVisibility();
+        final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+        final List<Device> device = dataContext.getDashboardDevices(profile);
+        updateDevicesList(device);
+        adapter.notifyDataSetChanged();
+        changeEmptyDashboardMsgVisibility();
+    }
+
+    @Subscribe
+    public void onDataUpdated(OnDataUpdatedEvent event) {
+        if(isCanUpdate) {
+            Timber.v("Dashboard list updated!");
+            final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+            final LocalProfile localProfile = provider.getActiveLocalProfile();
+            if(localProfile != null) {
+                final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
+                adapter.setProfile(profile);
+                updateDevicesList(event.devices);
+                adapter.notifyDataSetChanged();
+                changeEmptyDashboardMsgVisibility();
+            }
         }
     }
 

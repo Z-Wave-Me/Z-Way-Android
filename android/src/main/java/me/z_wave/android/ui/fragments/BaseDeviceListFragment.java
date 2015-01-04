@@ -30,6 +30,8 @@ import android.webkit.URLUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.z_wave.android.R;
 import me.z_wave.android.dataModel.Device;
@@ -51,7 +53,12 @@ import me.z_wave.android.utils.CameraUtils;
 public class BaseDeviceListFragment extends BaseFragment
         implements DevicesGridAdapter.DeviceStateUpdatedListener {
 
+    public static final int LIST_UPDATE_DELAY = 3000;
+
     public DevicesGridAdapter adapter;
+
+    public Timer updateDelayTimer;
+    public boolean isCanUpdate = true;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -68,16 +75,19 @@ public class BaseDeviceListFragment extends BaseFragment
     @Override
     public void onSwitchStateChanged(Device updatedDevice) {
         UpdateDeviceService.updateDeviceState(getActivity(), updatedDevice);
+        startUpdaytDelay();
     }
 
     @Override
     public void onSeekBarStateChanged(final Device updatedDevice) {
         UpdateDeviceService.updateDeviceLevel(getActivity(), updatedDevice);
+        startUpdaytDelay();
     }
 
     @Override
     public void onToggleClicked(Device updatedDevice) {
         UpdateDeviceService.updateDeviceToggle(getActivity(), updatedDevice);
+        startUpdaytDelay();
     }
 
     @Override
@@ -89,6 +99,7 @@ public class BaseDeviceListFragment extends BaseFragment
                 device.metrics.color.g = Color.green(color);
                 device.metrics.color.b = Color.blue(color);
                 UpdateDeviceService.updateRgbColor(getActivity(), device);
+                startUpdaytDelay();
             }
         };
         dialog.setOldColor(device.metrics.color.getColorAsInt());
@@ -109,7 +120,44 @@ public class BaseDeviceListFragment extends BaseFragment
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        isCanUpdate = true;
+        if(updateDelayTimer != null) {
+            updateDelayTimer.cancel();
+            updateDelayTimer = null;
+        }
+    }
+
+    public void startUpdaytDelay() {
+        if(updateDelayTimer != null) {
+            updateDelayTimer.cancel();
+        }
+
+        updateDelayTimer = new Timer();
+        updateDelayTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isCanUpdate = true;
+                if(isAdded()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onAfterDelayListUpdate();
+                        }
+                    });
+                }
+            }
+        }, LIST_UPDATE_DELAY);
+        isCanUpdate = false;
+    }
+
     protected void updateDevicesList(List<Device> devices) {
+
+    }
+
+    protected void onAfterDelayListUpdate() {
 
     }
 

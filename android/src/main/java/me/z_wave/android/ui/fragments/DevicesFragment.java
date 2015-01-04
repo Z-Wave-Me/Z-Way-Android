@@ -112,16 +112,25 @@ public class DevicesFragment extends BaseDeviceListFragment {
         }
     }
 
+    @Override
+    protected void onAfterDelayListUpdate() {
+        updateDevicesList(getFilteredDeviceList());
+        adapter.notifyDataSetChanged();
+        changeEmptyMsgVisibility();
+    }
+
     @Subscribe
     public void onDataUpdated(OnDataUpdatedEvent event){
         Timber.v("Device list updated!");
-        final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
-        final LocalProfile localProfile = provider.getActiveLocalProfile();
-        final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
-        adapter.setProfile(serverProfile);
-        updateDevicesList(event.devices);
-        adapter.notifyDataSetChanged();
-        changeEmptyMsgVisibility();
+        if(isCanUpdate) {
+            final DatabaseDataProvider provider = DatabaseDataProvider.getInstance(getActivity());
+            final LocalProfile localProfile = provider.getActiveLocalProfile();
+            final Profile serverProfile = provider.getServerProfileWithId(localProfile.serverId);
+            adapter.setProfile(serverProfile);
+            updateDevicesList(event.devices);
+            adapter.notifyDataSetChanged();
+            changeEmptyMsgVisibility();
+        }
     }
 
     private void changeEmptyMsgVisibility(){
