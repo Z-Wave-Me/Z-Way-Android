@@ -82,7 +82,8 @@ public class ApiClient {
 
     private LocalProfile mLocalProfile;
     private RestAdapter mAdaptor;
-    private Cookie mCookie;
+    private Cookie mZWayCookie;
+    private Cookie mCloudCookie;
 
     public void init(LocalProfile profile) {
         mLocalProfile = profile;
@@ -98,9 +99,10 @@ public class ApiClient {
                 .build();
     }
 
-    public void init(LocalProfile profile, Cookie cookie) {
+    public void init(LocalProfile profile, Cookie cloudCookie,Cookie ZWayCookie) {
         mLocalProfile = profile;
-        mCookie = cookie;
+        mZWayCookie = ZWayCookie;
+        mCloudCookie = cloudCookie;
 
         final DefaultHttpClient client = HttpClientHelper.createHttpsClient();
         mAdaptor = new RestAdapter.Builder()
@@ -108,7 +110,7 @@ public class ApiClient {
                 .setConverter(new GsonConverter(getGson()))
                 .setLogLevel(Constants.API_LOG_LEVEL)
                 .setClient(new ApacheClient(client))
-                .setEndpoint(Constants.DEFAULT_URL)
+                .setEndpoint(cloudCookie == null?profile.indoorServer:Constants.DEFAULT_URL)
                 .build();
     }
 
@@ -264,7 +266,7 @@ public class ApiClient {
     }
 
     public Cookie getCookie() {
-        return mCookie;
+        return mCloudCookie;
     }
 
     private RequestInterceptor createCookiesInterceptor() {
@@ -276,11 +278,15 @@ public class ApiClient {
         return new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                if (mCookie != null && !TextUtils.isEmpty(mCookie.getValue())) {
+                if (mZWayCookie != null && !TextUtils.isEmpty(mZWayCookie.getValue())) {
                     Timber.tag("Cookie values");
-                    Timber.v(mCookie.toString());
-                    String cookieValue = mCookie.getName() + "=" + mCookie.getValue();
-                    request.addHeader("Cookie", cookieValue);
+                    Timber.v(mZWayCookie.toString());
+                    request.addHeader(mZWayCookie.getName(), mZWayCookie.getValue());
+                }
+                if (mCloudCookie != null && !TextUtils.isEmpty(mZWayCookie.getValue())) {
+                    Timber.tag("Cookie values");
+                    Timber.v(mCloudCookie.toString());
+                    request.addHeader("Cookie", mCloudCookie.getName() + "=" + mCloudCookie.getValue());
                 }
             }
         };

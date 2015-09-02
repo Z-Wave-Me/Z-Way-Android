@@ -119,7 +119,7 @@ public class EditDashboardFragment extends BaseFragment implements
                 final LocalProfile localProfile = provider.getActiveLocalProfile();
                 final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
                 if(profile != null) {
-                    profile.positions = mDevicesIds;
+                    profile.dashboard = mDevicesIds;
                     bus.post(new ProgressEvent(true, false));
                     apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
                         @Override

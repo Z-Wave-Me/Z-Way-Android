@@ -154,13 +154,13 @@ public class DatabaseDataProvider {
         final SQLiteStatement stmt = mDatabase.compileStatement(ServerProfileTable.SQL_INSERT_BIG_DATA);
 
         for (Profile profile : profiles) {
-            final String profilePositions = profile.positions != null ?
-                    TextUtils.join(",", profile.positions) : "";
+            final String profilePositions = profile.dashboard != null ?
+                    TextUtils.join(",", profile.dashboard) : "";
 
             stmt.bindString(1, Integer.toString(profile.id));
             stmt.bindString(2, Integer.toString(localProfileId));
             stmt.bindString(3, profile.name);
-            stmt.bindString(4, profile.description);
+            stmt.bindString(4, profile.description!=null?profile.description:"");
             stmt.bindString(5, profilePositions);
 
             stmt.executeInsert();

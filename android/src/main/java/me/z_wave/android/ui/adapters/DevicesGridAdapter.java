@@ -143,8 +143,8 @@ public class DevicesGridAdapter extends BaseAdapter {
     }
 
     private void prepareAddRemoveView(ViewHolder holder, final Device device) {
-        final boolean isOnDashboard = mProfile != null && mProfile.positions != null
-                && mProfile.positions.contains(device.id);
+        final boolean isOnDashboard = mProfile != null && mProfile.dashboard != null
+                && mProfile.dashboard.contains(device.id);
         final int addRemoveTextResId = isOnDashboard ? R.string.dashboard_remove
                 : R.string.dashboard_to_dashboard;
         final int addRemoveBgColorResId = isOnDashboard ? R.color.red

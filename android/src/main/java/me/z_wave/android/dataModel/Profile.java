@@ -36,7 +36,7 @@ public class Profile {
     public int id;
     public String name;
     public String description;
-    public List<String> positions;
+    public List<String> dashboard;
 
     public Profile() {
     }
@@ -45,12 +45,12 @@ public class Profile {
         id = cursor.getInt(cursor.getColumnIndex(ServerProfileTable.SP_SERVER_ID));
         name = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_NAME));
         description = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_DESCRIPTION));
-        positions = new ArrayList<String>();
+        dashboard = new ArrayList<String>();
 
         final String savedPositions = cursor.getString(cursor.getColumnIndex(ServerProfileTable.SP_POSITIONS));
         if(!TextUtils.isEmpty(savedPositions)) {
             final String[] positionsArray = savedPositions.split(",");
-            positions = Arrays.asList(positionsArray);
+            dashboard = Arrays.asList(positionsArray);
         }
     }
 

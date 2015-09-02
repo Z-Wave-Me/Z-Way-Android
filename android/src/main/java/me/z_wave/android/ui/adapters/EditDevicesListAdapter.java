@@ -52,7 +52,7 @@ public class EditDevicesListAdapter extends ArrayAdapter<Device> {
         super(context, 0, objects);
         mDevicesIds = new ArrayList<String>();
         if(profile != null) {
-            mDevicesIds.addAll(profile.positions);
+            mDevicesIds.addAll(profile.dashboard);
         }
     }
 

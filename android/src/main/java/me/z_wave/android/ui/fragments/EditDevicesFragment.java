@@ -96,7 +96,7 @@ public class EditDevicesFragment extends BaseListFragment{
                 final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
                 //TODO hotfix, need find the reason of nullpointer in profile.positions = mAdapter.getDashboardDevicesIds()
                 if(profile != null && mAdapter != null) {
-                    profile.positions = mAdapter.getDashboardDevicesIds();
+                    profile.dashboard = mAdapter.getDashboardDevicesIds();
                     bus.post(new ProgressEvent(true, false));
                     apiClient.updateProfile(profile, new ApiClient.ApiCallback<List<Profile>, String>() {
                         @Override

@@ -50,6 +50,8 @@ import me.z_wave.android.database.DatabaseDataProvider;
 import me.z_wave.android.network.ApiClient;
 import me.z_wave.android.network.HttpClientHelper;
 import me.z_wave.android.network.auth.AuthRequest;
+import me.z_wave.android.network.auth.LocalAuth;
+import me.z_wave.android.network.auth.LocalAuthRequest;
 import me.z_wave.android.network.server.ServerStatusRequest;
 import me.z_wave.android.otto.MainThreadBus;
 import me.z_wave.android.otto.events.AccountChangedEvent;
@@ -75,6 +77,10 @@ public class AuthService extends IntentService {
 
     private static final int DEFAULT_AUTH_REQUEST_DELAY = 10000; //10 sec
 
+    private static final String CLOUD_COOKIE = "ZBW_SESSID";
+    private static final String ZWAY_COOKIE = "ZWaySession";
+
+
     @Inject
     ApiClient apiClient;
     @Inject
@@ -83,10 +89,26 @@ public class AuthService extends IntentService {
     MainThreadBus bus;
 
     private DefaultHttpClient mClient;
-    private Cookie mCookie;
-    private int mAuthTriesCounter;
+    private Cookie mCloudCookie;
+    private Cookie mZWayCookie;
+    private int mCloudAuthTriesCounter;
+    private int mZWayAuthTriesCounter;
     private boolean mCancelEvent;
     private int mDelay = DEFAULT_AUTH_REQUEST_DELAY;
+
+    private Cookie getCookie (String name){
+        final CookieStore cookieStore = mClient.getCookieStore();
+        if (cookieStore == null)
+            return null;
+        for (int i = 0; i < cookieStore.getCookies().size(); ++i) {
+            if (cookieStore.getCookies().get(i).getName().compareToIgnoreCase(name) == 0 &&
+                    !TextUtils.isEmpty(cookieStore.getCookies().get(i).getValue())) {
+                return cookieStore.getCookies().get(i);
+            }
+        }
+        return null;
+    }
+
 
     public static void login(Context context, LocalProfile profile, int requestDelay) {
         Intent intent = new Intent(context, AuthService.class);
@@ -141,13 +163,13 @@ public class AuthService extends IntentService {
     }
 
     private void handleActionAuth(LocalProfile profile) {
-        mAuthTriesCounter = 0;
+
         final boolean useDefaultUrl = TextUtils.isEmpty(profile.indoorServer);
         final RestAdapter adapter = prepareRestAdaptor(profile, useDefaultUrl);
         if (useDefaultUrl) {
-            authWithUserCredentials(adapter, profile);
+            cloudAuth(adapter, profile);
         } else {
-            connectToOutdoorService(adapter, profile);
+            ZWayAuth(adapter, profile);
         }
     }
 
@@ -173,7 +195,7 @@ public class AuthService extends IntentService {
 
     private void connectToOutdoorService(RestAdapter adapter, final LocalProfile profile) {
         Timber.v("Connect to outdoor...");
-        if(mCancelEvent) {
+        if (mCancelEvent) {
             return;
         }
 
@@ -181,62 +203,65 @@ public class AuthService extends IntentService {
             adapter.create(ServerStatusRequest.class).getServerStatus();
             onAuthSuccess(profile, LoginType.OUTDOOR);
         } catch (RetrofitError e) {
+            final RestAdapter newAdaptor = prepareRestAdaptor(profile, true);
             if (!TextUtils.isEmpty(profile.login) && !TextUtils.isEmpty(profile.password)) {
-                final RestAdapter newAdaptor = prepareRestAdaptor(profile, true);
-                authWithUserCredentials(newAdaptor, profile);
+                cloudAuth(newAdaptor, profile);
             } else {
-                onAuthFail(profile, LoginType.OUTDOOR, e.isNetworkError());
+                ZWayAuth (newAdaptor, profile);
             }
         }
     }
 
-    private void authWithUserCredentials(RestAdapter adapter, final LocalProfile profile) {
-        Timber.v("Auth with find.z-wave, try " + (mAuthTriesCounter + 1));
-        if(mCancelEvent) {
-            return;
-        }
+    private void cloudAuth (RestAdapter adapter, final LocalProfile profile) {
 
-        mAuthTriesCounter++;
-        try {
-            adapter.create(AuthRequest.class).auth("login", profile.login, profile.password);
-            final CookieStore cookieStore = mClient.getCookieStore();
-            if (cookieStore == null || cookieStore.getCookies().size() == 0 ||
-                    TextUtils.isEmpty(cookieStore.getCookies().get(0).getValue())) {
-                if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
-                    mAuthTriesCounter = 0;
-                    onAuthFail(profile, LoginType.WITH_CREDENTIALS, false);
-                } else {
-                    authWithUserCredentials(adapter, profile);
+        for (int i = 0; i < Constants.AUTH_TRIES_COUNT; ++i) {
+
+            Timber.v("Auth with find.z-wave, try " + i);
+            if (mCancelEvent)
+                return;
+
+            try {
+                adapter.create(AuthRequest.class).auth("login", profile.login, profile.password);
+            } catch (RetrofitError e) {
+                if (e.isNetworkError()) {
+                    onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);
                 }
-            } else {
-                mCookie = mClient.getCookieStore().getCookies().get(0);
-                onAuthSuccess(profile, LoginType.WITH_CREDENTIALS);
             }
-        } catch (RetrofitError e) {
-            if (e.isNetworkError()) {
-                onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);
-            } else {
-                checkCookie(adapter, profile);
+
+            if (getCookie(CLOUD_COOKIE) != null) {
+                mCloudCookie = getCookie(CLOUD_COOKIE);
+                ZWayAuth(adapter, profile);
+                return;
             }
         }
+        onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);
     }
 
-    private void checkCookie(RestAdapter adapter,
-                             final LocalProfile profile) {
-        final CookieStore cookieStore = mClient.getCookieStore();
-        if (cookieStore == null || cookieStore.getCookies().size() == 0 ||
-                TextUtils.isEmpty(cookieStore.getCookies().get(0).getValue())) {
-            if (mAuthTriesCounter >= Constants.AUTH_TRIES_COUNT) {
-                mAuthTriesCounter = 0;
-                onAuthFail(profile, LoginType.WITH_CREDENTIALS, false);
-            } else {
-                authWithUserCredentials(adapter, profile);
+    private void ZWayAuth(RestAdapter adapter, final LocalProfile profile) {
+        for (int i = 0; i < Constants.AUTH_TRIES_COUNT; ++i) {
+
+            Timber.v("Auth with ZBox, try " + i);
+            if (mCancelEvent)
+                return;
+
+            try {
+                adapter.create(LocalAuthRequest.class).auth(new LocalAuth(true, "admin", "admin", false, 1));
+            } catch (RetrofitError e) {
+                if (e.isNetworkError()) {
+                    onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);
+                }
             }
-        } else {
-            mCookie = mClient.getCookieStore().getCookies().get(0);
-            onAuthSuccess(profile, LoginType.WITH_CREDENTIALS);
+
+            if (getCookie(ZWAY_COOKIE) != null) {
+                mZWayCookie = getCookie(ZWAY_COOKIE);
+                onAuthSuccess(profile, LoginType.WITH_CREDENTIALS);
+                return;
+            }
         }
+        onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);
+
     }
+
 
     private void onAuthSuccess(LocalProfile profile, LoginType loginType) {
         Timber.v("Auth success!");
@@ -252,11 +277,7 @@ public class AuthService extends IntentService {
         }
 
         profile.active = true;
-        if (loginType == LoginType.OUTDOOR) {
-            apiClient.init(profile);
-        } else {
-            apiClient.init(profile, mCookie);
-        }
+        apiClient.init(profile, mCloudCookie,mZWayCookie);
 
         dataContext.clear();
         final List<Profile> serverProfiles = loadProfiles();

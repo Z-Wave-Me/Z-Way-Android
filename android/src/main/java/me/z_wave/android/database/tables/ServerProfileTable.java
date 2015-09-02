@@ -70,8 +70,8 @@ public class ServerProfileTable {
         values.put(SP_SERVER_ID, profile.id);
         values.put(SP_NAME, profile.name);
         values.put(SP_DESCRIPTION, profile.description);
-        if(profile.positions != null) {
-            values.put(SP_POSITIONS, Joiner.on(",").join(profile.positions));
+        if(profile.dashboard != null) {
+            values.put(SP_POSITIONS, Joiner.on(",").join(profile.dashboard));
         }
         return values;
     }

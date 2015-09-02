@@ -213,8 +213,8 @@ public class DataContext {
     public List<Device> getDashboardDevices(Profile profile) {
         final List<Device> result = new ArrayList<Device>();
 
-        if (profile != null && profile.positions != null && mDevices != null) {
-            for (String position : profile.positions) {
+        if (profile != null && profile.dashboard != null && mDevices != null) {
+            for (String position : profile.dashboard) {
                 for (Device device : mDevices) {
                     if (device.id.equals(position)) {
                         result.add(device);

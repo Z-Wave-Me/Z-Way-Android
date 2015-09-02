@@ -95,7 +95,7 @@ public class DashboardFragment extends BaseDeviceListFragment {
         final Profile profile = provider.getServerProfileWithId(localProfile.serverId);
         if(profile != null) {
             for (Device device : devices) {
-                if (profile.positions.contains(device.id)) {
+                if (profile.dashboard.contains(device.id)) {
                     adapter.update(device);
                 } else {
                     adapter.remove(device);
