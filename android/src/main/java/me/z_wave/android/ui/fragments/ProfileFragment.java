@@ -89,6 +89,12 @@ public class ProfileFragment extends NetworkScanFragment {
     @InjectView(R.id.profile_password)
     EditText profilePassword;
 
+    @InjectView(R.id.zbox_login)
+    EditText zboxLogin;
+
+    @InjectView(R.id.zbox_password)
+    EditText zboxPassword;
+
     @InjectView(R.id.profile_url_hint)
     TextView urlHint;
 
@@ -176,6 +182,8 @@ public class ProfileFragment extends NetworkScanFragment {
             profileUrl.setText(profile.indoorServer);
             profileLogin.setText(profile.login);
             profilePassword.setText(profile.password);
+            zboxLogin.setText(profile.zboxLogin);
+            zboxPassword.setText(profile.zboxPassword);
 
             if(profile.theme != null) {
                 themeName.setText(profile.theme.getThemeTitle(getActivity()));
@@ -357,6 +365,8 @@ public class ProfileFragment extends NetworkScanFragment {
         profile.indoorServer = getUrl();
         profile.login = profileLogin.getText().toString();
         profile.password = profilePassword.getText().toString();
+        profile.zboxLogin = zboxLogin.getText().toString();
+        profile.zboxPassword = zboxPassword.getText().toString();
     }
 
     public LocalProfile getProfile() {

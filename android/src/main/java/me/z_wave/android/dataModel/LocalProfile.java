@@ -41,6 +41,8 @@ public class LocalProfile implements Serializable {
     public String indoorServer;
     public String login;
     public String password;
+    public String zboxLogin;
+    public String zboxPassword;
     public String address;
     public double latitude;
     public double longitude;
@@ -63,7 +65,8 @@ public class LocalProfile implements Serializable {
         longitude = cursor.getDouble(cursor.getColumnIndex(ProfileTable.P_LONGITUDE));
         address = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ADDRESS));
         active = cursor.getInt(cursor.getColumnIndex(ProfileTable.P_ACTIVE)) == 1;
-
+        zboxLogin = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ZBOXLOGIN));
+        zboxPassword = cursor.getString(cursor.getColumnIndex(ProfileTable.P_ZBOXPASSWORD));
         final int themeColumnIndex = cursor.getColumnIndex(ProfileTable.P_THEME);
         theme = themeColumnIndex >= 0 ? Theme.values()[cursor.getInt(themeColumnIndex)] : Theme.DEFAULT;
     }

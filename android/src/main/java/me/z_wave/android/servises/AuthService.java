@@ -91,8 +91,6 @@ public class AuthService extends IntentService {
     private DefaultHttpClient mClient;
     private Cookie mCloudCookie;
     private Cookie mZWayCookie;
-    private int mCloudAuthTriesCounter;
-    private int mZWayAuthTriesCounter;
     private boolean mCancelEvent;
     private int mDelay = DEFAULT_AUTH_REQUEST_DELAY;
 
@@ -245,7 +243,7 @@ public class AuthService extends IntentService {
                 return;
 
             try {
-                adapter.create(LocalAuthRequest.class).auth(new LocalAuth(true, "admin", "admin", false, 1));
+                adapter.create(LocalAuthRequest.class).auth(new LocalAuth(true, profile.zboxLogin, profile.zboxPassword, false, 1));
             } catch (RetrofitError e) {
                 if (e.isNetworkError()) {
                     onAuthFail(profile, LoginType.WITH_CREDENTIALS, true);

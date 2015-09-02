@@ -65,6 +65,7 @@
     <string name="profile_http">http://</string>
     <string name="profile_http_hint">Должно выглядеть как 192.168.0.1:8083</string>
     <string name="profile_credentials">Реквизиты для удалённого доступа</string>
+    <string name="zbox_credentials">Реквизиты доступа к ZBox</string>
     <string name="profile_login">Логин</string>
     <string name="profile_password">Пароль</string>
     <string name="profile_credentials_hint">Вы можете получить логин и пароль на find.z-wave.me</string>

@@ -28,7 +28,7 @@
     android:background="@color/profiles_bg">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="10dp">
@@ -193,6 +193,76 @@
             android:textColor="@color/profile_text_hint_color"
             android:textSize="12sp"
             android:text="@string/profile_credentials_hint"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="6dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:textColor="@color/profile_text_hint_color"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:text="@string/zbox_credentials"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="@string/profile_login"/>
+
+            <EditText android:id="@+id/zbox_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:inputType="text"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="@string/profile_password"/>
+
+            <EditText android:id="@+id/zbox_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:inputType="textPassword"/>
+
+        </LinearLayout>
+
+
 
         <View
             android:layout_width="match_parent"

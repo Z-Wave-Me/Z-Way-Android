@@ -23,7 +23,7 @@
 package me.z_wave.android.network.auth;
 
 /**
- * Created by Ivan PL on 03.07.2014.
+ * Created by Oleg Gerasimov on 02.09.2015.
  */
 public class LocalAuthManager {
 }

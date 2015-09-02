@@ -42,6 +42,8 @@ public class ProfileTable {
     public static final String P_INDOOR_SERVER = "PIndoorServer";
     public static final String P_LOGIN = "PLogin";
     public static final String P_PASSWORD = "PPassword";
+    public static final String P_ZBOXLOGIN = "PZBoxLogin";
+    public static final String P_ZBOXPASSWORD = "PZBoxPassword";
     public static final String P_LONGITUDE = "PLongitude";
     public static final String P_LATITUDE = "PLatitude";
     public static final String P_ADDRESS = "PAddress";
@@ -55,6 +57,8 @@ public class ProfileTable {
             + P_INDOOR_SERVER + " TEXT,"
             + P_LOGIN + " TEXT,"
             + P_PASSWORD + " TEXT,"
+            + P_ZBOXLOGIN + " TEXT,"
+            + P_ZBOXPASSWORD + " TEXT,"
             + P_LONGITUDE + " REAL,"
             + P_LATITUDE + " REAL,"
             + P_ADDRESS + " TEXT,"
@@ -78,6 +82,8 @@ public class ProfileTable {
             values.put(P_INDOOR_SERVER, profile.indoorServer);
             values.put(P_LOGIN, profile.login);
             values.put(P_PASSWORD, profile.password);
+            values.put(P_ZBOXLOGIN, profile.zboxLogin);
+            values.put(P_ZBOXPASSWORD, profile.zboxPassword);
             values.put(P_LONGITUDE, profile.longitude);
             values.put(P_LATITUDE, profile.latitude);
             values.put(P_ADDRESS, profile.address);

@@ -31,7 +31,7 @@ import retrofit.http.Part;
 
 
 /**
- * Created by Ivan PL on 30.06.2014.
+ * Created by Oleg Gerasimov on 02.09.2015
  */
 public interface LocalAuthRequest {
 
