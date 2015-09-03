@@ -65,6 +65,7 @@
     <string name="profile_http">http://</string>
     <string name="profile_http_hint">Should look like 192.168.0.1:8083</string>
     <string name="profile_credentials">Remote access credentials</string>
+    <string name="zbox_credentials">Z-Way credentials</string>
     <string name="profile_login">Login</string>
     <string name="profile_password">Password</string>
     <string name="profile_credentials_hint">You can get yours at find.z-wave.me</string>
