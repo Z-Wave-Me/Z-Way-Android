@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 23.11.14 14:44.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <string name="category_devices">Devices</string>
+    <string name="category_notifications">Notifications</string>
+    <string name="category_profiles">Profiles</string>
+    <string name="category_locations">Locations</string>
+
+    <string name="action_show_devices">Show Devices</string>
+    <string name="action_edit_show_devices">Edit Devices</string>
+    <string name="action_remove_notification">Remove notification</string>
+    <string name="action_add_profile">Add profile</string>
+    <string name="action_remove_profile">Remove profile</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_enable_change_profile_by_location">Enable change profile by location</string>
+    <string name="action_disable_change_profile_by_location">Disable change profile by location</string>
+
+    <string name="label_devices_with_tag">Devices with tag</string>
+    <string name="label_devices_with_type">Devices with type</string>
+    <string name="label_devices_with_location">Devices with location</string>
+    <string name="label_devices_all">All devices</string>
+    <string name="label_devices_favourite">Favourite devices</string>
+    <string name="label_na">n/a</string>
+</resources>

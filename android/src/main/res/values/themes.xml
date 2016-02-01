@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 25.05.14 22:52.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <style name="ZWayAppBaseTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarTabStyle">@style/ZWayTabsStyle</item>
+        <item name="android:textViewStyle">@style/ZWayTextViewStyle</item>
+        <item name="navDrawerItemStyle">@style/NavDrawerItem</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+    </style>
+
+    <style name="ZWayAppTheme1" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style1</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style1</item>
+        <item name="android:listViewStyle">@style/ListView.Style1</item>
+    </style>
+
+    <style name="ZWayAppTheme2" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style2</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style2</item>
+        <item name="android:listViewStyle">@style/ListView.Style2</item>
+    </style>
+
+    <style name="ZWayAppTheme3" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style3</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style3</item>
+        <item name="android:listViewStyle">@style/ListView.Style3</item>
+    </style>
+
+    <style name="ZWayAppTheme4" parent="ZWayAppBaseTheme">
+        <item name="navDrawerItemStyle">@style/NavDrawerItem.Style4</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Style4</item>
+        <item name="android:listViewStyle">@style/ListView.Style4</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+</resources>

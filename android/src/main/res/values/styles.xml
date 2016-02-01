@@ -22,9 +22,116 @@
 
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="ZWayActionBar" parent="android:Theme.Holo.Light">
+
     </style>
+
+    <style name="ZWaySwitchStyle">
+        <item name="android:textOff">"Off"</item>
+        <item name="android:textOn">"On"</item>
+    </style>
+
+    <style name="TabText">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="ZWayTabsStyle" parent="android:Widget.Holo.Tab">
+        <item name="android:padding">0dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <!--<item name="android:background">@drawable/actionbar_background</item>-->
+    </style>
+
+    <style name="ZWayTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/main_text_color</item>
+    </style>
+
+    <style name="NavDrawerItem">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/nav_drawer_text_color</item>
+        <item name="android:background">@drawable/sl_drawer_item_selector</item>
+    </style>
+
+    <style name="NavDrawerCategory">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nav_drawer_group_title_color</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingTop">26dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ListView" parent="android:Widget.ListView">
+    </style>
+
+    <style name="NavDrawerItem.Style1" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_1</item>
+        <item name="android:textColor">#686868</item>
+    </style>
+
+    <style name="ActionBar.Style1" parent="ActionBar">
+        <item name="android:background">@color/theme_1_ab_color</item>
+    </style>
+
+    <style name="ListView.Style1" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_1</item>
+    </style>
+
+    <style name="NavDrawerItem.Style2" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_2</item>
+        <item name="android:textColor">#686868</item>
+    </style>
+
+    <style name="ActionBar.Style2" parent="ActionBar">
+        <item name="android:background">@color/theme_2_ab_color</item>
+    </style>
+
+    <style name="ListView.Style2" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_2</item>
+    </style>
+
+    <style name="NavDrawerItem.Style3" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_3</item>
+    </style>
+
+    <style name="ActionBar.Style3" parent="ActionBar">
+        <item name="android:background">@color/theme_3_ab_color</item>
+    </style>
+
+    <style name="ListView.Style3" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_3</item>
+    </style>
+
+    <style name="NavDrawerItem.Style4" parent="NavDrawerItem">
+        <item name="android:background">@drawable/sl_drawer_item_selector_style_4</item>
+    </style>
+
+    <style name="ActionBar.Style4" parent="ActionBar">
+        <item name="android:background">@color/theme_4_ab_color</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitle</item>
+    </style>
+
+    <style name="ListView.Style4" parent="ListView">
+        <item name="android:listSelector">@drawable/sl_list_selector_style_4</item>
+    </style>
+
+    <style name="ActionBarTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
 
 </resources>

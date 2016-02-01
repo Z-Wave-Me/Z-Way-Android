@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 02.08.14 9:56.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:orientation="vertical"
+              android:background="@color/nav_drawer_bg_color">
+
+    <RelativeLayout android:id="@+id/nav_drawer_profile"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="8dp">
+
+        <ImageView android:id="@+id/profile_menu_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/right_arrow_white"
+            android:scaleType="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/profile_menu_arrow"
+            android:orientation="vertical"
+            android:layout_centerVertical="true">
+
+            <TextView android:id="@+id/nav_drawer_profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:textColor="@color/nav_drawer_profile_text_color"
+                android:textAllCaps="true"
+                android:text="my Home"/>
+
+            <TextView android:id="@+id/nav_drawer_profile_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:textColor="@color/nav_drawer_profile_text_color"
+                android:text="Russia, Omsk"/>
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/nav_drawer_group_divider_color"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar android:id="@+id/nav_drawer_progress"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <me.z_wave.android.ui.views.NavDrawerItem android:id="@+id/nav_drawer_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="@string/dashboard"
+                    android:clickable="true"/>
+
+                <me.z_wave.android.ui.views.NavDrawerItem android:id="@+id/nav_drawer_all_devices"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="@string/all_devices"
+                    android:clickable="true"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/NavDrawerCategory"
+                        android:text="@string/notifications"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/nav_drawer_group_divider_color"/>
+
+                    <me.z_wave.android.ui.views.NavDrawerItem android:id="@+id/nav_drawer_notifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="@string/notification_everything_ok"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/nav_drawer_rooms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/NavDrawerCategory"
+                        android:text="@string/filters_rooms"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/nav_drawer_group_divider_color"/>
+
+                    <LinearLayout android:id="@+id/nav_drawer_rooms_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    </LinearLayout>
+
+                <LinearLayout android:id="@+id/nav_drawer_types"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/NavDrawerCategory"
+                        android:text="@string/filters_types"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/nav_drawer_group_divider_color"/>
+
+                    <LinearLayout android:id="@+id/nav_drawer_types_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                </LinearLayout>
+
+                    <LinearLayout android:id="@+id/nav_drawer_tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/NavDrawerCategory"
+                            android:text="@string/filters_tags"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/nav_drawer_group_divider_color"/>
+
+                        <LinearLayout android:id="@+id/nav_drawer_tags_menu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+        </ScrollView>
+
+        </RelativeLayout>
+
+</LinearLayout>

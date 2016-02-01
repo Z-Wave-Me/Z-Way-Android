@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 28.05.14 22:27.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout android:id="@+id/back_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_height">
+
+        <TextView android:id="@+id/device_grid_item_add_remove"
+            android:layout_height="match_parent"
+            android:layout_width="@dimen/grid_item_back_view_width"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@string/dashboard_remove"/>
+
+        </RelativeLayout>
+
+    <LinearLayout android:id="@+id/front_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_item_height">
+
+            <ImageView android:id="@+id/device_grid_item_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_sensor"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="22dp"
+                android:layout_toRightOf="@+id/device_grid_item_icon"
+                android:id="@+id/relativeLayout">
+
+                <LinearLayout android:id="@+id/device_grid_item_content_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"
+                    android:gravity="center">
+
+                    <Button android:id="@+id/device_grid_item_toggle"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:text=""/>
+
+                    <TextView android:id="@+id/device_grid_item_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/device_value_text_color"
+                        android:textSize="18sp"/>
+
+                    <Switch android:id="@+id/device_grid_item_switch"
+                        style="@style/ZWaySwitchStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
+
+                    <View android:id="@+id/device_grid_item_rgb_color"
+                        android:layout_height="36dp"
+                        android:layout_width="36dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/main_app_color"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <TextView android:id="@+id/device_grid_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:singleLine="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/device_grid_item_content_container"
+                    android:text="sdfsdfsdfsdfsdfsdfsdfsdf"/>
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <SeekBar android:id="@+id/device_grid_item_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:max="100"/>
+
+
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_color"/>
+
+
+
+
+    <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="@dimen/grid_item_height"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="TEXT"/>-->
+
+</RelativeLayout>

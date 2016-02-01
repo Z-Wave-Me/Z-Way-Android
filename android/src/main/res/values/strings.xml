@@ -24,7 +24,104 @@
 <resources>
 
     <string name="app_name">Z-Way</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Test fragment</string>
     <string name="action_settings">Settings</string>
 
+    <string name="dashboard">Dashboard</string>
+    <string name="widgets">Widgets</string>
+    <string name="notifications">Notifications</string>
+    <string name="profiles">Profiles</string>
+    <string name="done">Done</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+
+    <string name="msg_empty_dashboard">
+        The dashboard is empty now.\n
+        You can fill it with frequently used widgets\n
+        by swiping them left.
+    </string>
+    <string name="dashboard_remove">Remove from dashboard</string>
+    <string name="dashboard_to_dashboard">To dashboard</string>
+    <string name="dashboard_done">Done</string>
+
+    <string name="request_server_problem_msg">Something wrong with server!</string>
+    <string name="request_network_problem">Something wrong with network connection!</string>
+
+    <string name="filters_rooms">Rooms</string>
+    <string name="filters_types">Types</string>
+    <string name="filters_tags">Tags</string>
+
+    <string name="empty_msg">Nothing found</string>
+    
+    <string name="notification_everything_ok">Everything OK</string>
+    <string name="notification_count">You have %d notifications</string>
+    
+    <string name="profile_auto_switch_location_hint">App can switch the profiles automatically using your location:</string>
+    <string name="profile_auto_switch_location">Switch automatically</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_indoor_server">Indoor server</string>
+    <string name="profile_url">url</string>
+    <string name="profile_http">http://</string>
+    <string name="profile_http_hint">Should look like 192.168.0.1:8083</string>
+    <string name="profile_credentials">Remote access credentials</string>
+    <string name="zbox_credentials">Z-Way credentials</string>
+    <string name="profile_login">Login</string>
+    <string name="profile_password">Password</string>
+    <string name="profile_credentials_hint">You can get yours at find.z-wave.me</string>
+    <string name="profile_location">Location</string>
+    <string name="profile_serv_profile">Server Profile</string>
+    <string name="profile_connecting">Connecting…</string>
+    <string name="profile_delete">Delete Profile</string>
+    <string name="profile_connection_established">Connection established</string>
+    <string name="profile_connection_authorized">Authorised</string>
+    <string name="profile_connection_filed">Can\'t connect to this URL</string>
+    <string name="profile_changes_are_saved">Changes are saved.</string>
+    <string name="profile_app_theme_description">Click to choose app theme</string>
+
+    <string name="loading">Loading…</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="attention">Attention!</string>
+    <string name="ok">Ok</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="all_devices">All Widgets</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="connecting_to">Connecting to %s…</string>
+    
+    <string name="profile_changed">Active profile changed</string>
+    <string name="profile_changed_to_desc">Active profile was changed to %s</string>
+    
+    <string name="switch_binary">Binary Switch</string>
+    <string name="switch_multilevel">Multilevel Switch</string>
+    <string name="sensor_multilevel">Multilevel Sensor</string>
+    <string name="sensor_binary">Binary Sensory</string>
+    <string name="camera">Camera</string>
+    <string name="battery">Battery</string>
+    <string name="switch_control">Switch Control</string>
+    <string name="toggle_button">Scene</string>
+    <string name="switch_rgbw">Color</string>
+    <string name="doorlock">Doorlock</string>
+    <string name="thermostat">Thermostat</string>
+    
+    <string name="invalid_camera_url">Sorry, camera has invalid url!</string>
+
+    <string name="dialog_connection_lose_msg">No Internet connection!</string>
+    <string name="dialog_connection_lose_close_app">Close App</string>
+    <string name="dialog_connection_lose_settings">Settings</string>
+    
+    <string name="dialog_color_picker_select_color">Select color…</string>
+    <string name="dialog_network_scan_hint" formatted="false"> %s/%s scanned</string>
+    <string name="dialog_network_scan_scanning">Scanning…</string>
+    
+    <string name="dialog_select_url">Select an URL</string>
+
+    <string name="dialog_select_app_theme">Select an app theme</string>
+    <string name="theme_default_name">Turquoise</string>
+    <string name="theme_1_name">Pink</string>
+    <string name="theme_2_name">Sunny</string>
+    <string name="theme_3_name">Green</string>
+    <string name="theme_4_name">Chocolate</string>
 </resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Z-Way for Android is a UI for Z-Way server
+  ~
+  ~ Created by Ivan Platonov on 09.09.14 20:31.
+  ~ Copyright (c) 2014 Z-Wave.Me
+  ~
+  ~ All rights reserved
+  ~ info@z-wave.me
+  ~ Z-Way for Android is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Z-Way for Android is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Z-Way for Android.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <me.z_wave.android.ui.views.mjpegView.MjpegView
+        android:id="@+id/video_mjpeg_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button android:id="@+id/video_btn_left"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:text="L"/>
+
+    <Button android:id="@+id/video_btn_down"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/video_btn_left"
+        android:text="D"/>
+
+    <Button android:id="@+id/video_btn_right"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/video_btn_down"
+        android:text="R"/>
+
+    <Button android:id="@+id/video_btn_up"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignLeft="@id/video_btn_down"
+        android:layout_above="@id/video_btn_down"
+        android:text="U"/>
+
+
+    <Button android:id="@+id/video_btn_zoom_in"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="+"/>
+
+    <Button android:id="@+id/video_btn_zoom_out"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/video_btn_zoom_in"
+        android:text="-"/>
+
+    <Button android:id="@+id/video_btn_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="C"/>
+
+    <Button android:id="@+id/video_btn_open"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:layout_toLeftOf="@id/video_btn_close"
+        android:layout_alignParentBottom="true"
+        android:text="O"/>
+
+</RelativeLayout>
